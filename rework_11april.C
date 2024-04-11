@@ -35,6 +35,12 @@ double geoAngle(geo::Vector_t u, geo::Vector_t v) {
   return TMath::ACos(u.Dot(v)/u.R()/v.R())*TMath::RadToDeg();
 }
 
+geo::Point_t geoSum(geo::Point_t p, geo::Point_t q) {
+  geo::Point_t res(p.X() + q.X(), p.Y() + q.Y() , p.Z() + q.Z() );
+  return res;
+}
+
+
 
 /************************************ MuonAnalysis ************************************/
 
@@ -344,7 +350,7 @@ void ElectronAnalysis(int n_files, int i_first_event, int i_last_event, string d
           if(mu_to_depo_distance <= distance_max){
 
             elec_depo_energy_sphere += depo.Energy();
-            depo_weighted_point  += depo.Energy()*depo_hit;
+            depo_weighted_point = geoSum ( depo_weighted_point, depo_hit*depo.Energy() ) ;
 
           } //end of sphere condition
         }   //end of track masking condition
