@@ -24,20 +24,21 @@ R__ADD_INCLUDE_PATH("nusimdata/v1_27_01/include/nusimdata/SimulationBase")
 
 
 
-TVector3 to_TVector3(geo::Point_t point) {
-  TVector3 vector;
-  vector.SetXYZ( point.X() , point.Y(), point.Z() );
-  return vector;
+// TVector3 to_TVector3(auto geotype) {
+//   TVector3 vector;
+//   vector.SetXYZ( geotype.X() , geotype.Y(), geotype.Z() );
+//   return vector;
+// }
+
+
+double geoAngle(geo::Vector_t u, geo::Vector_t v) {
+  return TMath::ACos(u.Dot(v)/u.R()/v.R())*TMath::RadToDeg;
 }
-
-
-
-
 
 
 /************************************ MuonAnalysis ************************************/
 
-vector<pair<TVector3, int>> MuonAnalysis(int n_files, int i_first_event, int i_last_event, string depotag, string MCTruthtag, string listname, bool is_muon, bool save, bool verbose)
+vector<pair<geo::Vector_t, int>> MuonAnalysis(int n_files, int i_first_event, int i_last_event, string depotag, string MCTruthtag, string listname, bool is_muon, bool save, bool verbose)
 {
   //Particle options
   vector<string> pdgnames = {"e^{-}", "e^{+}", "#mu^{-}", "#mu^{+}", "p^{+}"};
@@ -80,7 +81,7 @@ vector<pair<TVector3, int>> MuonAnalysis(int n_files, int i_first_event, int i_l
 
   int i_muon_total_depo = 0;    //to account for all points from all events
   int i_event = 0;
-  vector<pair<TVector3, int>> muon_analysis(i_last_event-(i_first_event-1));
+  vector<pair<geo::Vector_t, int>> muon_analysis(i_last_event-(i_first_event-1));
 
   int depoless_count = 0; //number of depoless events
 
@@ -112,19 +113,19 @@ vector<pair<TVector3, int>> MuonAnalysis(int n_files, int i_first_event, int i_l
     double muon_depo_energy_tot  = 0;
     int    i_muon_last_hit       = -1;
 
-    TVector3 muon_first_hit = to_TVector3( depo_list->at(0).MidPoint() );
-    TVector3 muon_previous_hit = muon_first_hit;
+    geo::Point_t muon_first_hit = depo_list->at(0).MidPoint();
+    geo::Point_t muon_previous_hit = muon_first_hit;
     double muon_track_length = 0.;
 
     //Depo loop for muon/antimuon information
     for(size_t i_depo = 0; i_depo < n_depo; i_depo++){
 
       const sim::SimEnergyDeposit& depo = depo_list->at(i_depo);
-      TVector3 hit = to_TVector3( depo.MidPoint() );
+      geo::Point_t hit = depo.MidPoint();
 
       if(depo.PdgCode() != pdg) {continue;} //muon/anitmuon condition
 
-      muon_track_length += (muon_previous_hit - hit).Mag();
+      muon_track_length += (muon_previous_hit - hit).R();
       muon_remaining_energy -= depo.Energy();
       muon_depo_energy_tot  += depo.Energy();
       
@@ -139,7 +140,7 @@ vector<pair<TVector3, int>> MuonAnalysis(int n_files, int i_first_event, int i_l
     
     if(array_muon_track_length.size() == 0 && verbose){cout << "There is no muon/antimuon information here!" << endl; continue;}    //go back to begining if you don't have muon information
     
-    TVector3 muon_last_hit = to_TVector3( depo_list->at(i_muon_last_hit).MidPoint() );
+    geo::Point_t muon_last_hit = depo_list->at(i_muon_last_hit).MidPoint();
 
     if (verbose) {
         cout << "Muon/AntiMuon Total Deposit Energy: " << muon_depo_energy_tot << " MeV" << endl;
@@ -148,7 +149,7 @@ vector<pair<TVector3, int>> MuonAnalysis(int n_files, int i_first_event, int i_l
 
 
     //Direction vector  
-    TVector3 muon_track_global_direction = ( muon_first_hit - muon_last_hit ).Unit();
+    geo::Vector_t muon_track_global_direction = ( muon_first_hit - muon_last_hit ).Unit();
 
     //Retrieve residual track length
     int n_track_length = array_muon_track_length.size();
@@ -174,7 +175,7 @@ vector<pair<TVector3, int>> MuonAnalysis(int n_files, int i_first_event, int i_l
     }   //end of muon/antimuon information loop
 
 
-    pair<TVector3, int> p(muon_track_global_direction, i_muon_last_hit);
+    pair<geo::Vector_t, int> p(muon_track_global_direction, i_muon_last_hit);
     muon_analysis[i_event] = p;
   } //end of event loop
 
@@ -209,7 +210,7 @@ vector<pair<TVector3, int>> MuonAnalysis(int n_files, int i_first_event, int i_l
 /************************************ ElectronAnalysis ************************************/
 
 
-void ElectronAnalysis(int n_files, int i_first_event, int i_last_event, string depotag, string MCTruthtag, string MCParticletag, string listname, vector<pair<TVector3, int>> muon_analysis, bool is_muon, bool save, bool verbose)
+void ElectronAnalysis(int n_files, int i_first_event, int i_last_event, string depotag, string MCTruthtag, string MCParticletag, string listname, vector<pair<geo::Vector_t, int>> muon_analysis, bool is_muon, bool save, bool verbose)
 {
   //X-axis
   vector<string> xtitle = {"#theta (degrees)", "Energy (MeV)", "Energy (MeV)", "Energy (MeV)", "Energy (MeV)"};
@@ -307,11 +308,11 @@ void ElectronAnalysis(int n_files, int i_first_event, int i_last_event, string d
     if(verbose && muon_analysis[i_event].second == 0){cout << "There is no muon information here!" << endl; continue;}    //go back to begining if you don't have muon information
 
     //Information from muon/anitmuon analysis     
-    TVector3 muon_track_global_direction = muon_analysis[i_event].first;      
+    geo::Vector_t muon_track_global_direction = muon_analysis[i_event].first;      
     int i_muon_last_hit = muon_analysis[i_event].second;
 
-    TVector3 muon_last_hit = to_TVector3( depo_list->at(i_muon_last_hit).MidPoint() );
-    // TVector3 depo_hit;
+    geo::Point_t muon_last_hit = depo_list->at(i_muon_last_hit).MidPoint();
+
 
 
     //Electron information
@@ -321,7 +322,7 @@ void ElectronAnalysis(int n_files, int i_first_event, int i_last_event, string d
     double elec_depo_energy_sphere   = 0;
     double elec_depo_energy_cone = 0;       
 
-    TVector3 depo_weighted_point;     //weighted electron hits
+    geo::Point_t depo_weighted_point;     //weighted electron hits
     
     //Compute barycenter
     for(size_t i_depo = 0; i_depo < n_depo; i_depo++){
@@ -331,12 +332,12 @@ void ElectronAnalysis(int n_files, int i_first_event, int i_last_event, string d
       if(abs(depo.PdgCode()) == 11){  
 
         //Retrieve position of energy deposit
-        TVector3 depo_hit = to_TVector3( depo.MidPoint() );
-        TVector3 mu_to_depo_vector = depo_hit - muon_last_hit;
+        geo::Point_t depo_hit = depo.MidPoint();
+        geo::Vector_t mu_to_depo_vector = depo_hit - muon_last_hit;
 
         //Distance and angle of electron hit from muon last hit
-        double mu_to_depo_distance = mu_to_depo_vector.Mag();
-        double angle_track_depo  = muon_track_global_direction.Angle(mu_to_depo_vector)*TMath::RadToDeg(); 
+        double mu_to_depo_distance = mu_to_depo_vector.R();
+        double angle_track_depo  = geoAngle(muon_track_global_direction,mu_to_depo_vector); 
 
         if(abs(angle_track_depo) >= 20.0){     //muon/antimuon track masking 
 
@@ -354,12 +355,12 @@ void ElectronAnalysis(int n_files, int i_first_event, int i_last_event, string d
     if(verbose && elec_depo_energy_sphere <= 0){cout << "There is no Michel electron information here!" << endl; continue;}    //go back to begining if you don't have Michel electron information
 
     //coordinates of barycenter shower
-    TVector3 elec_barycenter = 1/elec_depo_energy_sphere * depo_weighted_point ; 
+    geo::Point_t elec_barycenter = depo_weighted_point /elec_depo_energy_sphere; 
 
     if (verbose) {cout << "Barycenter: (" << elec_barycenter.X() << "," << elec_barycenter.Y() << "," << elec_barycenter.Z() << ")" << endl;}
 
     //axis cone vector
-    TVector3 mu_to_barycenter_direction = ( elec_barycenter - muon_last_hit ).Unit(); 
+    geo::Vector_t mu_to_barycenter_direction = ( elec_barycenter - muon_last_hit ).Unit(); 
 
     //Depo loop for michel electron selection
     for(size_t i_depo = 0; i_depo < n_depo; i_depo++){
@@ -371,13 +372,13 @@ void ElectronAnalysis(int n_files, int i_first_event, int i_last_event, string d
         elec_depo_energy_tot += depo.Energy();  
 
         //Retrieve position of energy deposit
-        TVector3 depo_hit = to_TVector3( depo.MidPoint() );
+        geo::Point_t depo_hit = depo.MidPoint();
         
-        TVector3 mu_to_depo_vector = depo_hit - muon_last_hit;
+        geo::Vector_t mu_to_depo_vector = depo_hit - muon_last_hit;
 
         //Distance and angle of electron hit from muon last hit
-        double mu_to_depo_distance = mu_to_depo_vector.Mag();
-        double angle_track_depo  = muon_track_global_direction.Angle(mu_to_depo_vector)*TMath::RadToDeg(); 
+        double mu_to_depo_distance = mu_to_depo_vector.R();
+        double angle_track_depo  = geoAngle(muon_track_global_direction , mu_to_depo_vector); 
 
 
         if(abs(angle_track_depo) >= 20.0){    //muon/antimuon track masking condition
@@ -387,7 +388,7 @@ void ElectronAnalysis(int n_files, int i_first_event, int i_last_event, string d
           if(mu_to_depo_distance <= distance_max){   //containment sphere condition
 
             //angle between axis and hit in degrees
-            double angle_barycentre_depo = mu_to_barycenter_direction.Angle(mu_to_depo_vector)*TMath::RadToDeg();                
+            double angle_barycentre_depo = geoAngle( mu_to_barycenter_direction , mu_to_depo_vector);                
             elec_histograms[0]->Fill(angle_barycentre_depo);
 
 
@@ -557,7 +558,7 @@ int SimMichelAnalysis(int n_files, int i_first_event, int i_last_event, bool sav
   string MCParticletag = "";
 
 
-  vector<pair<TVector3, int>> muon_analysis = MuonAnalysis(n_files, i_first_event, i_last_event, depotag, MCTruthtag,"list", 1, save, verbose);
+  vector<pair<geo::Vector_t, int>> muon_analysis = MuonAnalysis(n_files, i_first_event, i_last_event, depotag, MCTruthtag,"list", 1, save, verbose);
 
   ElectronAnalysis(n_files, i_first_event, i_last_event, depotag, MCTruthtag, MCParticletag ,"list",muon_analysis, true, save, verbose);
 
