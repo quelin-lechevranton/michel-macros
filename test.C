@@ -7,6 +7,14 @@ R__ADD_INCLUDE_PATH("nusimdata/v1_27_01/include/nusimdata/SimulationBase")
 #include "nusimdata/SimulationBase/MCParticle.h"
 #include "tools.h"
 
+int test(string a, int b, int c);
+
+int main(int i,int f) {
+    string file_name="eos/..";
+    test(file_name,i,f);
+    return 0;
+}
+
 int test(string file_name, int i_first_event, int i_last_event) {
 
     int pdg = 13;
