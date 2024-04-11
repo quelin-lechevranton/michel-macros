@@ -15,7 +15,7 @@ int test(string file_name, int i_first_event, int i_last_event) {
     art::InputTag monte_tag("generator::SinglesGen");
     
     vector<string> file_list = { file_name };
-    gallery::Event ev(file_lsit);
+    gallery::Event ev(file_list);
 
     for ( ; !ev.atEnd() ; ev.next() ) {
         
