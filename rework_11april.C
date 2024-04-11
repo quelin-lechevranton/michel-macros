@@ -32,7 +32,7 @@ R__ADD_INCLUDE_PATH("nusimdata/v1_27_01/include/nusimdata/SimulationBase")
 
 
 double geoAngle(geo::Vector_t u, geo::Vector_t v) {
-  return TMath::ACos(u.Dot(v)/u.R()/v.R())*TMath::RadToDeg;
+  return TMath::ACos(u.Dot(v)/u.R()/v.R())*TMath::RadToDeg();
 }
 
 
