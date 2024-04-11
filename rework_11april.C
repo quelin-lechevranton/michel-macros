@@ -400,6 +400,7 @@ void ElectronAnalysis(int n_files, int i_first_event, int i_last_event, string d
 
             //Fill angle distribution for sphere events 
             int angle_bin = floor( n_bin[0]*angle_barycentre_depo / 180);
+            cout << angle_bin << "for an angle of " << angle_barycentre_depo << endl;
             elec_energy_angular_distribution[angle_bin] += depo.Energy();                      
             
 
