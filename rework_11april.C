@@ -74,7 +74,7 @@ vector<pair<TVector3, int>> MuonAnalysis(int n_files, int i_first_event, int i_l
   art::InputTag MCTruth_tag(MCTruthtag);  
 
   cout << depotag << " and the equivalent InputTag: " << depo_tag << endl;
-
+  cout << "HEEELLLLOOOOO" << endl;
 
   //Search your files
   string file_list          = listname+".list";
@@ -96,7 +96,7 @@ vector<pair<TVector3, int>> MuonAnalysis(int n_files, int i_first_event, int i_l
     if(ev.eventAuxiliary().event() < i_first_event) continue;
     if(ev.eventAuxiliary().event() > i_last_event) break; 
 
-    cout << "Event: " << ev.eventAuxiliary().event() << endl;
+    if (verbose) {cout << "Event: " << ev.eventAuxiliary().event() << endl;}
       
     //Retrieve list of energy deposits per event
     auto const depo_list = ev.getValidHandle<vector<sim::SimEnergyDeposit>>(depo_tag);
