@@ -107,7 +107,11 @@ vector<pair<geo::Vector_t, int>> MuonAnalysis(int n_files, int i_first_event, in
     auto const depo_list = ev.getValidHandle<vector<sim::SimEnergyDeposit>>(depo_tag);
     size_t n_depo        = depo_list->size();
 
-    if (verbose && n_depo ==0) {cout << "There is no deposit here!" << endl; depoless_count++; continue;}
+    if (n_depo ==0) {
+      if (verbose) {cout << "There is no deposit here!" << endl;}
+      depoless_count++; 
+      continue;
+    }
 
     //Retrieve generated information   
     auto const montecarlo        = ev.getValidHandle<vector<simb::MCTruth>>(MCTruth_tag);
@@ -144,7 +148,10 @@ vector<pair<geo::Vector_t, int>> MuonAnalysis(int n_files, int i_first_event, in
       muon_previous_hit = hit;
     }   //end of depo loop 
     
-    if(array_muon_track_length.size() == 0 && verbose){cout << "There is no muon/antimuon information here!" << endl; continue;}    //go back to begining if you don't have muon information
+    if(array_muon_track_length.size() == 0){ 
+      if (verbose) {cout << "There is no muon/antimuon information here!" << endl;} 
+      continue;
+    }    //go back to begining if you don't have muon information
     
     geo::Point_t muon_last_hit = depo_list->at(i_muon_last_hit).MidPoint();
 
@@ -297,7 +304,10 @@ void ElectronAnalysis(int n_files, int i_first_event, int i_last_event, string d
     auto const depo_list = ev.getValidHandle<vector<sim::SimEnergyDeposit>>(depo_tag);
     size_t n_depo       = depo_list->size();
 
-    if (verbose && n_depo ==0) {cout << "There is no deposit here!" << endl;depoless_count++;continue;}
+    if (n_depo ==0) {
+      if (verbose) {cout << "There is no deposit here!" << endl;depoless_count++;}
+      continue;
+    }
 
     //Decay mc positron information ~ only for antimuon events
     /*
@@ -311,7 +321,10 @@ void ElectronAnalysis(int n_files, int i_first_event, int i_last_event, string d
       }    
     } */ 
 
-    if(verbose && muon_analysis[i_event].second == 0){cout << "There is no muon information here!" << endl; continue;}    //go back to begining if you don't have muon information
+    if(muon_analysis[i_event].second == 0){
+      if (verbose) {cout << "There is no muon information here!" << endl;}
+      continue;
+    }    //go back to begining if you don't have muon information
 
     //Information from muon/anitmuon analysis     
     geo::Vector_t muon_track_global_direction = muon_analysis[i_event].first;      
@@ -358,7 +371,10 @@ void ElectronAnalysis(int n_files, int i_first_event, int i_last_event, string d
     }       //end of depo loop
 
 
-    if(verbose && elec_depo_energy_sphere <= 0){cout << "There is no Michel electron information here!" << endl; continue;}    //go back to begining if you don't have Michel electron information
+    if( elec_depo_energy_sphere <= 0){
+      if (verbose) {cout << "There is no Michel electron information here!" << endl;}
+      continue;
+    }    //go back to begining if you don't have Michel electron information
 
     //coordinates of barycenter shower
     geo::Point_t elec_barycenter = depo_weighted_point /elec_depo_energy_sphere; 
