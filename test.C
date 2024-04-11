@@ -14,7 +14,8 @@ int test(string file_name, int i_first_event, int i_last_event) {
     art::InputTag depo_tag = InputTag("largeant:LArG4DetectorServicevolTPCActive:G4Stage1");
     art::InputTag monte_tag = InputTag("generator::SinglesGen");
     
-    gallery::Event ev(file_name);
+    vector<string> file_list = { file_name };
+    gallery::Event ev(file_lsit);
 
     for ( ; !ev.atEnd() ; ev.next() ) {
         
