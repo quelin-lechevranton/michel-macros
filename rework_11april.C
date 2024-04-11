@@ -37,7 +37,7 @@ TVector3 to_TVector3( geo::Point_t point) {
 
 /************************************ MuonAnalysis ************************************/
 
-vector<pair<TVector3, int>> MuonAnalysis(int n_files, int i_first_event, int i_last_event, string depotag, string MCTruthtag, string listname, bool is_muon, bool save)
+vector<pair<TVector3, int>> MuonAnalysis(int n_files, int i_first_event, int i_last_event, string depotag, string MCTruthtag, string listname, bool is_muon, bool save, bool verbose)
 {
   //Particle options
   vector<string> pdgnames = {"e^{-}", "e^{+}", "#mu^{-}", "#mu^{+}", "p^{+}"};
@@ -100,7 +100,7 @@ vector<pair<TVector3, int>> MuonAnalysis(int n_files, int i_first_event, int i_l
     auto const depo_list = ev.getValidHandle<vector<sim::SimEnergyDeposit>>(depo_tag);
     size_t n_depo        = depo_list->size();
 
-    if (n_depo ==0 ) {cout << "There is no deposit here!" << endl; depoless_count++; continue;}
+    if (verbose && n_depo ==0) {cout << "There is no deposit here!" << endl; depoless_count++; continue;}
 
     //Retrieve generated information   
     auto const montecarlo        = ev.getValidHandle<vector<simb::MCTruth>>(MCTruth_tag);
@@ -108,7 +108,7 @@ vector<pair<TVector3, int>> MuonAnalysis(int n_files, int i_first_event, int i_l
     const simb::MCParticle& muon = gen.GetParticle(0);
 
     double muon_remaining_energy = (1000)*muon.E();   //in MeV
-    cout << "Muon/AntiMuon Energy: " << muon_remaining_energy << " MeV" << endl;
+    if (verbose) {cout << "Muon/AntiMuon Energy: " << muon_remaining_energy << " MeV" << endl;}
     double muon_depo_energy_tot  = 0;
     int    i_muon_last_hit       = -1;
 
@@ -122,28 +122,29 @@ vector<pair<TVector3, int>> MuonAnalysis(int n_files, int i_first_event, int i_l
       const sim::SimEnergyDeposit& depo = depo_list->at(i_depo);
       TVector3 hit = to_TVector3( depo.MidPoint() );
 
-      if(depo.PdgCode() == pdg) {
+      if(depo.PdgCode() != pdg) {continue;} //muon/anitmuon condition
 
-        muon_track_length += (muon_previous_hit - hit).Mag();
-        muon_remaining_energy -= depo.Energy();
-        muon_depo_energy_tot  += depo.Energy();
-        
-        //Energy deposit and position for muon/antimuon
-        array_muon_track_length.push_back( muon_track_length );
-        array_muon_depo_energy.push_back( depo.Energy() );
-        array_muon_remaining_energy.push_back(muon_remaining_energy);
+      muon_track_length += (muon_previous_hit - hit).Mag();
+      muon_remaining_energy -= depo.Energy();
+      muon_depo_energy_tot  += depo.Energy();
+      
+      //Energy deposit and position for muon/antimuon
+      array_muon_track_length.push_back( muon_track_length );
+      array_muon_depo_energy.push_back( depo.Energy() );
+      array_muon_remaining_energy.push_back(muon_remaining_energy);
 
-        i_muon_last_hit = i_depo;              //save last hit
-        muon_previous_hit = hit;
-      } //end of muon/anitmuon condition
+      i_muon_last_hit = i_depo;              //save last hit
+      muon_previous_hit = hit;
     }   //end of depo loop 
     
-    if(array_muon_track_length.size() == 0){cout << "There is no muon/antimuon information here!" << endl; continue;}    //go back to begining if you don't have muon information
+    if(array_muon_track_length.size() == 0 && verbose){cout << "There is no muon/antimuon information here!" << endl; continue;}    //go back to begining if you don't have muon information
     
     TVector3 muon_last_hit = to_TVector3( depo_list->at(i_muon_last_hit).MidPoint() );
 
-    cout << "Muon/AntiMuon Total Deposit Energy: " << muon_depo_energy_tot << " MeV" << endl;
-    cout << "Muon/AntiMuon Last Hit: ( " << muon_last_hit.X() << " , " << muon_last_hit.Y() << " , " << muon_last_hit.Z() << " )" << endl;
+    if (verbose) {
+        cout << "Muon/AntiMuon Total Deposit Energy: " << muon_depo_energy_tot << " MeV" << endl;
+        cout << "Muon/AntiMuon Last Hit: ( " << muon_last_hit.X() << " , " << muon_last_hit.Y() << " , " << muon_last_hit.Z() << " )" << endl;
+    }
 
 
     //Direction vector  
@@ -208,7 +209,7 @@ vector<pair<TVector3, int>> MuonAnalysis(int n_files, int i_first_event, int i_l
 /************************************ ElectronAnalysis ************************************/
 
 
-void ElectronAnalysis(int n_files, int i_first_event, int i_last_event, string depotag, string MCTruthtag, string MCParticletag, string listname, vector<pair<TVector3, int>> muon_analysis, bool is_muon, bool save)
+void ElectronAnalysis(int n_files, int i_first_event, int i_last_event, string depotag, string MCTruthtag, string MCParticletag, string listname, vector<pair<TVector3, int>> muon_analysis, bool is_muon, bool save, bool verbose)
 {
   //X-axis
   vector<string> xtitle = {"#theta (degrees)", "Energy (MeV)", "Energy (MeV)", "Energy (MeV)", "Energy (MeV)"};
@@ -283,13 +284,13 @@ void ElectronAnalysis(int n_files, int i_first_event, int i_last_event, string d
     if(ev.eventAuxiliary().event() < i_first_event) continue;
     if(ev.eventAuxiliary().event() > i_last_event) break; 
 
-    cout << "Event: " << ev.eventAuxiliary().event() << endl;
+    if (verbose) {cout << "Event: " << ev.eventAuxiliary().event() << endl;}
       
     //Retrieve list of energy deposits per event
     auto const depo_list = ev.getValidHandle<vector<sim::SimEnergyDeposit>>(depo_tag);
     size_t n_depo       = depo_list->size();
 
-    if (n_depo ==0 ) {cout << "There is no deposit here!" << endl;depoless_count++;continue;}
+    if (verbose && n_depo ==0) {cout << "There is no deposit here!" << endl;depoless_count++;continue;}
 
     //Decay mc positron information ~ only for antimuon events
     /*
@@ -303,7 +304,7 @@ void ElectronAnalysis(int n_files, int i_first_event, int i_last_event, string d
       }    
     } */ 
 
-    if(muon_analysis[i_event].second == 0){cout << "There is no muon information here!" << endl; continue;}    //go back to begining if you don't have muon information
+    if(verbose && muon_analysis[i_event].second == 0){cout << "There is no muon information here!" << endl; continue;}    //go back to begining if you don't have muon information
 
     //Information from muon/anitmuon analysis     
     TVector3 muon_track_global_direction = muon_analysis[i_event].first;      
@@ -350,12 +351,12 @@ void ElectronAnalysis(int n_files, int i_first_event, int i_last_event, string d
     }       //end of depo loop
 
 
-    if(elec_depo_energy_sphere <= 0){cout << "There is no Michel electron information here!" << endl; continue;}    //go back to begining if you don't have Michel electron information
+    if(verbose && elec_depo_energy_sphere <= 0){cout << "There is no Michel electron information here!" << endl; continue;}    //go back to begining if you don't have Michel electron information
 
     //coordinates of barycenter shower
     TVector3 elec_barycenter = 1/elec_depo_energy_sphere * depo_weighted_point ; 
 
-    cout << "Barycenter: (" << elec_barycenter.X() << "," << elec_barycenter.Y() << "," << elec_barycenter.Z() << ")" << endl;
+    if (verbose) {cout << "Barycenter: (" << elec_barycenter.X() << "," << elec_barycenter.Y() << "," << elec_barycenter.Z() << ")" << endl;}
 
     //axis cone vector
     TVector3 mu_to_barycenter_direction = ( elec_barycenter - muon_last_hit ).Unit(); 
@@ -544,7 +545,7 @@ void ElectronAnalysis(int n_files, int i_first_event, int i_last_event, string d
 
 // ----- M A I N ----- //
 
-int SimMichelAnalysis(int n_files, int i_first_event, int i_last_event, bool save)
+int SimMichelAnalysis(int n_files, int i_first_event, int i_last_event, bool save, bool verbose)
 {
   //debug = Debug;
   //SetDebug(debug);
@@ -556,9 +557,9 @@ int SimMichelAnalysis(int n_files, int i_first_event, int i_last_event, bool sav
   string MCParticletag = "";
 
 
-  vector<pair<TVector3, int>> muon_analysis = MuonAnalysis(n_files, i_first_event, i_last_event, depotag, MCTruthtag,"list", 1, save);
+  vector<pair<TVector3, int>> muon_analysis = MuonAnalysis(n_files, i_first_event, i_last_event, depotag, MCTruthtag,"list", 1, save, verbose);
 
-  ElectronAnalysis(n_files, i_first_event, i_last_event, depotag, MCTruthtag, MCParticletag ,"list",muon_analysis, true, save);
+  ElectronAnalysis(n_files, i_first_event, i_last_event, depotag, MCTruthtag, MCParticletag ,"list",muon_analysis, true, save, verbose);
 
   return 0;
 }
