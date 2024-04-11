@@ -73,6 +73,8 @@ vector<pair<TVector3, int>> MuonAnalysis(int n_files, int i_first_event, int i_l
   art::InputTag depo_tag(depotag);
   art::InputTag MCTruth_tag(MCTruthtag);  
 
+  cout << depotag << " and the equivalent InputTag: " << depo_tag << endl;
+
 
   //Search your files
   string file_list          = listname+".list";
