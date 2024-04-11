@@ -208,13 +208,13 @@ vector<pair<geo::Vector_t, int>> MuonAnalysis(int n_files, int i_first_event, in
   canvas_muon_2->Update();
 
   //Save it!
-  if (!save) {continue;}
-  canvas_muon_1->SaveAs(("output/"+generated+"_depo_energy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".pdf").c_str()); 
-  canvas_muon_1->SaveAs(("output/"+generated+"_depo_energy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".root").c_str());
+  if (!save) {
+    canvas_muon_1->SaveAs(("output/"+generated+"_depo_energy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".pdf").c_str()); 
+    canvas_muon_1->SaveAs(("output/"+generated+"_depo_energy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".root").c_str());
 
-  canvas_muon_2->SaveAs(("output/"+generated+"_remaining_energy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".pdf").c_str()); 
-  canvas_muon_2->SaveAs(("output/"+generated+"_remaining_energy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".root").c_str());
-
+    canvas_muon_2->SaveAs(("output/"+generated+"_remaining_energy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".pdf").c_str()); 
+    canvas_muon_2->SaveAs(("output/"+generated+"_remaining_energy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".root").c_str());
+  }
 
   return muon_analysis;
 
@@ -535,24 +535,25 @@ void ElectronAnalysis(int n_files, int i_first_event, int i_last_event, string d
   // }
 
   //Save it!
-  if (!save) {continue;} 
-  ctheta->SaveAs(("output/images/simmichelanalysis/"+generated+"_theta_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".pdf").c_str()); 
-  ctheta->SaveAs(("output/images/simmichelanalysis/"+generated+"_theta_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".root").c_str());
+  if (!save) {
+    ctheta->SaveAs(("output/images/simmichelanalysis/"+generated+"_theta_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".pdf").c_str()); 
+    ctheta->SaveAs(("output/images/simmichelanalysis/"+generated+"_theta_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".root").c_str());
 
-  cene->SaveAs(("output/images/simmichelanalysis/"+generated+"_Eenergy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".pdf").c_str()); 
-  cene->SaveAs(("output/images/simmichelanalysis/"+generated+"_Eenergy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".root").c_str());
+    cene->SaveAs(("output/images/simmichelanalysis/"+generated+"_Eenergy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".pdf").c_str()); 
+    cene->SaveAs(("output/images/simmichelanalysis/"+generated+"_Eenergy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".root").c_str());
 
-  cene_2->SaveAs(("output/images/simmichelanalysis/"+generated+"_MTMenergy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".pdf").c_str()); 
-  cene_2->SaveAs(("output/images/simmichelanalysis/"+generated+"_MTMenergy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".root").c_str());
+    cene_2->SaveAs(("output/images/simmichelanalysis/"+generated+"_MTMenergy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".pdf").c_str()); 
+    cene_2->SaveAs(("output/images/simmichelanalysis/"+generated+"_MTMenergy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".root").c_str());
 
-  cene_3->SaveAs(("output/images/simmichelanalysis/"+generated+"_CSenergy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".pdf").c_str()); 
-  cene_3->SaveAs(("output/images/simmichelanalysis/"+generated+"_CSenergy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".root").c_str());
+    cene_3->SaveAs(("output/images/simmichelanalysis/"+generated+"_CSenergy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".pdf").c_str()); 
+    cene_3->SaveAs(("output/images/simmichelanalysis/"+generated+"_CSenergy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".root").c_str());
 
-  cene_4->SaveAs(("output/images/simmichelanalysis/"+generated+"_Selenergy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".pdf").c_str()); 
-  cene_4->SaveAs(("output/images/simmichelanalysis/"+generated+"_Selenergy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".root").c_str());
+    cene_4->SaveAs(("output/images/simmichelanalysis/"+generated+"_Selenergy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".pdf").c_str()); 
+    cene_4->SaveAs(("output/images/simmichelanalysis/"+generated+"_Selenergy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".root").c_str());
 
-  celec_sel->SaveAs(("output/images/simmichelanalysis/"+generated+"_sel_elec_energy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".pdf").c_str()); 
-  celec_sel->SaveAs(("output/images/simmichelanalysis/"+generated+"_sel_elec_energy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".root").c_str());
+    celec_sel->SaveAs(("output/images/simmichelanalysis/"+generated+"_sel_elec_energy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".pdf").c_str()); 
+    celec_sel->SaveAs(("output/images/simmichelanalysis/"+generated+"_sel_elec_energy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".root").c_str());
+  }
 
 } // end of ElectronAnalysis
 
