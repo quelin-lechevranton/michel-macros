@@ -208,13 +208,13 @@ vector<pair<geo::Vector_t, int>> MuonAnalysis(int n_files, int i_first_event, in
   canvas_muon_2->Update();
 
   //Save it!
-  if (save) {
-    canvas_muon_1->SaveAs(("output/"+generated+"_depo_energy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".pdf").c_str()); 
-    canvas_muon_1->SaveAs(("output/"+generated+"_depo_energy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".root").c_str());
+  if (!save) {continue;}
+  canvas_muon_1->SaveAs(("output/"+generated+"_depo_energy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".pdf").c_str()); 
+  canvas_muon_1->SaveAs(("output/"+generated+"_depo_energy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".root").c_str());
 
-    canvas_muon_2->SaveAs(("output/"+generated+"_remaining_energy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".pdf").c_str()); 
-    canvas_muon_2->SaveAs(("output/"+generated+"_remaining_energy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".root").c_str());
-  }
+  canvas_muon_2->SaveAs(("output/"+generated+"_remaining_energy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".pdf").c_str()); 
+  canvas_muon_2->SaveAs(("output/"+generated+"_remaining_energy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".root").c_str());
+
 
   return muon_analysis;
 
@@ -348,26 +348,22 @@ void ElectronAnalysis(int n_files, int i_first_event, int i_last_event, string d
 
       const sim::SimEnergyDeposit& depo = depo_list->at(i_depo);
       
-      if(abs(depo.PdgCode()) == 11){  
+      if(abs(depo.PdgCode()) != 11){  continue;}
 
-        //Retrieve position of energy deposit
-        geo::Point_t depo_hit = depo.MidPoint();
-        geo::Vector_t mu_to_depo_vector = depo_hit - muon_last_hit;
+      //Retrieve position of energy deposit
+      geo::Point_t depo_hit = depo.MidPoint();
+      geo::Vector_t mu_to_depo_vector = depo_hit - muon_last_hit;
 
-        //Distance and angle of electron hit from muon last hit
-        double mu_to_depo_distance = mu_to_depo_vector.R();
-        double angle_track_depo  = geoAngle(muon_track_global_direction,mu_to_depo_vector); 
+      //Distance and angle of electron hit from muon last hit
+      double mu_to_depo_distance = mu_to_depo_vector.R();
+      double angle_track_depo  = geoAngle(muon_track_global_direction,mu_to_depo_vector); 
 
-        if(abs(angle_track_depo) >= 20.0){     //muon/antimuon track masking 
+      if(abs(angle_track_depo) < 20.0){continue;}     //muon/antimuon track masking 
+      if(mu_to_depo_distance > distance_max){continue;} //sphere condition
 
-          if(mu_to_depo_distance <= distance_max){
+      elec_depo_energy_sphere += depo.Energy();
+      depo_weighted_point = geoSum ( depo_weighted_point, depo_hit*depo.Energy() ) ;
 
-            elec_depo_energy_sphere += depo.Energy();
-            depo_weighted_point = geoSum ( depo_weighted_point, depo_hit*depo.Energy() ) ;
-
-          } //end of sphere condition
-        }   //end of track masking condition
-      }     //end of electron condition
     }       //end of depo loop
 
 
@@ -389,43 +385,39 @@ void ElectronAnalysis(int n_files, int i_first_event, int i_last_event, string d
       
       const sim::SimEnergyDeposit& depo = depo_list->at(i_depo);
       
-      if(abs(depo.PdgCode()) == 11){        
+      if(abs(depo.PdgCode()) != 11){continue;}   
 
-        elec_depo_energy_tot += depo.Energy();  
+      elec_depo_energy_tot += depo.Energy();  
 
-        //Retrieve position of energy deposit
-        geo::Point_t depo_hit = depo.MidPoint();
-        
-        geo::Vector_t mu_to_depo_vector = depo_hit - muon_last_hit;
+      //Retrieve position of energy deposit
+      geo::Point_t depo_hit = depo.MidPoint();
+      
+      geo::Vector_t mu_to_depo_vector = depo_hit - muon_last_hit;
 
-        //Distance and angle of electron hit from muon last hit
-        double mu_to_depo_distance = mu_to_depo_vector.R();
-        double angle_track_depo  = geoAngle(muon_track_global_direction , mu_to_depo_vector); 
-
-
-        if(abs(angle_track_depo) >= 20.0){    //muon/antimuon track masking condition
-
-          elec_depo_energy_mask += depo.Energy();
-
-          if(mu_to_depo_distance <= distance_max){   //containment sphere condition
-
-            //angle between axis and hit in degrees
-            double angle_barycentre_depo = geoAngle( mu_to_barycenter_direction , mu_to_depo_vector);                
-            elec_histograms[0]->Fill(angle_barycentre_depo);
+      //Distance and angle of electron hit from muon last hit
+      double mu_to_depo_distance = mu_to_depo_vector.R();
+      double angle_track_depo  = geoAngle(muon_track_global_direction , mu_to_depo_vector); 
 
 
-            //Fill angle distribution for sphere events 
-            int angle_bin = floor( n_bin[0]*angle_barycentre_depo / 180);
-            
-            elec_energy_angular_distribution[angle_bin] += depo.Energy();                      
-            
+      if(abs(angle_track_depo) < 20.0){ continue;}    //muon/antimuon track masking condition
 
-            if(angle_barycentre_depo <= 70){ // selection cone condition
-              elec_depo_energy_cone += depo.Energy();
-            } //end of cone condition     
-          }   //end of containtment sphere condition
-        }     //end of track masking condition
-      }       //end of electron hit condition
+        elec_depo_energy_mask += depo.Energy();
+
+      if(mu_to_depo_distance > distance_max){ continue;}  //containment sphere condition
+
+      //angle between axis and hit in degrees
+      double angle_barycentre_depo = geoAngle( mu_to_barycenter_direction , mu_to_depo_vector);                
+      elec_histograms[0]->Fill(angle_barycentre_depo);
+
+
+      //Fill angle distribution for sphere e"e26:prof"vents 
+      int angle_bin = floor( n_bin[0]*angle_barycentre_depo / 180);
+      
+      elec_energy_angular_distribution[angle_bin] += depo.Energy();                      
+      
+
+      if(angle_barycentre_depo > 70){ continue;} // selection cone condition
+      elec_depo_energy_cone += depo.Energy();
     }         //end of depo loop
 
 
@@ -521,7 +513,7 @@ void ElectronAnalysis(int n_files, int i_first_event, int i_last_event, string d
   //   cposi->SetLogy();
   //   stack->Draw("hist");
 
-  //   //Legend
+  //   //Legend"e26:prof"
   //   TLegend* legend = new TLegend(0.125, 0.8, 0.225, 0.88);
   //   legend->AddEntry(hposi, " Decay MC Positron", "l");
   //   legend->AddEntry(elec_histograms[4], " Selected e^{+}/e^{-}", "l");
@@ -543,25 +535,24 @@ void ElectronAnalysis(int n_files, int i_first_event, int i_last_event, string d
   // }
 
   //Save it!
-  if (save) {
-    ctheta->SaveAs(("output/images/simmichelanalysis/"+generated+"_theta_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".pdf").c_str()); 
-    ctheta->SaveAs(("output/images/simmichelanalysis/"+generated+"_theta_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".root").c_str());
+  if (!save) {continue;} 
+  ctheta->SaveAs(("output/images/simmichelanalysis/"+generated+"_theta_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".pdf").c_str()); 
+  ctheta->SaveAs(("output/images/simmichelanalysis/"+generated+"_theta_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".root").c_str());
 
-    cene->SaveAs(("output/images/simmichelanalysis/"+generated+"_Eenergy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".pdf").c_str()); 
-    cene->SaveAs(("output/images/simmichelanalysis/"+generated+"_Eenergy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".root").c_str());
+  cene->SaveAs(("output/images/simmichelanalysis/"+generated+"_Eenergy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".pdf").c_str()); 
+  cene->SaveAs(("output/images/simmichelanalysis/"+generated+"_Eenergy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".root").c_str());
 
-    cene_2->SaveAs(("output/images/simmichelanalysis/"+generated+"_MTMenergy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".pdf").c_str()); 
-    cene_2->SaveAs(("output/images/simmichelanalysis/"+generated+"_MTMenergy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".root").c_str());
+  cene_2->SaveAs(("output/images/simmichelanalysis/"+generated+"_MTMenergy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".pdf").c_str()); 
+  cene_2->SaveAs(("output/images/simmichelanalysis/"+generated+"_MTMenergy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".root").c_str());
 
-    cene_3->SaveAs(("output/images/simmichelanalysis/"+generated+"_CSenergy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".pdf").c_str()); 
-    cene_3->SaveAs(("output/images/simmichelanalysis/"+generated+"_CSenergy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".root").c_str());
+  cene_3->SaveAs(("output/images/simmichelanalysis/"+generated+"_CSenergy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".pdf").c_str()); 
+  cene_3->SaveAs(("output/images/simmichelanalysis/"+generated+"_CSenergy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".root").c_str());
 
-    cene_4->SaveAs(("output/images/simmichelanalysis/"+generated+"_Selenergy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".pdf").c_str()); 
-    cene_4->SaveAs(("output/images/simmichelanalysis/"+generated+"_Selenergy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".root").c_str());
+  cene_4->SaveAs(("output/images/simmichelanalysis/"+generated+"_Selenergy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".pdf").c_str()); 
+  cene_4->SaveAs(("output/images/simmichelanalysis/"+generated+"_Selenergy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".root").c_str());
 
-    celec_sel->SaveAs(("output/images/simmichelanalysis/"+generated+"_sel_elec_energy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".pdf").c_str()); 
-    celec_sel->SaveAs(("output/images/simmichelanalysis/"+generated+"_sel_elec_energy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".root").c_str());
-  }
+  celec_sel->SaveAs(("output/images/simmichelanalysis/"+generated+"_sel_elec_energy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".pdf").c_str()); 
+  celec_sel->SaveAs(("output/images/simmichelanalysis/"+generated+"_sel_elec_energy_"+to_string(i_first_event)+"_"+to_string(i_last_event)+".root").c_str());
 
 } // end of ElectronAnalysis
 
