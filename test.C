@@ -34,7 +34,9 @@ int test(string file_name, int i_first_event, int i_last_event) {
 
         cout << "Event #" << i_event << endl;
 
-        // auto const spacepoints = ev.getValidHandle<
+        auto const point_list = ev.getValidHandle<vector<recob::SpacePoints>>(point_tag);
+    
+        cout << point_list << endl;
 
 
 
