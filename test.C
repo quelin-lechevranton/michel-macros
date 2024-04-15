@@ -21,7 +21,7 @@ int test(string file_name, int i_first_event, int i_last_event) {
 
     art::InputTag monte_tag("generator::SinglesGen");
     art::InputTag depo_tag("largeant:LArG4DetectorServicevolTPCActive");
-    art::InputTag point_tag("pandora")
+    art::InputTag point_tag("pandora");
     
     vector<string> file_list = { file_name };
 
