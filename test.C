@@ -9,9 +9,9 @@ R__ADD_INCLUDE_PATH("nusimdata/v1_27_01/include/nusimdata/SimulationBase")
 
 int test(string a, int b, int c);
 
-int main(int i,int f) {
-    string file_name="eos/..";
-    test(file_name,i,f);
+int main() {
+    string file_name="/eos/user/t/thoudy/pdvd/sims/out/protodunevd_10k_muon_reco.root";
+    test(file_name,1,10);
     return 0;
 }
 
@@ -23,9 +23,9 @@ int test(string file_name, int i_first_event, int i_last_event) {
     art::InputTag monte_tag("generator::SinglesGen");
     
     vector<string> file_list = { file_name };
-    gallery::Event ev(file_list);
 
-    for ( ; !ev.atEnd() ; ev.next() ) {
+    for (
+    gallery::Event ev(file_list); !ev.atEnd(); ev.next()) {
         
         auto i_event = ev.eventAuxiliary().event();
         if ( i_event < i_first_event ) continue;
@@ -42,7 +42,7 @@ int test(string file_name, int i_first_event, int i_last_event) {
 
             auto Theta = depo.startPos.fCoordinates.Theta();
 
-            cout << "Theta :" << Theta << endl; 
+            cout << "Theta: " << Theta << "at event.depo: " << i_depo << i_event << endl; 
 
 
         }
