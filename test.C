@@ -19,8 +19,9 @@ int test(string file_name, int i_first_event, int i_last_event) {
 
     int pdg = 13;
 
-    art::InputTag depo_tag("largeant:LArG4DetectorServicevolTPCActive");
     art::InputTag monte_tag("generator::SinglesGen");
+    art::InputTag depo_tag("largeant:LArG4DetectorServicevolTPCActive");
+    art::InputTag point_tag("pandora")
     
     vector<string> file_list = { file_name };
 
@@ -31,21 +32,29 @@ int test(string file_name, int i_first_event, int i_last_event) {
         if ( i_event < i_first_event ) continue;
         if ( i_event > i_last_event ) break;
 
+        cout << "Event #" << i_event << endl;
+
+        // auto const spacepoints = ev.getValidHandle<
+
+
+
         
-        auto const depo_list = ev.getValidHandle<vector<sim::SimEnergyDeposit>>(depo_tag);
+        // auto const depo_list = ev.getValidHandle<vector<sim::SimEnergyDeposit>>(depo_tag);
 
-        for (size_t i_depo=0; i_depo<depo_list->size(); i_depo++) {
+        // for (size_t i_depo=0; i_depo<depo_list->size(); i_depo++) {
 
-            const sim::SimEnergyDeposit& depo = depo_list->at(i_depo);
+        //     const sim::SimEnergyDeposit& depo = depo_list->at(i_depo);
 
-            if(depo.PdgCode() != pdg) {continue;}
+        //     if(depo.PdgCode() != pdg) {continue;}
 
-            auto Theta = depo.startPos.fCoordinates.Theta();
+        //     auto Theta = depo.startPos.fCoordinates.Theta();
+        //     //error: /afs/cern.ch/work/t/thoudy/DUNE/analyses/ProtoDUNE/michel/test.C:43:31: error: 'startPos' is a private member of 'sim::SimEnergyDeposit'
 
-            cout << "Theta: " << Theta << "at event.depo: " << i_depo << i_event << endl; 
+
+        //     cout << "Theta: " << Theta << "at event.depo: " << i_depo << i_event << endl; 
 
 
-        }
+        // }
 
         // auto const truth_list = ev.getValidHandle<vector<simb::MCTruths>>(monte_tag);
         // auto const particle_list = ev.getValidHandle<vector<simb::MCParticles>>(monte_tag);
