@@ -10,7 +10,7 @@ R__ADD_INCLUDE_PATH("nusimdata/v1_27_01/include/nusimdata/SimulationBase")
 int test(string a, int b, int c);
 
 int main() {
-    string file_name="/eos/user/t/thoudy/pdvd/sims/out/protodunevd_10k_muon_reco.root";
+    string file_name="/eos/user/t/thoudy/pdvd/sims/out/protodunevd_10_muon_reco.root";
     test(file_name,1,10);
     return 0;
 }
@@ -34,9 +34,9 @@ int test(string file_name, int i_first_event, int i_last_event) {
 
         cout << "Event #" << i_event << endl;
 
-        auto const point_list = ev.getValidHandle<vector<recob::SpacePoints>>(point_tag);
+        // auto const point_list = ev.getValidHandle<vector<recob::SpacePoints>>(point_tag);
     
-        cout << point_list << endl;
+        // cout << point_list << endl;
 
 
 
