@@ -38,36 +38,34 @@ int test(string file_name, int i_first_event, int i_last_event) {
     
         // cout << point_list << endl;
 
-
-
         
-        // auto const depo_list = ev.getValidHandle<vector<sim::SimEnergyDeposit>>(depo_tag);
+        auto const depo_list = ev.getValidHandle<vector<sim::SimEnergyDeposit>>(depo_tag);
 
-        // for (size_t i_depo=0; i_depo<depo_list->size(); i_depo++) {
+        for (size_t i_depo=0; i_depo<depo_list->size(); i_depo++) {
 
-        //     const sim::SimEnergyDeposit& depo = depo_list->at(i_depo);
+            const sim::SimEnergyDeposit& depo = depo_list->at(i_depo);
 
-        //     if(depo.PdgCode() != pdg) {continue;}
+            if(depo.PdgCode() != pdg) {continue;}
 
-        //     auto Theta = depo.startPos.fCoordinates.Theta();
-        //     //error: /afs/cern.ch/work/t/thoudy/DUNE/analyses/ProtoDUNE/michel/test.C:43:31: error: 'startPos' is a private member of 'sim::SimEnergyDeposit'
-
-
-        //     cout << "Theta: " << Theta << "at event.depo: " << i_depo << i_event << endl; 
+            auto Theta = depo.startPos.fCoordinates.Theta();
+            //error: /afs/cern.ch/work/t/thoudy/DUNE/analyses/ProtoDUNE/michel/test.C:43:31: error: 'startPos' is a private member of 'sim::SimEnergyDeposit'
 
 
-        // }
+            cout << "Theta: " << Theta << "at event.depo: " << i_depo << i_event << endl; 
 
-        // auto const truth_list = ev.getValidHandle<vector<simb::MCTruths>>(monte_tag);
-        // auto const particle_list = ev.getValidHandle<vector<simb::MCParticles>>(monte_tag);
 
-        // for (size_t i_truth=0; i_truth<truth_list->size(); i_truth++) {
+        }
 
-        //     const simb::MCTruths& truth = truth_list->at(i_truth);
+        auto const truth_list = ev.getValidHandle<vector<simb::MCTruths>>(monte_tag);
+        auto const particle_list = ev.getValidHandle<vector<simb::MCParticles>>(monte_tag);
 
-        //     if(truth.fPartList.fpdgCode != )
+        for (size_t i_truth=0; i_truth<truth_list->size(); i_truth++) {
 
-        // }
+            const simb::MCTruths& truth = truth_list->at(i_truth);
+
+            if(truth.fPartList.fpdgCode != )
+
+        }
 
 
 
