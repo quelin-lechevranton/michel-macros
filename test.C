@@ -70,6 +70,8 @@ int test(string file_name, int i_first_event, int i_last_event) {
 
 
     }
+
+    return 0;
 }
 
 // Events->simb::MCTruths_cosmicgenerator__SinglesGen.obj.fPartList.Py()/simb::MCTruths_cosmicgenerator__SinglesGen.obj.fPartList.P()
