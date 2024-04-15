@@ -32,7 +32,7 @@ int test(string file_name, int i_first_event, int i_last_event) {
         if ( i_event > i_last_event ) break;
 
         
-        auto const depo_list = ev.getValidHandle<vector<sim::SimEnergyDeposits>>(depo_tag);
+        auto const depo_list = ev.getValidHandle<vector<sim::SimEnergyDeposit>>(depo_tag);
 
         for (size_t i_depo=0; i_depo<depo_list->size(); i_depo++) {
 
