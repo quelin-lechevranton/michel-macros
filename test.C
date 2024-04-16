@@ -11,7 +11,7 @@ using geo::Length_t;
 using geo::Point_t;
 using geo::Vector_t;
 
-int test(string a, int b, int c);
+int test(string file_name, int i_first_event, int i_last_event, int pdg);
 
 int main() {
     string file_name="/eos/user/t/thoudy/pdvd/sims/out/protodunevd_10_muon_g4_stage1.root";
