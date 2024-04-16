@@ -124,6 +124,7 @@ int test(string file_name, int i_first_event, int i_last_event, int pdg) {
             TG_point[2]->SetPoint(i_point_total,point_point.Z(),point_point.Y());
             i_point_total++;
 
+        }
 
 
         // auto const truth_list = ev.getValidHandle<vector<simb::MCTruths>>(monte_tag);
