@@ -10,8 +10,8 @@ R__ADD_INCLUDE_PATH("nusimdata/v1_27_01/include/nusimdata/SimulationBase")
 
 int test(string file_name, int i_first_event, int i_last_event, int pdg);
 
-int main() {
-    string file_name="/eos/user/t/thoudy/pdvd/sims/out/protodunevd_10_muon_g4_stage1.root";
+int main(string file_name) {
+    // string file_name="/eos/user/t/thoudy/pdvd/sims/out/protodunevd_10_muon_g4_stage1.root";
     //string file_name="/eos/user/t/thoudy/pdvd/sims/out/protodunevd_10_muon_reco.root";
     test(file_name,1,1,13);
     return 0;
