@@ -38,7 +38,7 @@ int test(string file_name, int i_first_event, int i_last_event, int pdg) {
         400,                            //Y_max
         1000,                           //n_bin_Z
         -400,                           //Z_min
-        400,                            //Z_max
+        400                             //Z_max
     );
 
 
