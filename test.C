@@ -60,7 +60,7 @@ int test(string file_name, int i_first_event, int i_last_event, int pdg) {
         TG_point[i]->GetXaxis()->SetTitle(xtitle[i].c_str());
         TG_point[i]->GetYaxis()->SetTitle(ytitle[i].c_str());
     }   
-    int i_depo_total = 0;
+    int i_point_total = 0;
     
 
     for (
