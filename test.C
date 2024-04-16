@@ -56,16 +56,16 @@ int test(string file_name, int i_first_event, int i_last_event) {
 
         }
 
-        auto const truth_list = ev.getValidHandle<vector<simb::MCTruths>>(monte_tag);
-        auto const particle_list = ev.getValidHandle<vector<simb::MCParticles>>(monte_tag);
+        // auto const truth_list = ev.getValidHandle<vector<simb::MCTruths>>(monte_tag);
+        // auto const particle_list = ev.getValidHandle<vector<simb::MCParticles>>(monte_tag);
 
-        for (size_t i_truth=0; i_truth<truth_list->size(); i_truth++) {
+        // for (size_t i_truth=0; i_truth<truth_list->size(); i_truth++) {
 
-            const simb::MCTruths& truth = truth_list->at(i_truth);
+        //     const simb::MCTruths& truth = truth_list->at(i_truth);
 
-            if(truth.fPartList.fpdgCode != )
+        //     if(truth.fPartList.fpdgCode != )
 
-        }
+        // }
 
 
 
