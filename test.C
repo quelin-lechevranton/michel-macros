@@ -39,8 +39,8 @@ int test(string file_name, int i_first_event, int i_last_event, int pdg) {
     //     400                             //Z_max
     // );
     
-    vector<string> xtitle = {"Z (cm)","Y (cm)","Z (cm)"};
-    vector<string> ytitle = {"X (cm)","X (cm)","Y (cm)"};
+    vector<char *> xtitle = {"Z (cm)","Y (cm)","Z (cm)"};
+    vector<char *> ytitle = {"X (cm)","X (cm)","Y (cm)"};
 
     vector<TGraph*> TG_depo(3);
     for(int i=0; i<TG_depo.size(); i++) {
