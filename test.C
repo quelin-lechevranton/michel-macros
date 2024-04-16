@@ -10,7 +10,8 @@ R__ADD_INCLUDE_PATH("nusimdata/v1_27_01/include/nusimdata/SimulationBase")
 
 int test(string file_name, int i_first_event, int i_last_event, int pdg);
 
-int main(string file_name) {
+int main() {
+    string file_name="/homeijclab/quelin-lechevranton/Documents/out/protodunevd_10_muon_g4_stage1.root";
     // string file_name="/eos/user/t/thoudy/pdvd/sims/out/protodunevd_10_muon_g4_stage1.root";
     //string file_name="/eos/user/t/thoudy/pdvd/sims/out/protodunevd_10_muon_reco.root";
     test(file_name,1,1,13);
@@ -81,6 +82,16 @@ int test(string file_name, int i_first_event, int i_last_event, int pdg) {
 
 
         }
+
+        // auto const point_list = ev.getValidHandle<vector<recob::SpacePoint>>(point_tag);
+
+        // for (size_t i_point=0; i_point<point_list->size(); i_point++) {
+
+        //     const recob::SpacePoint& point = point_list->at(i_point);
+
+
+
+
 
         // auto const truth_list = ev.getValidHandle<vector<simb::MCTruths>>(monte_tag);
         // auto const particle_list = ev.getValidHandle<vector<simb::MCParticles>>(monte_tag);
