@@ -26,19 +26,32 @@ int test(string file_name, int i_first_event, int i_last_event, int pdg) {
     
     vector<string> file_list = { file_name };
 
-    auto TH_depo = new TH3D("TH_depo",  //name
-        "SimEnergyDeposit",             //title
-        1000,                           //n_bin_X
-        -400,                           //X_min
-        400,                            //X_max
-        1000,                           //n_bin_Y
-        -400,                           //Y_min
-        400,                            //Y_max
-        1000,                           //n_bin_Z
-        -400,                           //Z_min
-        400                             //Z_max
-    );
+    // TH3D* TH_depo = new TH3D("TH_depo",  //name
+    //     "SimEnergyDeposit",             //title
+    //     1000,                           //n_bin_X
+    //     -400,                           //X_min
+    //     400,                            //X_max
+    //     1000,                           //n_bin_Y
+    //     -400,                           //Y_min
+    //     400,                            //Y_max
+    //     1000,                           //n_bin_Z
+    //     -400,                           //Z_min
+    //     400                             //Z_max
+    // );
+    
+    vector<string> xtitle = {"Z (cm)","Y (cm)","Z (cm)"};
+    vector<string> ytitle = {"X (cm)","X (cm)","Y (cm)"};
 
+    vector<TGraph*> TG_depo(3);
+    for(int i=0; i<TG_depo.size(); i++) {
+        TG_depo[i] = new TGraph();
+        TG_depo[i]->SetName("SimEnergyDeposit");
+        TG_depo[i]->SetMarkerColor(kPink);
+        TG_depo[i]->GetXaxis()->SetTitle(xtitle[i]);
+        TG_depo[i]->GetYaxis()->SetTitle(ytitle[i]);
+    }   
+    int i_depo_total = 0;
+    
 
     for (
     gallery::Event ev(file_list); !ev.atEnd(); ev.next()) {
@@ -64,10 +77,15 @@ int test(string file_name, int i_first_event, int i_last_event, int pdg) {
 
             // geo::Length_t len=depo.StepLength(); //equals 0.03 cm until the few last deposits
 
+            
             geo::Point_t depo_point = depo.MidPoint();
 
-            TH_depo->Fill(depo_point.X(),depo_point.Y(),depo_point.Z());
+            // TH_depo->Fill(depo_point.X(),depo_point.Y(),depo_point.Z());
 
+            TG_depo[0]->SetPoint(i_depo_total,depo_point.Z(),depo_point.X());
+            TG_depo[1]->SetPoint(i_depo_total,depo_point.Y(),depo_point.X());
+            TG_depo[2]->SetPoint(i_depo_total,depo_point.Z(),depo_point.Y());
+            i_depo_total++;
 
             // cout << "step length: " << len << " at event.depo: " << i_depo << i_event << endl; 
 
@@ -111,9 +129,15 @@ int test(string file_name, int i_first_event, int i_last_event, int pdg) {
     TCanvas* TC_depo = new TCanvas("TC_depo",   //name
         "SimEnergyDeposit"                      //title
     );
-    TC_depo->cd();
-    TH_depo->Draw();
-    TC_depo->Update();
+    // TC_depo->cd();
+    // TH_depo->Draw();
+
+    TC_depo->Divide(2,2);
+    for (int i=0; i<TG_depo.size(); i++) {
+        TC_depo->cd(i+1);
+        TG_depo[i]->Draw("AP");
+    }
+    // TC_depo->Update(); //Is this useful ??
 
     return 0;
 }
