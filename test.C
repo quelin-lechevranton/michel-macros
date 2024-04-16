@@ -7,9 +7,6 @@ R__ADD_INCLUDE_PATH("nusimdata/v1_27_01/include/nusimdata/SimulationBase")
 #include "nusimdata/SimulationBase/MCParticle.h"
 #include "tools.h"
 
-using geo::Length_t;
-using geo::Point_t;
-using geo::Vector_t;
 
 int test(string file_name, int i_first_event, int i_last_event, int pdg);
 
@@ -66,7 +63,7 @@ int test(string file_name, int i_first_event, int i_last_event, int pdg) {
 
             // geo::Length_t len=depo.StepLength(); //equals 0.03 cm until the few last deposits
 
-            Point_t depo_point = depo.MidPoint();
+            geo::Point_t depo_point = depo.MidPoint();
 
             TH_depo->Fill(depo_point.X(),depo_point.Y(),depo_point.Z());
 
