@@ -47,11 +47,13 @@ int test(string file_name, int i_first_event, int i_last_event) {
 
             if(depo.PdgCode() != pdg) {continue;}
 
-            auto Theta = depo.startPos.fCoordinates.Theta();
+            // auto Theta = depo.startPos.fCoordinates.Theta();
             //error: /afs/cern.ch/work/t/thoudy/DUNE/analyses/ProtoDUNE/michel/test.C:43:31: error: 'startPos' is a private member of 'sim::SimEnergyDeposit'
 
+            auto len = depo.Length_t;
 
-            cout << "Theta: " << Theta << "at event.depo: " << i_depo << i_event << endl; 
+
+            cout << "length: " << len << "at event.depo: " << i_depo << i_event << endl; 
 
 
         }
