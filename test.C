@@ -16,19 +16,31 @@ int test(string a, int b, int c);
 int main() {
     string file_name="/eos/user/t/thoudy/pdvd/sims/out/protodunevd_10_muon_g4_stage1.root";
     //string file_name="/eos/user/t/thoudy/pdvd/sims/out/protodunevd_10_muon_reco.root";
-    test(file_name,1,1);
+    test(file_name,1,1,13);
     return 0;
 }
 
-int test(string file_name, int i_first_event, int i_last_event) {
-
-    int pdg = 13;
+int test(string file_name, int i_first_event, int i_last_event. int pdg) {
 
     art::InputTag monte_tag("generator::SinglesGen");
     art::InputTag depo_tag("largeant:LArG4DetectorServicevolTPCActive");
     art::InputTag point_tag("pandora");
     
     vector<string> file_list = { file_name };
+
+    auto TH_depo = new TH3D("TH_depo",  //name
+        "SimEnergyDeposit",             //title
+        1000,                           //n_bin_X
+        -400,                           //X_min
+        400,                            //X_max
+        1000,                           //n_bin_Y
+        -400,                           //Y_min
+        400,                            //Y_max
+        1000,                           //n_bin_Z
+        -400,                           //Z_min
+        400,                            //Z_max
+    );
+
 
     for (
     gallery::Event ev(file_list); !ev.atEnd(); ev.next()) {
@@ -52,16 +64,23 @@ int test(string file_name, int i_first_event, int i_last_event) {
 
             if(depo.PdgCode() != pdg) {continue;}
 
-            geo::Length_t len=depo.StepLength();
+            // geo::Length_t len=depo.StepLength(); //equals 0.03 cm until the few last deposits
+
+            Point_t depo_point = depo.MidPoint();
+
+            TH_depo->Fill(depo_point.X(),depo_point.Y(),depo_point.Z());
+
+
+            cout << "step length: " << len << " at event.depo: " << i_depo << i_event << endl; 
+
+
+
 
             // auto Theta = depo.startPos.fCoordinates.Theta();
             //error: 'startPos' is a private member of 'sim::SimEnergyDeposit'
 
             // auto len = depo.Length_t;
             //error: cannot refer to type member 'Length_t' in 'const sim::SimEnergyDeposit' with '.'
-
-
-            cout << "step length: " << len << "at event.depo: " << i_depo << i_event << endl; 
 
 
         }
@@ -80,6 +99,13 @@ int test(string file_name, int i_first_event, int i_last_event) {
 
 
     }
+
+    TCanvas* TC_depo = new TCanvas("TC_depo",   //name
+        "SimEnergyDeposit"                      //title
+    );
+    TC_depo->cd();
+    TH_depo->Draw();
+    TC_depo->Update();
 
     return 0;
 }
