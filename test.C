@@ -46,9 +46,19 @@ int test(string file_name, int i_first_event, int i_last_event, int pdg) {
     for(int i=0; i<TG_depo.size(); i++) {
         TG_depo[i] = new TGraph();
         TG_depo[i]->SetName("SimEnergyDeposit");
-        TG_depo[i]->SetMarkerColor(kPink);
+        TG_depo[i]->SetMarkerColorAlpha(kPink,.7);
         TG_depo[i]->GetXaxis()->SetTitle(xtitle[i].c_str());
         TG_depo[i]->GetYaxis()->SetTitle(ytitle[i].c_str());
+    }   
+    int i_depo_total = 0;
+
+    vector<TGraph*> TG_point(3);
+    for(int i=0; i<TG_point.size(); i++) {
+        TG_point[i] = new TGraph();
+        TG_point[i]->SetName("SpacePoint");
+        TG_point[i]->SetMarkerColorAlpha(kBlue,.7);
+        TG_point[i]->GetXaxis()->SetTitle(xtitle[i].c_str());
+        TG_point[i]->GetYaxis()->SetTitle(ytitle[i].c_str());
     }   
     int i_depo_total = 0;
     
@@ -101,13 +111,18 @@ int test(string file_name, int i_first_event, int i_last_event, int pdg) {
 
         }
 
-        // auto const point_list = ev.getValidHandle<vector<recob::SpacePoint>>(point_tag);
+        auto const point_list = ev.getValidHandle<vector<recob::SpacePoint>>(point_tag);
 
-        // for (size_t i_point=0; i_point<point_list->size(); i_point++) {
+        for (size_t i_point=0; i_point<point_list->size(); i_point++) {
 
-        //     const recob::SpacePoint& point = point_list->at(i_point);
+            const recob::SpacePoint& point = point_list->at(i_point);
 
+            geo::Point_t point_point = point.position();
 
+            TG_point[0]->SetPoint(i_point_total,point_point.Z(),point_point.X());
+            TG_point[1]->SetPoint(i_point_total,point_point.Y(),point_point.X());
+            TG_point[2]->SetPoint(i_point_total,point_point.Z(),point_point.Y());
+            i_point_total++;
 
 
 
@@ -126,18 +141,19 @@ int test(string file_name, int i_first_event, int i_last_event, int pdg) {
 
     }
 
-    TCanvas* TC_depo = new TCanvas("TC_depo",   //name
+    TCanvas* canvas = new TCanvas("canvas",   //name
         "SimEnergyDeposit"                      //title
     );
-    // TC_depo->cd();
+    // canvas->cd();
     // TH_depo->Draw();
 
-    TC_depo->Divide(2,2);
+    canvas->Divide(2,2);
     for (int i=0; i<TG_depo.size(); i++) {
-        TC_depo->cd(i+1);
+        canvas->cd(i+1);
         TG_depo[i]->Draw("AP");
+        TG_point[i]->Draw("P");
     }
-    // TC_depo->Update(); //Is this useful ??
+    // canvas->Update(); //Is this useful ??
 
     return 0;
 }
