@@ -7,11 +7,16 @@ R__ADD_INCLUDE_PATH("nusimdata/v1_27_01/include/nusimdata/SimulationBase")
 #include "nusimdata/SimulationBase/MCParticle.h"
 #include "tools.h"
 
+using geo::Length_t
+using geo::Point_t
+using geo::Vector_t
+
 int test(string a, int b, int c);
 
 int main() {
-    string file_name="/eos/user/t/thoudy/pdvd/sims/out/protodunevd_10_muon_reco.root";
-    test(file_name,1,10);
+    string file_name="/eos/user/t/thoudy/pdvd/sims/out/protodunevd_10_muon_g4_stage1.root";
+    //string file_name="/eos/user/t/thoudy/pdvd/sims/out/protodunevd_10_muon_reco.root";
+    test(file_name,1,1);
     return 0;
 }
 
@@ -47,13 +52,16 @@ int test(string file_name, int i_first_event, int i_last_event) {
 
             if(depo.PdgCode() != pdg) {continue;}
 
+            geo::Length_t len=depo.StepLength();
+
             // auto Theta = depo.startPos.fCoordinates.Theta();
-            //error: /afs/cern.ch/work/t/thoudy/DUNE/analyses/ProtoDUNE/michel/test.C:43:31: error: 'startPos' is a private member of 'sim::SimEnergyDeposit'
+            //error: 'startPos' is a private member of 'sim::SimEnergyDeposit'
 
-            auto len = depo.Length_t;
+            // auto len = depo.Length_t;
+            //error: cannot refer to type member 'Length_t' in 'const sim::SimEnergyDeposit' with '.'
 
 
-            cout << "length: " << len << "at event.depo: " << i_depo << i_event << endl; 
+            cout << "step length: " << len << "at event.depo: " << i_depo << i_event << endl; 
 
 
         }
