@@ -7,9 +7,9 @@ R__ADD_INCLUDE_PATH("nusimdata/v1_27_01/include/nusimdata/SimulationBase")
 #include "nusimdata/SimulationBase/MCParticle.h"
 #include "tools.h"
 
-using geo::Length_t
-using geo::Point_t
-using geo::Vector_t
+using geo::Length_t;
+using geo::Point_t;
+using geo::Vector_t;
 
 int test(string a, int b, int c);
 
