@@ -11,9 +11,9 @@ R__ADD_INCLUDE_PATH("nusimdata/v1_27_01/include/nusimdata/SimulationBase")
 int test(string file_name, int i_first_event, int i_last_event, int pdg);
 
 int main() {
-    string file_name="/homeijclab/quelin-lechevranton/Documents/out/protodunevd_10_muon_g4_stage1.root";
+    // string file_name="/homeijclab/quelin-lechevranton/Documents/out/protodunevd_10_muon_g4_stage1.root";
     // string file_name="/eos/user/t/thoudy/pdvd/sims/out/protodunevd_10_muon_g4_stage1.root";
-    //string file_name="/eos/user/t/thoudy/pdvd/sims/out/protodunevd_10_muon_reco.root";
+    string file_name="/eos/user/t/thoudy/pdvd/sims/out/protodunevd_10_muon_reco.root";
     test(file_name,1,1,13);
     return 0;
 }
@@ -39,16 +39,16 @@ int test(string file_name, int i_first_event, int i_last_event, int pdg) {
     //     400                             //Z_max
     // );
     
-    vector<char *> xtitle = {"Z (cm)","Y (cm)","Z (cm)"};
-    vector<char *> ytitle = {"X (cm)","X (cm)","Y (cm)"};
+    vector<string> xtitle = {"Z (cm)","Y (cm)","Z (cm)"};
+    vector<string> ytitle = {"X (cm)","X (cm)","Y (cm)"};
 
     vector<TGraph*> TG_depo(3);
     for(int i=0; i<TG_depo.size(); i++) {
         TG_depo[i] = new TGraph();
         TG_depo[i]->SetName("SimEnergyDeposit");
         TG_depo[i]->SetMarkerColor(kPink);
-        TG_depo[i]->GetXaxis()->SetTitle(xtitle[i]);
-        TG_depo[i]->GetYaxis()->SetTitle(ytitle[i]);
+        TG_depo[i]->GetXaxis()->SetTitle(xtitle[i].c_str());
+        TG_depo[i]->GetYaxis()->SetTitle(ytitle[i].c_str());
     }   
     int i_depo_total = 0;
     
