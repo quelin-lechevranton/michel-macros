@@ -75,15 +75,15 @@ int plot(vector<string> file_list, int i_first_event, int i_last_event, int pdg=
     }   
     int i_track_total = 0;
 
-    // vector<TGraph*> TG_track_valid(n_graph);
-    // for(int i=0; i<TG_track_valid.size(); i++) {
-    //     TG_track_valid[i] = new TGraph();
-    //     TG_track_valid[i]->SetName("TrackValid");
-    //     TG_track_valid[i]->SetMarkerColorAlpha(kSpring,.7);
-    //     // TG_track_valid[i]->GetXaxis()->SetTitle(axis_title[Xaxis[i]].c_str());
-    //     // TG_track_valid[i]->GetYaxis()->SetTitle(axis_title[Yaxis[i]].c_str());
-    // }   
-    // int i_track_valid_total = 0;
+    vector<TGraph*> TG_valid(n_graph);
+    for(int i=0; i<TG_valid.size(); i++) {
+        TG_valid[i] = new TGraph();
+        TG_valid[i]->SetName("TrackValid");
+        TG_valid[i]->SetMarkerColorAlpha(kSpring,.7);
+        // TG_track_valid[i]->GetXaxis()->SetTitle(axis_title[Xaxis[i]].c_str());
+        // TG_track_valid[i]->GetYaxis()->SetTitle(axis_title[Yaxis[i]].c_str());
+    }   
+    int i_valid_total = 0;
     
 
     for (
@@ -119,7 +119,11 @@ int plot(vector<string> file_list, int i_first_event, int i_last_event, int pdg=
             double XYZ[3];
             depo.MidPoint().GetCoordinates(XYZ);
             for (int i=0; i<n_graph; i++) {
-                TG_depo[i]->SetPoint(i_depo_total,XYZ[Xaxis[i]],XYZ[Yaxis[i]]);
+                TG_depo[i]->SetPoint(
+                    i_depo_total,
+                    XYZ[Xaxis[i]],
+                    XYZ[Yaxis[i]]
+                );
             }
             i_depo_total++;
         }
@@ -134,11 +138,14 @@ int plot(vector<string> file_list, int i_first_event, int i_last_event, int pdg=
 
             // geo::Point_t point_point = point.position();
 
-
             double XYZ[3];
             point.position().GetCoordinates(XYZ);
             for (int i=0; i<n_graph; i++) {
-                TG_depo[i]->SetPoint(i_point_total,XYZ[Xaxis[i]],XYZ[Yaxis[i]]);
+                TG_depo[i]->SetPoint(
+                    i_point_total,
+                    XYZ[Xaxis[i]],
+                    XYZ[Yaxis[i]]
+                );
             }
             i_point_total++;
         }
@@ -151,9 +158,11 @@ int plot(vector<string> file_list, int i_first_event, int i_last_event, int pdg=
 
             const recob::Track& track = track_list->at(i_track);
 
-            for (size_t i_track_point = track.FirstPoint();
-            i_track_point < track.LastPoint();
-            i_track_point++ ) {
+            for (
+                size_t i_track_point = track.FirstPoint();
+                i_track_point < track.LastPoint();
+                i_track_point++ 
+            ) {
 
                 // geo::Point_t track_point = track.LocationAtPoint(i_track_point);
 
@@ -161,9 +170,33 @@ int plot(vector<string> file_list, int i_first_event, int i_last_event, int pdg=
                 track.LocationAtPoint(i_track_point).GetCoordinates(XYZ);
 
                 for (int i=0; i<n_graph; i++) {
-                    TG_track[i]->SetPoint(i_track_total,XYZ[Xaxis[i]],XYZ[Yaxis[i]]);
+                    TG_track[i]->SetPoint(
+                        i_track_total,
+                        XYZ[Xaxis[i]],
+                        XYZ[Yaxis[i]]
+                    );
                 }
                 i_track_total++;
+            }
+
+            for (
+                size_t i_track_valid = track.FirstValidPoint();
+                i_track_valid < track.LastValidPoint();
+                i_track_valid=track.NextValidPoint(i_track_valid)
+            ) {
+
+                double XYZ[3];
+                track.LocationAtPoint(i_track_valid).GetCoordinates(XYZ);
+
+                for (int i=0; i<n_graph; i++) {
+                    TG_valid[i]->SetPoint(
+                        i_valid_total,
+                        XYZ[Xaxis[i]],
+                        XYZ[Yaxis[i]]
+                    );
+                }
+                i_valid_total++;
+
             }
 
         }
@@ -195,7 +228,7 @@ int plot(vector<string> file_list, int i_first_event, int i_last_event, int pdg=
         TG_depo[i]->Draw("AP");
         TG_point[i]->Draw("P");
         TG_track[i]->Draw("P");
-        // TG_track_valid[i]->Draw("P");
+        TG_valid[i]->Draw("P");
     }
     // canvas->Update(); //Is this useful ??
 
