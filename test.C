@@ -11,13 +11,14 @@ R__ADD_INCLUDE_PATH("nusimdata/v1_27_01/include/nusimdata/SimulationBase")
 art::InputTag monte_tag("generator::SinglesGen");
 art::InputTag depo_tag("largeant:LArG4DetectorServicevolTPCActive");
 art::InputTag point_tag("pandora");
+art::InputTag track_tag("pandoraTrack");
 
 
 int test(vector<string> file_list, int i_first_event, int i_last_event, int pdg);
 
 int main() {
     vector<string> files = ReadFileList(4,"file.list");
-    vector<string> file_list = { files[2] };
+    vector<string> file_list = { files[1] };
     test(file_list,1,1,13);
     return 0;
 }
@@ -41,8 +42,9 @@ int test(vector<string> file_list, int i_first_event, int i_last_event, int pdg)
     vector<int> Xaxis = {2,1,2};
     vector<int> Yaxis = {0,0,1};
     vector<string> axis_title = {"X (cm)","Y (cm)","Z (cm)"};
+    const int n_graph=Xaxis.size();
 
-    vector<TGraph*> TG_depo(3);
+    vector<TGraph*> TG_depo(n_graph);
     for(int i=0; i<TG_depo.size(); i++) {
         TG_depo[i] = new TGraph();
         TG_depo[i]->SetName("SimEnergyDeposit");
@@ -52,15 +54,35 @@ int test(vector<string> file_list, int i_first_event, int i_last_event, int pdg)
     }   
     int i_depo_total = 0;
 
-    vector<TGraph*> TG_point(3);
+    vector<TGraph*> TG_point(n_graph);
     for(int i=0; i<TG_point.size(); i++) {
         TG_point[i] = new TGraph();
         TG_point[i]->SetName("SpacePoint");
         TG_point[i]->SetMarkerColorAlpha(kBlue,.7);
-        TG_point[i]->GetXaxis()->SetTitle(axis_title[Xaxis[i]].c_str());
-        TG_point[i]->GetYaxis()->SetTitle(axis_title[Yaxis[i]].c_str());
+        // TG_point[i]->GetXaxis()->SetTitle(axis_title[Xaxis[i]].c_str());
+        // TG_point[i]->GetYaxis()->SetTitle(axis_title[Yaxis[i]].c_str());
     }   
     int i_point_total = 0;
+
+    vector<TGraph*> TG_track(n_graph);
+    for(int i=0; i<TG_track.size(); i++) {
+        TG_track[i] = new TGraph();
+        TG_track[i]->SetName("Track");
+        TG_track[i]->SetMarkerColorAlpha(kOrange,.7);
+        // TG_track[i]->GetXaxis()->SetTitle(axis_title[Xaxis[i]].c_str());
+        // TG_track[i]->GetYaxis()->SetTitle(axis_title[Yaxis[i]].c_str());
+    }   
+    int i_track_total = 0;
+
+    // vector<TGraph*> TG_track_valid(n_graph);
+    // for(int i=0; i<TG_track_valid.size(); i++) {
+    //     TG_track_valid[i] = new TGraph();
+    //     TG_track_valid[i]->SetName("TrackValid");
+    //     TG_track_valid[i]->SetMarkerColorAlpha(kSpring,.7);
+    //     // TG_track_valid[i]->GetXaxis()->SetTitle(axis_title[Xaxis[i]].c_str());
+    //     // TG_track_valid[i]->GetYaxis()->SetTitle(axis_title[Yaxis[i]].c_str());
+    // }   
+    // int i_track_valid_total = 0;
     
 
     for (
@@ -87,12 +109,15 @@ int test(vector<string> file_list, int i_first_event, int i_last_event, int pdg)
 
             // geo::Length_t len=depo.StepLength(); //equals 0.03 cm until the few last deposits
             
-            geo::Point_t depo_point = depo.MidPoint();
+            // geo::Point_t depo_point = depo.MidPoint();
+            // double XYZ[3];
+            // depo_point.GetCoordinates(XYZ);
 
             // TH_depo->Fill(depo_point.X(),depo_point.Y(),depo_point.Z());
 
-            vector<double&> XYZ(3) = { depo_point.X(), depo_point.Y(), depo_point.Z() };
-            for (int i=0; i<3; i++) {
+            double XYZ[3];
+            depo.MidPoint().GetCoordinates(XYZ);
+            for (int i=0; i<n_graph; i++) {
                 TG_depo[i]->SetPoint(i_depo_total,XYZ[Xaxis[i]],XYZ[Yaxis[i]]);
             }
             i_depo_total++;
@@ -106,10 +131,12 @@ int test(vector<string> file_list, int i_first_event, int i_last_event, int pdg)
 
             const recob::SpacePoint& point = point_list->at(i_point);
 
-            geo::Point_t point_point = point.position();
+            // geo::Point_t point_point = point.position();
 
-            vector<double&> XYZ(3) = { point_point.X(), point_point.Y(), point_point.Z() };
-            for (int i=0; i<3; i++) {
+
+            double XYZ[3];
+            point.position().GetCoordinates(XYZ);
+            for (int i=0; i<n_graph; i++) {
                 TG_depo[i]->SetPoint(i_point_total,XYZ[Xaxis[i]],XYZ[Yaxis[i]]);
             }
             i_point_total++;
@@ -117,7 +144,28 @@ int test(vector<string> file_list, int i_first_event, int i_last_event, int pdg)
         /*END SPACE POINTS***************/
 
         /*TRACKS************************/
-        auto const track_list = ev.getValidHandle
+        auto const track_list = ev.getValidHandle<vector<recob::Track>>(track_tag);
+
+        for (size_t i_track=0; i_track<track_list->size(); i_track++ ) {
+
+            const recob::Track& track = track_list->at(i_track);
+
+            for (size_t i_track_point = track.FirstPoint();
+            i_track_point < track.LastPoint();
+            i_track_point++ ) {
+
+                // geo::Point_t track_point = track.LocationAtPoint(i_track_point);
+
+                double XYZ[3];
+                track.LocationAtPoint(i_track_point).GetCoordinates(XYZ);
+
+                for (int i=0; i<n_graph; i++) {
+                    TG_track[i]->SetPoint(i_track_total,XYZ[Xaxis[i]],XYZ[Yaxis[i]]);
+                }
+                i_track_total++;
+            }
+
+        }
 
         // auto const truth_list = ev.getValidHandle<vector<simb::MCTruths>>(monte_tag);
         // auto const particle_list = ev.getValidHandle<vector<simb::MCParticles>>(monte_tag);
@@ -135,16 +183,18 @@ int test(vector<string> file_list, int i_first_event, int i_last_event, int pdg)
     }
 
     TCanvas* canvas = new TCanvas("canvas",   //name
-        "SimEnergyDeposit"                      //title
+        "Bonjour"                      //title
     );
     // canvas->cd();
     // TH_depo->Draw();
 
     canvas->Divide(2,2);
-    for (int i=0; i<TG_depo.size(); i++) {
+    for (int i=0; i<3; i++) {
         canvas->cd(i+1);
         TG_depo[i]->Draw("AP");
         TG_point[i]->Draw("P");
+        TG_track[i]->Draw("P");
+        // TG_track_valid[i]->Draw("P");
     }
     // canvas->Update(); //Is this useful ??
 
