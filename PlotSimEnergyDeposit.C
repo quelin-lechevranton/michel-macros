@@ -24,8 +24,9 @@ void PlotSimEnergyDeposit(int nfiles=0, int neventmax=10, int pdgcode=11, string
   debug = Debug;
   SetDebug(debug);
 
-  string filelist = "./list/"+prod+".list";
-  vector<string> filenames = ReadFileList(nfiles,filelist);
+  // string filelist = "./list/"+prod+".list";
+  // vector<string> filenames = ReadFileList(nfiles,filelist);
+  vector<string> filenames = {"/eos/user/t/thoudy/pdvd/sims/out/protodunevd_10_muon_reco.root"}
 
   art::InputTag sim_tag(simtag);
 
