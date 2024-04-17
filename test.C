@@ -69,7 +69,7 @@ int plot(vector<string> file_list, int i_first_event, int i_last_event, int pdg=
     for(int i=0; i<TG_track.size(); i++) {
         TG_track[i] = new TGraph();
         TG_track[i]->SetName("Track");
-        TG_track[i]->SetMarkerColorAlpha(kGreen,.7);
+        TG_track[i]->SetMarkerColorAlpha(kOrange,.7);
         // TG_track[i]->GetXaxis()->SetTitle(axis_title[Xaxis[i]].c_str());
         // TG_track[i]->GetYaxis()->SetTitle(axis_title[Yaxis[i]].c_str());
     }   
