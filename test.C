@@ -19,7 +19,7 @@ int test(vector<string> file_list, int i_first_event, int i_last_event, int pdg)
 int main() {
     vector<string> files = ReadFileList(4,"file.list");
     vector<string> file_list = { files[1] };
-    test(file_list,1,1,13);
+    test(file_list,1,10,13);
     return 0;
 }
 
