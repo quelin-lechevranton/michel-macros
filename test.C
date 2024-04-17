@@ -140,9 +140,8 @@ int plot(vector<string> file_list, int i_first_event, int i_last_event, int pdg=
 
             double XYZ[3];
             point.position().GetCoordinates(XYZ);
-            cout << XYZ[0] << " " << XYZ[1] << " " << XYZ[2] << endl;
             for (int i=0; i<n_graph; i++) {
-                TG_depo[i]->SetPoint(
+                TG_point[i]->SetPoint(
                     i_point_total,
                     XYZ[Xaxis[i]],
                     XYZ[Yaxis[i]]
