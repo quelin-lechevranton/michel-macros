@@ -179,25 +179,25 @@ int plot(vector<string> file_list, int i_first_event, int i_last_event, int pdg=
                 i_track_total++;
             }
 
-            for (
-                size_t i_track_valid = track.FirstValidPoint();
-                i_track_valid < track.LastValidPoint();
-                i_track_valid=track.NextValidPoint(i_track_valid)
-            ) {
+            // for (
+            //     size_t i_track_valid = track.FirstValidPoint();
+            //     i_track_valid < track.LastValidPoint();
+            //     i_track_valid=track.NextValidPoint(i_track_valid)
+            // ) {
 
-                double XYZ[3];
-                track.LocationAtPoint(i_track_valid).GetCoordinates(XYZ);
+            //     double XYZ[3];
+            //     track.LocationAtPoint(i_track_valid).GetCoordinates(XYZ);
 
-                for (int i=0; i<n_graph; i++) {
-                    TG_valid[i]->SetPoint(
-                        i_valid_total,
-                        XYZ[Xaxis[i]],
-                        XYZ[Yaxis[i]]
-                    );
-                }
-                i_valid_total++;
+            //     for (int i=0; i<n_graph; i++) {
+            //         TG_valid[i]->SetPoint(
+            //             i_valid_total,
+            //             XYZ[Xaxis[i]],
+            //             XYZ[Yaxis[i]]
+            //         );
+            //     }
+            //     i_valid_total++;
 
-            }
+            // }
 
         }
 
