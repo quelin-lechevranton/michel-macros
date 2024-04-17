@@ -8,24 +8,22 @@ R__ADD_INCLUDE_PATH("nusimdata/v1_27_01/include/nusimdata/SimulationBase")
 #include "tools.h"
 
 
+art::InputTag monte_tag("generator::SinglesGen");
+art::InputTag depo_tag("largeant:LArG4DetectorServicevolTPCActive");
+art::InputTag point_tag("pandora");
 
-int test(string file_name, int i_first_event, int i_last_event, int pdg);
+
+int test(vector<string> file_list, int i_first_event, int i_last_event, int pdg);
 
 int main() {
-    // string file_name="/homeijclab/quelin-lechevranton/Documents/out/protodunevd_10_muon_g4_stage1.root";
-    // string file_name="/eos/user/t/thoudy/pdvd/sims/out/protodunevd_10_muon_g4_stage1.root";
-    string file_name="/eos/user/t/thoudy/pdvd/sims/out/protodunevd_10_muon_reco.root";
-    test(file_name,1,1,13);
+    vector<string> files = ReadFileList(4,"file.list");
+    vector<string> file_list = { files[2] };
+    test(file_list,1,1,13);
     return 0;
 }
 
-int test(string file_name, int i_first_event, int i_last_event, int pdg) {
+int test(vector<string> file_list, int i_first_event, int i_last_event, int pdg) {
 
-    art::InputTag monte_tag("generator::SinglesGen");
-    art::InputTag depo_tag("largeant:LArG4DetectorServicevolTPCActive");
-    art::InputTag point_tag("pandora");
-    
-    vector<string> file_list = { file_name };
 
     // TH3D* TH_depo = new TH3D("TH_depo",  //name
     //     "SimEnergyDeposit",             //title
@@ -40,16 +38,17 @@ int test(string file_name, int i_first_event, int i_last_event, int pdg) {
     //     400                             //Z_max
     // );
     
-    vector<string> xtitle = {"Z (cm)","Y (cm)","Z (cm)"};
-    vector<string> ytitle = {"X (cm)","X (cm)","Y (cm)"};
+    vector<int> Xaxis = {2,1,2};
+    vector<int> Yaxis = {0,0,1};
+    vector<string> axis_title = {"X (cm)","Y (cm)","Z (cm)"};
 
     vector<TGraph*> TG_depo(3);
     for(int i=0; i<TG_depo.size(); i++) {
         TG_depo[i] = new TGraph();
         TG_depo[i]->SetName("SimEnergyDeposit");
         TG_depo[i]->SetMarkerColorAlpha(kPink,.7);
-        TG_depo[i]->GetXaxis()->SetTitle(xtitle[i].c_str());
-        TG_depo[i]->GetYaxis()->SetTitle(ytitle[i].c_str());
+        TG_depo[i]->GetXaxis()->SetTitle(axis_title[Xaxis[i]].c_str());
+        TG_depo[i]->GetYaxis()->SetTitle(axis_title[Yaxis[i]].c_str());
     }   
     int i_depo_total = 0;
 
@@ -58,8 +57,8 @@ int test(string file_name, int i_first_event, int i_last_event, int pdg) {
         TG_point[i] = new TGraph();
         TG_point[i]->SetName("SpacePoint");
         TG_point[i]->SetMarkerColorAlpha(kBlue,.7);
-        TG_point[i]->GetXaxis()->SetTitle(xtitle[i].c_str());
-        TG_point[i]->GetYaxis()->SetTitle(ytitle[i].c_str());
+        TG_point[i]->GetXaxis()->SetTitle(axis_title[Xaxis[i]].c_str());
+        TG_point[i]->GetYaxis()->SetTitle(axis_title[Yaxis[i]].c_str());
     }   
     int i_point_total = 0;
     
@@ -77,41 +76,30 @@ int test(string file_name, int i_first_event, int i_last_event, int pdg) {
     
         // cout << point_list << endl;
 
-        
+        /*SIM ENERGY DEPOSIT*******************/ 
         auto const depo_list = ev.getValidHandle<vector<sim::SimEnergyDeposit>>(depo_tag);
 
         for (size_t i_depo=0; i_depo<depo_list->size(); i_depo++) {
 
             const sim::SimEnergyDeposit& depo = depo_list->at(i_depo);
 
-            if(depo.PdgCode() != pdg) {continue;}
+            if(depo.PdgCode() != pdg) {continue;} //keep only muons
 
             // geo::Length_t len=depo.StepLength(); //equals 0.03 cm until the few last deposits
-
             
             geo::Point_t depo_point = depo.MidPoint();
 
             // TH_depo->Fill(depo_point.X(),depo_point.Y(),depo_point.Z());
 
-            TG_depo[0]->SetPoint(i_depo_total,depo_point.Z(),depo_point.X());
-            TG_depo[1]->SetPoint(i_depo_total,depo_point.Y(),depo_point.X());
-            TG_depo[2]->SetPoint(i_depo_total,depo_point.Z(),depo_point.Y());
+            vector<double&> XYZ(3) = { depo_point.X(), depo_point.Y(), depo_point.Z() };
+            for (int i=0; i<3; i++) {
+                TG_depo[i]->SetPoint(i_depo_total,XYZ[Xaxis[i]],XYZ[Yaxis[i]]);
+            }
             i_depo_total++;
-
-            // cout << "step length: " << len << " at event.depo: " << i_depo << i_event << endl; 
-
-
-
-
-            // auto Theta = depo.startPos.fCoordinates.Theta();
-            //error: 'startPos' is a private member of 'sim::SimEnergyDeposit'
-
-            // auto len = depo.Length_t;
-            //error: cannot refer to type member 'Length_t' in 'const sim::SimEnergyDeposit' with '.'
-
-
         }
+        /*END SIM ENERGY DEPOSIT************/
 
+        /*SPACE POINTS*********************/
         auto const point_list = ev.getValidHandle<vector<recob::SpacePoint>>(point_tag);
 
         for (size_t i_point=0; i_point<point_list->size(); i_point++) {
@@ -120,13 +108,16 @@ int test(string file_name, int i_first_event, int i_last_event, int pdg) {
 
             geo::Point_t point_point = point.position();
 
-            TG_point[0]->SetPoint(i_point_total,point_point.Z(),point_point.X());
-            TG_point[1]->SetPoint(i_point_total,point_point.Y(),point_point.X());
-            TG_point[2]->SetPoint(i_point_total,point_point.Z(),point_point.Y());
+            vector<double&> XYZ(3) = { point_point.X(), point_point.Y(), point_point.Z() };
+            for (int i=0; i<3; i++) {
+                TG_depo[i]->SetPoint(i_point_total,XYZ[Xaxis[i]],XYZ[Yaxis[i]]);
+            }
             i_point_total++;
-
         }
+        /*END SPACE POINTS***************/
 
+        /*TRACKS************************/
+        auto const track_list = ev.getValidHandle
 
         // auto const truth_list = ev.getValidHandle<vector<simb::MCTruths>>(monte_tag);
         // auto const particle_list = ev.getValidHandle<vector<simb::MCParticles>>(monte_tag);
