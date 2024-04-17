@@ -75,15 +75,15 @@ int plot(vector<string> file_list, int i_first_event, int i_last_event, int pdg=
     }   
     int i_track_total = 0;
 
-    vector<TGraph*> TG_valid(n_graph);
-    for(int i=0; i<TG_valid.size(); i++) {
-        TG_valid[i] = new TGraph();
-        TG_valid[i]->SetName("TrackValid");
-        TG_valid[i]->SetMarkerColorAlpha(kSpring,.7);
-        // TG_track_valid[i]->GetXaxis()->SetTitle(axis_title[Xaxis[i]].c_str());
-        // TG_track_valid[i]->GetYaxis()->SetTitle(axis_title[Yaxis[i]].c_str());
-    }   
-    int i_valid_total = 0;
+    // vector<TGraph*> TG_valid(n_graph);
+    // for(int i=0; i<TG_valid.size(); i++) {
+    //     TG_valid[i] = new TGraph();
+    //     TG_valid[i]->SetName("TrackValid");
+    //     TG_valid[i]->SetMarkerColorAlpha(kSpring,.7);
+    //     // TG_track_valid[i]->GetXaxis()->SetTitle(axis_title[Xaxis[i]].c_str());
+    //     // TG_track_valid[i]->GetYaxis()->SetTitle(axis_title[Yaxis[i]].c_str());
+    // }   
+    // int i_valid_total = 0;
     
 
     for (
@@ -228,7 +228,7 @@ int plot(vector<string> file_list, int i_first_event, int i_last_event, int pdg=
         TG_depo[i]->Draw("AP");
         TG_point[i]->Draw("P");
         TG_track[i]->Draw("P");
-        TG_valid[i]->Draw("P");
+        // TG_valid[i]->Draw("P");
     }
     // canvas->Update(); //Is this useful ??
 
