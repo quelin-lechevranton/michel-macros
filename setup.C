@@ -20,7 +20,7 @@ auto const depo_list = ev.getValidHandle<vector<sim::SimEnergyDeposit>>(depo_tag
 auto const point_list = ev.getValidHandle<vector<recob::SpacePoint>>(point_tag);
 auto const track_list = ev.getValidHandle<vector<recob::Track>>(track_tag);
 
-const simb::MCTruth& monte = monte_list->at(0);
-const sim::SimEnergyDeposit& depo = depo_list->at(0);
-const recob::SpacePoint& point = point_list->at(0);
-const recob::Track& track = track_list->at(0);
+// const simb::MCTruth& monte = monte_list->at(0);
+// const sim::SimEnergyDeposit& depo = depo_list->at(0);
+// const recob::SpacePoint& point = point_list->at(0);
+// const recob::Track& track = track_list->at(0);
