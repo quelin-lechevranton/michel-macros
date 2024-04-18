@@ -14,17 +14,20 @@ art::InputTag point_tag("pandora");
 art::InputTag track_tag("pandoraTrack");
 
 
-int plot(vector<string> file_list, int i_first_event, int i_last_event, int pdg);
 
-int test(int i_file=0, int i_first_event=0, int i_last_event=10, int pdg=13) {
+
+
+int test(vector<string> file_list, int i_first_event, int i_last_event, int pdg);
+
+int plot(int i_file=0, int i_first_event=0, int i_last_event=10, int pdg=13) {
     vector<string> files = ReadFileList(4,"file.list");
     vector<string> file_list = { files[i_file] };
-    plot(file_list,i_first_event,i_last_event,pdg);
+    plotting(file_list,i_first_event,i_last_event,pdg);
     return 0;
 }
 
 
-int plot(vector<string> file_list, int i_first_event, int i_last_event, int pdg=13) {
+int test(vector<string> file_list, int i_first_event, int i_last_event, int pdg=13) {
 
 
     // TH3D* TH_depo = new TH3D("TH_depo",  //name
