@@ -19,7 +19,7 @@ art::InputTag calo_tag("????????????");
 
 int test(vector<string> file_list, int i_first_event, int i_last_event, int pdg);
 
-int plot(int i_file=0, int i_first_event=0, int i_last_event=10, int pdg=13) {
+int plot(int i_file=0, int i_first_event=1, int i_last_event=10, int pdg=13) {
     vector<string> files = ReadFileList(4,"file.list");
     vector<string> file_list = { files[i_file] };
     test(file_list,i_first_event,i_last_event,pdg);
@@ -219,8 +219,11 @@ int test(vector<string> file_list, int i_first_event, int i_last_event, int pdg=
 
     }
 
-    TCanvas* canvas = new TCanvas("canvas",   //name
-        "Bonjour"                      //title
+    stringstream title;
+    title << "Events #" << i_first_event << "-" << i_last_event;
+    TCanvas* canvas = new TCanvas(
+        "canvas",       //name
+        title.str()     //title
     );
     // canvas->cd();
     // TH_depo->Draw();
