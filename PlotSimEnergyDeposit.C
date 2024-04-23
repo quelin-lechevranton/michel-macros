@@ -19,12 +19,12 @@ R__ADD_INCLUDE_PATH("gallery/Event.h")
 
 bool debug = false;
 
-void PlotSimEnergyDeposit(int nfiles=0, int neventmax=10, int pdgcode=11, string simtag = "largeant:LArG4DetectorServicevolTPCActive", string prod="test", bool Debug = false){
+void PlotSimEnergyDeposit(int nfiles=0, int neventmax=10, int pdgcode=11, string simtag = "largeant:LArG4DetectorServicevolTPCActive", string prod="file", bool Debug = false){
   for (int nevent=1;nevent<=neventmax;nevent++){
   debug = Debug;
   SetDebug(debug);
 
-  // string filelist = "./list/"+prod+".list";
+  // string filelist = "./"+prod+".list";
   // vector<string> filenames = ReadFileList(nfiles,filelist);
   vector<string> filenames = {"/eos/user/t/thoudy/pdvd/sims/out/protodunevd_10_muon_500MeV_reco.root"};
 

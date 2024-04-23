@@ -485,8 +485,8 @@ int main()
   //MuonAnred_g4_stage2_muon.rootorServicevolTPCActive", "generator::SinglesGen","test", true);
 
 
-  vector<pair<vector<double>, int>> muon_Info = MuonAnalysis(1, 1, 8, "largeant:LArG4DetectorServicevolTPCActive", "generator::SinglesGen","list", 1);
-  ElectronAnalysis(1, 1, 8, "largeant:LArG4DetectorServicevolTPCActive", "generator::SinglesGen","","list",muon_Info, true);
+  vector<pair<vector<double>, int>> muon_Info = MuonAnalysis(1, 1, 8, "largeant:LArG4DetectorServicevolTPCActive", "generator::SinglesGen","file", 1);
+  ElectronAnalysis(1, 1, 8, "largeant:LArG4DetectorServicevolTPCActive", "generator::SinglesGen","","file",muon_Info, true);
 
 
   //ElectronAnalysis(nfiles, event_i, event_f, simtag1, simtag2, simtag3, listname, muon_Info, muon);
