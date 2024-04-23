@@ -223,7 +223,7 @@ int test(vector<string> file_list, int i_first_event, int i_last_event, int pdg=
     title << "Events #" << i_first_event << "-" << i_last_event;
     TCanvas* canvas = new TCanvas(
         "canvas",       //name
-        title.str()     //title
+        title.str().c_str()     //title
     );
     // canvas->cd();
     // TH_depo->Draw();
