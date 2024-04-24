@@ -12,7 +12,8 @@ art::InputTag monte_tag("generator::SinglesGen");
 art::InputTag depo_tag("largeant:LArG4DetectorServicevolTPCActive");
 art::InputTag point_tag("pandora");
 art::InputTag track_tag("pandoraTrack");
-art::InputTag calo_tag("????????????");
+art::InputTag shower_tag("pandoraShower")
+art::InputTag calo_tag("pandoraGnocalo");
 
 
 
@@ -202,6 +203,16 @@ int test(vector<string> file_list, int i_first_event, int i_last_event, int pdg=
 
         // }
 
+        // auto const shower_list = ev.getValidHandle<vector<recob::Shower>>(shower_tag);
+        
+        // auto const calo_list = ev.getValidHangle<vector<anab::Calorimetry>>(shower_tag);
+
+        // for (size_t i_calo=0; i_calo<calo_list->size(); i_calo++) {
+
+        //     const anab::Calorimetry& calo = calo_list->at(i_calo);
+        //     vector<float> dEdx = calo.fdEdx; //or calo.dEdx();
+        //     vector<float> resRange = calo.fResidualRange;
+        // }
 
 
     }
