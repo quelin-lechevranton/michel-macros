@@ -14,7 +14,7 @@ art::InputTag point_tag("pandora");
 art::InputTag track_tag("pandoraTrack");
 art::InputTag calo_tag("pandoraGnocalo");
 
-gallery::Event ev({"/eos/user/t/thoudy/pdvd/sims/out/protodunevd_10_muon_reco.root"});
+gallery::Event ev({"/eos/user/t/thoudy/pdvd/sims/out/protodunevd_100_muon_800MeV_reco.root"});
 
 auto const monte_list = ev.getValidHandle<vector<simb::MCTruth>>(monte_tag);
 auto const depo_list = ev.getValidHandle<vector<sim::SimEnergyDeposit>>(depo_tag);
