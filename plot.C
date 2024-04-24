@@ -95,12 +95,7 @@ int test(vector<string> file_list, int i_first_event, int i_last_event, int pdg=
         auto i_event = ev.eventAuxiliary().event();
         if ( i_event < i_first_event ) continue;
         if ( i_event > i_last_event ) break;
-
         cout << "Event #" << i_event << endl;
-
-        // auto const point_list = ev.getValidHandle<vector<recob::SpacePoints>>(point_tag);
-    
-        // cout << point_list << endl;
 
         /*SIM ENERGY DEPOSIT*******************/ 
         auto const depo_list = ev.getValidHandle<vector<sim::SimEnergyDeposit>>(depo_tag);
@@ -113,12 +108,6 @@ int test(vector<string> file_list, int i_first_event, int i_last_event, int pdg=
 
             // geo::Length_t len=depo.StepLength(); //equals 0.03 cm until the few last deposits
             
-            // geo::Point_t depo_point = depo.MidPoint();
-            // double XYZ[3];
-            // depo_point.GetCoordinates(XYZ);
-
-            // TH_depo->Fill(depo_point.X(),depo_point.Y(),depo_point.Z());
-
             double XYZ[3];
             depo.MidPoint().GetCoordinates(XYZ);
             for (int i=0; i<n_graph; i++) {
@@ -139,10 +128,9 @@ int test(vector<string> file_list, int i_first_event, int i_last_event, int pdg=
 
             const recob::SpacePoint& point = point_list->at(i_point);
 
-            // geo::Point_t point_point = point.position();
-
             double XYZ[3];
             point.position().GetCoordinates(XYZ);
+            
             for (int i=0; i<n_graph; i++) {
                 TG_point[i]->SetPoint(
                     i_point_total,
@@ -167,7 +155,6 @@ int test(vector<string> file_list, int i_first_event, int i_last_event, int pdg=
                 i_track_point++ 
             ) {
 
-                // geo::Point_t track_point = track.LocationAtPoint(i_track_point);
 
                 double XYZ[3];
                 track.LocationAtPoint(i_track_point).GetCoordinates(XYZ);
