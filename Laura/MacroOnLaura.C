@@ -3,7 +3,7 @@
 // string path = "/silver/DUNE/quelin-lechevranton/out/";
 // string file = "PDVD_100_muon_800MeV_LauraP_dumped.root";
 
-void test(int i_event) {
+int test(int i_event) {
     // TFile file(path+file);
     // TFile file("/silver/DUNE/quelin-lechevranton/out/PDVD_100_muon_800MeV_LauraP_dumped.root");
     TFile file("/eos/user/t/thoudy/pdvd/sims/out/PDVD_100_muon_800MeV_LauraP_dumped.root");
@@ -13,7 +13,7 @@ void test(int i_event) {
     if (!(0<=i_event<n_event)) {
         cout << "event index out of bound" << endl; 
         file.Close();
-        return;
+        return 1;
     }
 
     int j_total=0;
@@ -72,4 +72,5 @@ void test(int i_event) {
     //     auto reco_entry = treeco->GetEntry(i_event);    
     // }
     file.Close();
+    return 0;
 }
