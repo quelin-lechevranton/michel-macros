@@ -2,7 +2,7 @@ R__ADD_INCLUDE_PATH("lardataobj/Simulation/SimEnergyDeposit.h")
 R__ADD_INCLUDE_PATH("larcoreobj/SimpleTypesAndConstants/geo_types.h")
 R__ADD_INCLUDE_PATH("larcoreobj/SimpleTypesAndConstants/geo_vectors.h")
 R__ADD_INCLUDE_PATH("gallery/Event.h")
-#include "tools.h"
+#include "../tools.h"
 
 // -----------------
 // Particle PDGcode:
@@ -19,7 +19,7 @@ R__ADD_INCLUDE_PATH("gallery/Event.h")
 
 bool debug = false;
 
-void PlotSimEnergyDeposit(int nfiles=0, int neventmax=10, int pdgcode=11, string simtag = "largeant:LArG4DetectorServicevolTPCActive", string prod="file", bool Debug = false){
+void PlotSimEnergyDeposit(int nfiles=0, int neventmax=10, int pdgcode=11, string simtag = "largeant:LArG4DetectorServicevolTPCActive", string prod="../file", bool Debug = false){
   for (int nevent=1;nevent<=neventmax;nevent++){
   debug = Debug;
   SetDebug(debug);

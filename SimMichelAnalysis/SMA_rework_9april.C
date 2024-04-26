@@ -17,7 +17,7 @@ R__ADD_INCLUDE_PATH("larcoreobj/SimpleTypesAndConstants/geo_vectors.h")
 R__ADD_INCLUDE_PATH("nusimdata/v1_27_01/include/nusimdata/SimulationBase")
 #include "nusimdata/SimulationBase/MCTruth.h"
 #include "nusimdata/SimulationBase/MCParticle.h"
-#include "tools.h"
+#include "../tools.h"
 
 
 
@@ -534,9 +534,9 @@ int main()
   string tag_MCParticle = "";
 
 
-  vector<pair<TVector3, int>> muon_analysis = MuonAnalysis(1, 1, 8, tag_energy_deposit, tag_MCTruth,"file", 1);
+  vector<pair<TVector3, int>> muon_analysis = MuonAnalysis(1, 1, 8, tag_energy_deposit, tag_MCTruth,"../file", 1);
 
-  ElectronAnalysis(1, 1, 8, tag_energy_deposit, tag_MCTruth, tag_MCParticle ,"file",muon_analysis, true);
+  ElectronAnalysis(1, 1, 8, tag_energy_deposit, tag_MCTruth, tag_MCParticle ,"../file",muon_analysis, true);
 
 
   //ElectronAnalysis(n_files, i_first_event, i_last_event, tag_energy_deposit, tag_MCTruth, tag_MCParticle, listname, muon_analysis, muon);

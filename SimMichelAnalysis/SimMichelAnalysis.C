@@ -13,7 +13,7 @@ R__ADD_INCLUDE_PATH("larcoreobj/SimpleTypesAndConstants/geo_vectors.h")
 R__ADD_INCLUDE_PATH("nusimdata/v1_27_01/include/nusimdata/SimulationBase")
 #include "nusimdata/SimulationBase/MCTruth.h"
 #include "nusimdata/SimulationBase/MCParticle.h"
-#include "tools.h"
+#include "../tools.h"
 
 //-----------------------------------------------------MuonAnalysis------------------------------------------------------------------//
 //
@@ -485,8 +485,8 @@ int main()
   //MuonAnred_g4_stage2_muon.rootorServicevolTPCActive", "generator::SinglesGen","test", true);
 
 
-  vector<pair<vector<double>, int>> muon_Info = MuonAnalysis(1, 1, 8, "largeant:LArG4DetectorServicevolTPCActive", "generator::SinglesGen","file", 1);
-  ElectronAnalysis(1, 1, 8, "largeant:LArG4DetectorServicevolTPCActive", "generator::SinglesGen","","file",muon_Info, true);
+  vector<pair<vector<double>, int>> muon_Info = MuonAnalysis(1, 1, 8, "largeant:LArG4DetectorServicevolTPCActive", "generator::SinglesGen","../file", 1);
+  ElectronAnalysis(1, 1, 8, "largeant:LArG4DetectorServicevolTPCActive", "generator::SinglesGen","","../file",muon_Info, true);
 
 
   //ElectronAnalysis(nfiles, event_i, event_f, simtag1, simtag2, simtag3, listname, muon_Info, muon);
