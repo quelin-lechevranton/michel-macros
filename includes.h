@@ -57,7 +57,9 @@
 #include "TString.h"
 #include "TLorentzVector.h"
 #include "TVector3.h"
+#include "TGraph.h"
 #include "TGraph2D.h"
+#include "TCanvas.h"
 
 // C++ includes
 #include <TTree.h>

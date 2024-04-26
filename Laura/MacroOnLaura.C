@@ -43,18 +43,18 @@ int test(int i_event) {
 
     // Reco->GetEntry(i_event);
 
-    vector<TGraph2D*> graph(2);
-    graph[0] = new TGraph2D();
+    vector<TGraph*> graph(2);
+    graph[0] = new TGraph();
     graph[0]->SetName("Track Start Positions");
     graph[0]->SetMarkerColor(kBlue);
 
-    graph[1] = new TGraph2D();
+    graph[1] = new TGraph();
     graph[1]->SetName("Track End Positions");
     graph[1]->SetMarkerColor(kRed);
 
     graph[0]->GetXaxis()->SetTitle("X (cm)");
     graph[0]->GetYaxis()->SetTitle("Y (cm)");
-    graph[0]->GetZaxis()->SetTitle("Z (cm)");
+    // graph[0]->GetZaxis()->SetTitle("Z (cm)");
 
     // for (int j=0; j<-TrackStartX->size(); j++) {        
     //     graph[0]->SetPoint(j_total++,TrackStartX->at(j),TrackStartY->at(j),TrackStartZ->at(j));
