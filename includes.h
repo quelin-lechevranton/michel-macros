@@ -49,31 +49,34 @@
 // #include "larsim/MCCheater/BackTrackerService.h"
 
 // ROOT includes.
-#include "TH1.h"
-#include "TH1F.h"
-#include "TNtuple.h"
-#include "TTree.h"
-#include "TTimeStamp.h"
-#include "TString.h"
-#include "TLorentzVector.h"
-#include "TVector3.h"
-#include "TGraph.h"
-#include "TGraph2D.h"
-#include "TCanvas.h"
+// #include "TH1.h"
+// #include "TH1F.h"
+// #include "TNtuple.h"
+// #include "TTree.h"
+// #include "TTimeStamp.h"
+// #include "TString.h"
+// #include "TLorentzVector.h"
+// #include "TVector3.h"
+
+#include <TGraph.h>
+#include <TGraph2D.h>
+#include <TCanvas.h>
+#include <TBranch.h>
+#include <TFile.h>
 
 // C++ includes
 #include <TTree.h>
-#include <TH1D.h>
-#include <TLorentzVector.h>
+// #include <TH1D.h>
+// #include <TLorentzVector.h>
 #include <vector>
-#include <cmath>
-#include <map>
-#include <iterator> // std::begin(), std::end()
+// #include <cmath>
+// #include <map>
+// #include <iterator> // std::begin(), std::end()
 #include <string>
 #include <sstream>
-#include <iostream>
-#include <fstream>
-#include <algorithm>
+// #include <iostream>
+// #include <fstream>
+// #include <algorithm>
 
 // #include "duneana/DAQSimAna/TriggerPrimitiveFinderTool.h"
 
