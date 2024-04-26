@@ -6,14 +6,14 @@
 int test(int i_event) {
     // TFile file(path+file);
     // TFile file("/silver/DUNE/quelin-lechevranton/out/PDVD_100_muon_800MeV_LauraP_dumped.root");
-    TFile file("/eos/user/t/thoudy/pdvd/sims/out/PDVD_100_muon_800MeV_LauraP_dumped.root");
+    TFile* file=TFile::Open("/eos/user/t/thoudy/pdvd/sims/out/PDVD_100_muon_800MeV_LauraP_dumped.root");
     cout << "bonjour" << endl;
-    TTree* Reco=(TTree*) file.Get("LauraPDumper/Reco");
+    TTree* Reco=(TTree*) file->Get("LauraPDumper/Reco");
 
     int n_event = Reco->GetEntries();
     if (!(0<=i_event<n_event)) {
         cout << "event index out of bound" << endl; 
-        file.Close();
+        file->Close();
         return 1;
     }
 
@@ -72,6 +72,6 @@ int test(int i_event) {
     // for (Int_t i_event=0; i_event<treeco->GetEntries(); i_event++) {
     //     auto reco_entry = treeco->GetEntry(i_event);    
     // }
-    file.Close();
+    file->Close();
     return 0;
 }
