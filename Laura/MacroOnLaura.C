@@ -11,29 +11,56 @@ int TrackEnds(void);
 int Clusters(void);
 
 void MacroOnLaura() {
-    TrackEnds();
-    // Clusters();
+    // TrackEnds();
+    Clusters();
 
 }
 
 int Clusters() {
-    // TFile file(filename);
-    // TTree *Reco = (TTree*) file.Get("LauraPDumper/Reco");
+    TFile file(filename);
+    TTree *Reco = (TTree*) file.Get("LauraPDumper/Reco");
 
-    // vector<double> *fPFPTrackStartDirectionX=nullptr,
-    //     *fPFPTrackStartDirectionY=nullptr,
-    //     *fPFPTrackStartDirectionZ=nullptr,
-    //     *fPFPTrackVertexDirectionX=nullptr,
-    //     *fPFPTrackVertexDirectionY=nullptr,
-    //     *fPFPTrackVertexDirectionZ=nullptr;
-    // vector<int> *fPFPNClusters=nullptr;
-    // vector<vector<double>> *fPFPCluPlane =0    ;
-    // vector<vector<double>> *fPFPCluView  =0    ;
-    // vector<vector<double>> *fPFPCluNHits  =0   ;
-    // vector<vector<double>> *fPFPCluSummedADC  =0;
-    // vector<vector<double>> *fPFPCluIntegral  =0;
-    // vector<vector<double>> *fPFPCluWidth  =0;
-    
+    usigned int *nParticles=nullptr;
+
+    vector<int> *nClusters=nullptr,
+        TrackID=nullptr;
+
+    vector<double> *TrackStartDirectionX=nullptr,
+        *TrackStartDirectionY=nullptr,
+        *TrackStartDirectionZ=nullptr,
+        *TrackVertexDirectionX=nullptr,
+        *TrackVertexDirectionY=nullptr,
+        *TrackVertexDirectionZ=nullptr;
+
+    vector<vector<double>> *CluPlane=nullptr,
+        *CluView=nullptr,
+        *CluNHits=nullptr,
+        *CluSummedADC=nullptr,
+        *CluIntegral=nullptr,
+        *CluWidth=nullptr;
+
+    Reco->SetBranchAddress("pfpTrackStartDirectionX",   &TrackStartDirectionX);
+
+    Reco->SetBranchAddress("pfpNClusters",              &nClusters);
+    Reco->SetBranchAddress("nPFParticles",              &nParticles);
+    Reco->SetBranchAddress("pfpTrackID",                &TrackID);
+
+    Reco->SetBranchAddress("pfpCluPlane",               &CluPlane);
+    Reco->SetBranchAddress("pfpCluView",                &CluView);
+    Reco->SetBranchAddress("pfpCluNHits",               &CluNHits);
+    Reco->SetBranchAddress("pfpCluSummedADC",           &CluSummedADC);
+    Reco->SetBranchAddress("pfpCluIntegral",            &CluIntegral);
+    Reco->SetBranchAddress("pfpCluWidth",               &CluWidth);
+
+    Int_t n_event=Reco->GetEntries();
+    for (Int_t i_event=0; i_event < n_event; i_event++) {
+        cout << "Event #" << i_event << ": ";
+
+        Reco->GetEntry(i_event);
+        cout << "\tn_track=" << TrackID.size(); 
+        cout << "\tn_particle=" << nParticles;
+        cout << "\tn_particle??=" << nClusters.size();
+    } 
 
     return 0;
 
@@ -82,7 +109,7 @@ int TrackEnds() {
     // // Reco->SetBranchAddress("pfpTrackEndY",&(TrackEnd[1]));
     // // Reco->SetBranchAddress("pfpTrackEndZ",&(TrackEnd[2]));
 
-    vector<double> *TrackStartX=nullptr, *TrackStartY=nullptr, *TrackStartZ=nullptr, *TrackEndX=nullptr, *TrackEndY=nullptr, *TrackEndZ=nullptr;
+    vector<double> *TrackStartX=0, *TrackStartY=0, *TrackStartZ=0, *TrackEndX=0, *TrackEndY=0, *TrackEndZ=0;
     
     Reco->SetBranchAddress("pfpTrackStartX",&TrackStartX);
     Reco->SetBranchAddress("pfpTrackStartY",&TrackStartY);
