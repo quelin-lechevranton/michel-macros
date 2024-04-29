@@ -55,7 +55,7 @@ int Clusters() {
     Reco->SetBranchAddress("pfpCluIntegral",            &CluIntegral);
     Reco->SetBranchAddress("pfpCluWidth",               &CluWidth);
 
-    Reco->SetAutoDelete(true);
+    Reco->GetBranch("pfpNClusters")->SetAutoDelete(true);
 
     Int_t n_event=Reco->GetEntries();
     for (Int_t i_event=0; i_event < n_event; i_event++) {
