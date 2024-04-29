@@ -55,14 +55,16 @@ int Clusters() {
     Reco->SetBranchAddress("pfpCluIntegral",            &CluIntegral);
     Reco->SetBranchAddress("pfpCluWidth",               &CluWidth);
 
+    Reco->SetAutoDelete(true);
+
     Int_t n_event=Reco->GetEntries();
     for (Int_t i_event=0; i_event < n_event; i_event++) {
         cout << "Event #" << i_event << ": ";
 
         Reco->GetEntry(i_event);
-        cout << "\tn_track=" << TrackID->size();        TrackID=nullptr;
+        cout << "\tn_track=" << TrackID->size();
         cout << "\tn_particle=" << nParticles;
-        cout << "\tn_particle=" << nClusters->size();   nClusters=nullptr;
+        cout << "\tn_particle=" << nClusters->size();
 
         cout << endl;
     } 
