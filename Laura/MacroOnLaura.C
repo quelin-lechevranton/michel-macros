@@ -65,7 +65,7 @@ int test() {
     graph[1] = new TGraph2D();
     graph[1]->SetName("Track End Positions");
     graph[1]->SetMarkerColor(kRed);
-    graph[1]->SetMarkerSize(5);
+    graph[1]->SetMarkerSize(50);
 
     graph[0]->GetXaxis()->SetTitle("X (cm)");
     graph[0]->GetYaxis()->SetTitle("Y (cm)");
