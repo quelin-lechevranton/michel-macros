@@ -7,7 +7,7 @@
 // string path = "/silver/DUNE/quelin-lechevranton/out/";
 // string file = "PDVD_100_muon_800MeV_LauraP_dumped.root";
 
-int MacroOnLaura(int i_event) {
+int MacroOnLaura(int i_event=1) {
     // TFile file(path+file);
     // TFile* file=TFile::Open("/silver/DUNE/quelin-lechevranton/out/PDVD_10_muon_500MeV_LauraP_dumped.root");
     TFile file("/eos/user/t/thoudy/pdvd/sims/out/PDVD_10_muon_500MeV_LauraP_dumped.root");
