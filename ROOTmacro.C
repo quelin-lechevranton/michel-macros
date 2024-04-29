@@ -1,5 +1,5 @@
-// #include "TGraph.h"
-// #include "TCanvas.h"
+#include <TGraph.h>
+#include <TCanvas.h>
 
 
 void macro() {
