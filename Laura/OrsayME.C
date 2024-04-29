@@ -4,21 +4,21 @@ Authors:
 - Thibaut Houdy, 4/11/22
 */
 
-#include <vector>
-#include <cmath>
-#include <iostream>
-#include "TGraph.h"
-#include <string>
-#include "TVector3.h"
-#include "TPolyMarker3D.h"
-#include "TPolyMarker.h"
-#include "TPolyLine.h"
-#include "TPolyLine3D.h"
-#include "TCanvas.h"
-#include "TStyle.h"
-#include "TFile.h"
+// #include <vector>
+// #include <cmath>
+// #include <iostream>
+// #include "TGraph.h"
+// #include <string>
+// #include "TVector3.h"
+// #include "TPolyMarker3D.h"
+// #include "TPolyMarker.h"
+// #include "TPolyLine.h"
+// #include "TPolyLine3D.h"
+// #include "TCanvas.h"
+// #include "TStyle.h"
+// #include "TFile.h"
 
-#include "TTree.h"
+// #include "TTree.h"
 
 
 // #include "TH3F.h"
@@ -67,7 +67,7 @@ void GetCharacteristics(string in_root_file="PDVD_cosmics_LauraP_dumped.root", s
 
     unsigned int fNPFParticles = 0;
     
-    TFile file1("/eos/user/t/thoudy/pdvd/sims/out/PDVD_cosmics_LauraP_dumped.root");
+    TFile file1("/eos/user/t/thoudy/pdvd/sims/out/PDVD_100_muon_800MeV_LauraP_dumped.root");
     TTree* tree_reco = (TTree*) file1.Get("LauraPDumper/Reco");    
     
     tree_reco->SetBranchAddress("pfpTrackStartDirectionX",&fPFPTrackStartDirectionX);
