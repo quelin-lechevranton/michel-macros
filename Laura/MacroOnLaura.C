@@ -38,21 +38,20 @@ int test(Int_t i_event) {
     // // Reco->SetBranchAddress("pfpTrackEndY",&(TrackEnd[1]));
     // // Reco->SetBranchAddress("pfpTrackEndZ",&(TrackEnd[2]));
 
-    // vector<double> *TrackStartX, *TrackStartY, *TrackStartZ, *TrackEndX, *TrackEndY, *TrackEndZ;
+    vector<double> *TrackStartX=0, *TrackStartY=0, *TrackStartZ=0, *TrackEndX=0, *TrackEndY=0, *TrackEndZ=0;
     
-    // Reco->SetBranchAddress("pfpTrackStartX",&TrackStartX);
-    // Reco->SetBranchAddress("pfpTrackStartY",&TrackStartY);
-    // Reco->SetBranchAddress("pfpTrackStartZ",&TrackStartZ);
-    // Reco->SetBranchAddress("pfpTrackEndX",&TrackEndX);
-    // Reco->SetBranchAddress("pfpTrackEndY",&TrackEndY);
-    // Reco->SetBranchAddress("pfpTrackEndZ",&TrackEndZ);
+    Reco->SetBranchAddress("pfpTrackStartX",&TrackStartX);
+    Reco->SetBranchAddress("pfpTrackStartY",&TrackStartY);
+    Reco->SetBranchAddress("pfpTrackStartZ",&TrackStartZ);
+    Reco->SetBranchAddress("pfpTrackEndX",&TrackEndX);
+    Reco->SetBranchAddress("pfpTrackEndY",&TrackEndY);
+    Reco->SetBranchAddress("pfpTrackEndZ",&TrackEndZ);
 
-    vector<int> *TrackStartX=0;
-    Reco->SetBranchAddress("pfpTrackEndZ",&TrackStartX);
+    // vector<int> *TrackStartX=0;
+    // Reco->SetBranchAddress("pfpTrackEndZ",&TrackStartX);
 
     Reco->GetEntry(i_event);
 
-    cout << "mode" << endl;
     cout << (*TrackStartX).size() << endl;
 
     // for (Int_t iev=0; iev < Reco->GetEntries(); ++iev) { //Loop over the events
