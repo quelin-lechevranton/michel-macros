@@ -59,28 +59,31 @@ int Clusters() {
     Reco->SetBranchAddress("pfpCluIntegral",            &CluIntegral);
     Reco->SetBranchAddress("pfpCluWidth",               &CluWidth);
 
-    // Reco->GetBranch("pfpNClusters")->SetAutoDelete(true);
-
     // Int_t n_event=Reco->GetEntries();
     // for (Int_t i_event=0; i_event < n_event; i_event++) {
     //     cout << "Event #" << i_event << ": ";
 
-    //     // delete nClusters;
-    //     // nClusters=nullptr;
+    //     delete nClusters;
+    //     nClusters=nullptr;
 
     //     Reco->GetEntry(i_event);
     //     cout << "\tn_track=" << TrackID->size();
     //     cout << "\tn_particle=" << nParticles;
-    //     cout << "\tn_particle=" << nClusters->size();
+    //     cout << "\tn_particle_incr=" << nClusters->size();
 
     //     cout << endl;
     // } 
 
 
-    Reco->GetEntry(1);
+    Reco->GetEntry(9);
     cout << "\tn_track=" << TrackID->size();
     cout << "\tn_particle=" << nParticles;
     cout << "\tn_particle=" << nClusters->size();
+
+    for (int i=0; i<TrackID->size(); i++) {
+        cout << TrackID->at(i) << " ";
+    }
+    cout << endl;
 
 
 
