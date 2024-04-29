@@ -63,13 +63,10 @@ int Clusters() {
     for (Int_t i_event=0; i_event < n_event; i_event++) {
         cout << "Event #" << i_event << ": ";
 
-        delete nClusters;
-        nClusters=nullptr;
-
         Reco->GetEntry(i_event);
         cout << "\tn_track=" << TrackID->size();
         cout << "\tn_particle=" << nParticles;
-        cout << "\tn_particle_incr=" << nClusters->size();
+        cout << "\tn_particle=" << nClusters->size();
 
         cout << endl;
     } 
@@ -86,8 +83,9 @@ int Clusters() {
     // cout << endl;
 
 
-
-    // Reco->Draw("pfpCluSummedADC","pfp")
+    auto canvas = new TCanvas("c1","muon's dE");
+    canvas->cd();
+    Reco->Draw("pfpCluSummedADC","pfpPdgCode==13");
 
     return 0;
 
