@@ -20,10 +20,12 @@ int Clusters() {
     TFile file(filename);
     TTree *Reco = (TTree*) file.Get("LauraPDumper/Reco");
 
-    unsigned int nParticles=0;
+    //POURQUOI PAS UN POINTER ?
+    unsigned int nParticles=0; 
 
     vector<int> *nClusters=nullptr,
         *TrackID=nullptr;
+        *PdgCode=nullptr;
 
     vector<double> *TrackStartDirectionX=nullptr,
         *TrackStartDirectionY=nullptr,
@@ -44,6 +46,7 @@ int Clusters() {
     Reco->SetBranchAddress("pfpNClusters",              &nClusters);
     Reco->SetBranchAddress("nPFParticles",              &nParticles);
     Reco->SetBranchAddress("pfpTrackID",                &TrackID);
+    Reco->SetBranchAddress("pfpPdgCode",                &PdgCode);
 
     Reco->SetBranchAddress("pfpCluPlane",               &CluPlane);
     Reco->SetBranchAddress("pfpCluView",                &CluView);
@@ -54,14 +57,17 @@ int Clusters() {
 
     Int_t n_event=Reco->GetEntries();
     for (Int_t i_event=0; i_event < n_event; i_event++) {
-        cout << "\nEvent #" << i_event << ": ";
+        cout << "Event #" << i_event << ": ";
 
         Reco->GetEntry(i_event);
         cout << "\tn_track=" << TrackID->size(); 
         cout << "\tn_particle=" << nParticles;
-        cout << "\tn_clusssss=" << nClusters->size();
+        cout << "\tn_particle=" << nClusters->size();
 
+        cout << endl;
     } 
+
+    // Reco->Draw("pfpCluSummedADC","pfp")
 
     return 0;
 
