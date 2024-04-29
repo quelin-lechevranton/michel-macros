@@ -58,7 +58,7 @@ int Clusters() {
 
         Reco->GetEntry(i_event);
         cout << "\tn_track=" << TrackID->size(); 
-        cout << "\tn_particle=" << *nParticles;
+        cout << "\tn_particle=" << nParticles;
         cout << "\tn_clusssss=" << nClusters->size();
     } 
 
