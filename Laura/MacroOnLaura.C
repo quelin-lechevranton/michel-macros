@@ -19,6 +19,7 @@ int test(int i_event) {
     TFile file("/eos/user/t/thoudy/pdvd/sims/out/PDVD_10_muon_500MeV_LauraP_dumped.root");
     // cout << "bonjour" << endl;
     TTree* Reco=(TTree*) file.Get("LauraPDumper/Reco");
+    cout << "bonjour" << endl;
 
     int n_event = Reco->GetEntries();
     if (i_event<0 || i_event>n_event) {
@@ -39,12 +40,8 @@ int test(int i_event) {
     // // Reco->SetBranchAddress("pfpTrackEndY",&(TrackEnd[1]));
     // // Reco->SetBranchAddress("pfpTrackEndZ",&(TrackEnd[2]));
 
-    vector<double>* TrackStartX=0;
-    vector<double>* TrackStartY=0;
-    vector<double>* TrackStartZ=0;
-    vector<double>* TrackEndX=0;
-    vector<double>* TrackEndY=0;
-    vector<double>* TrackEndZ=0;
+    vector<double>* TrackStartX, TrackStartY, TrackStartZ, TrackEndX, TrackEndY, TrackEndZ;
+    
     Reco->SetBranchAddress("pfpTrackStartX",&TrackStartX);
     Reco->SetBranchAddress("pfpTrackStartY",&TrackStartY);
     Reco->SetBranchAddress("pfpTrackStartZ",&TrackStartZ);
