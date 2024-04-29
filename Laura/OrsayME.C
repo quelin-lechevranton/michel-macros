@@ -54,7 +54,7 @@ bool b_Simulation = true;
 
 void GetCharacteristics(string in_root_file="PDVD_cosmics_LauraP_dumped.root", string out_root_file="no.root"){
 
-    vector<double> fPFPTrackStartDirectionX,fPFPTrackStartDirectionY,fPFPTrackStartDirectionZ,fPFPTrackVertexDirectionX,fPFPTrackVertexDirectionY,fPFPTrackVertexDirectionZ;
+    vector<double> *fPFPTrackStartDirectionX,fPFPTrackStartDirectionY,fPFPTrackStartDirectionZ,fPFPTrackVertexDirectionX,fPFPTrackVertexDirectionY,fPFPTrackVertexDirectionZ;
     vector<int> *fPFPNClusters =0;
     vector<vector<double>> *fPFPCluPlane =0    ;
     vector<vector<double>> *fPFPCluView  =0    ;
