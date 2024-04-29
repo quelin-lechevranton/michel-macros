@@ -1,4 +1,8 @@
-#include "../includes.h"
+// #include "../includes.h"
+#include <vector>
+#include <string>
+#include <sstream>
+#include <iostream>
 
 // string path = "/silver/DUNE/quelin-lechevranton/out/";
 // string file = "PDVD_100_muon_800MeV_LauraP_dumped.root";
@@ -6,9 +10,9 @@
 int test(int i_event) {
     // TFile file(path+file);
     // TFile* file=TFile::Open("/silver/DUNE/quelin-lechevranton/out/PDVD_10_muon_500MeV_LauraP_dumped.root");
-    TFile* file=TFile::Open("/eos/user/t/thoudy/pdvd/sims/out/PDVD_10_muon_500MeV_LauraP_dumped.root");
+    TFile file("/eos/user/t/thoudy/pdvd/sims/out/PDVD_10_muon_500MeV_LauraP_dumped.root");
     // cout << "bonjour" << endl;
-    TTree* Reco=(TTree*) file->Get("LauraPDumper/Reco");
+    TTree* Reco=(TTree*) file.Get("LauraPDumper/Reco");
 
     int n_event = Reco->GetEntries();
     if (i_event<0 || i_event>n_event) {
@@ -88,6 +92,6 @@ int test(int i_event) {
     graph[0]->Draw("AP");
     graph[1]->Draw("P");     
 
-    file->Close();
+    file.Close();
     return 0;
 }
