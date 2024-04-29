@@ -18,8 +18,8 @@ void MacroOnLaura() {
 int test(Int_t i_event) {
     // TFile file(path+file);
     // TFile* file=TFile::Open("/silver/DUNE/quelin-lechevranton/out/PDVD_10_muon_500MeV_LauraP_dumped.root");
-    TFile file("/eos/user/t/thoudy/pdvd/sims/out/PDVD_10_muon_500MeV_LauraP_dumped.root");
-    TTree* Reco=(TTree*) file.Get("LauraPDumper/Reco");
+    TFile file1("/eos/user/t/thoudy/pdvd/sims/out/PDVD_10_muon_500MeV_LauraP_dumped.root");
+    TTree* Reco=(TTree*) file1.Get("LauraPDumper/Reco");
 
     Int_t n_event = Reco->GetEntries();
     if (i_event<0 || i_event>n_event) {
@@ -98,6 +98,6 @@ int test(Int_t i_event) {
     // graph[0]->Draw("AP");
     // graph[1]->Draw("P");     
 
-    file.Close();
+    file1.Close();
     return 0;
 }
