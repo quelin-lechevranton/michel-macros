@@ -7,7 +7,13 @@
 // string path = "/silver/DUNE/quelin-lechevranton/out/";
 // string file = "PDVD_100_muon_800MeV_LauraP_dumped.root";
 
-int MacroOnLaura(int i_event=1) {
+int test(int);
+
+void MacroOnLaura() {
+    test(1);
+}
+
+int test(int i_event) {
     // TFile file(path+file);
     // TFile* file=TFile::Open("/silver/DUNE/quelin-lechevranton/out/PDVD_10_muon_500MeV_LauraP_dumped.root");
     TFile file("/eos/user/t/thoudy/pdvd/sims/out/PDVD_10_muon_500MeV_LauraP_dumped.root");
@@ -33,12 +39,12 @@ int MacroOnLaura(int i_event=1) {
     // // Reco->SetBranchAddress("pfpTrackEndY",&(TrackEnd[1]));
     // // Reco->SetBranchAddress("pfpTrackEndZ",&(TrackEnd[2]));
 
-    vector<double>* TrackStartX;
-    vector<double>* TrackStartY;
-    vector<double>* TrackStartZ;
-    vector<double>* TrackEndX;
-    vector<double>* TrackEndY;
-    vector<double>* TrackEndZ;
+    vector<double>* TrackStartX=0;
+    vector<double>* TrackStartY=0;
+    vector<double>* TrackStartZ=0;
+    vector<double>* TrackEndX=0;
+    vector<double>* TrackEndY=0;
+    vector<double>* TrackEndZ=0;
     Reco->SetBranchAddress("pfpTrackStartX",&TrackStartX);
     Reco->SetBranchAddress("pfpTrackStartY",&TrackStartY);
     Reco->SetBranchAddress("pfpTrackStartZ",&TrackStartZ);
