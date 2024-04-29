@@ -86,7 +86,7 @@ int test(vector<string> file_list, int i_first_event, int i_last_event, int pdg=
     //     TG_valid[i]->SetName("TrackValid");
     //     TG_valid[i]->SetMarkerColorAlpha(kSpring,.7);
     //     // TG_track_valid[i]->GetXaxis()->SetTitle(axis_title[Xaxis[i]].c_str());
-    //     // TG_track_valid[i]->GetYaxis()->SetTitle(axis_title[Yaxis[i]].c_str());
+    //     // TG_track_valid[i]->GetYaxis()->SetTitle(axis_title[Yaxis[iSetPoint]].c_str());
     // }   
     // int i_valid_total = 0;
     

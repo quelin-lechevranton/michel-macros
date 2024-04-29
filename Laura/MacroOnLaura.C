@@ -5,8 +5,8 @@
 
 int test(int i_event) {
     // TFile file(path+file);
-    TFile* file=TFile::Open("/silver/DUNE/quelin-lechevranton/out/PDVD_10_muon_500MeV_LauraP_dumped.root");
-    // TFile* file=TFile::Open("/eos/user/t/thoudy/pdvd/sims/out/PDVD_100_muon_800MeV_LauraP_dumped.root");
+    // TFile* file=TFile::Open("/silver/DUNE/quelin-lechevranton/out/PDVD_10_muon_500MeV_LauraP_dumped.root");
+    TFile* file=TFile::Open("/eos/user/t/thoudy/pdvd/sims/out/PDVD_10_muon_500MeV_LauraP_dumped.root");
     // cout << "bonjour" << endl;
     TTree* Reco=(TTree*) file->Get("LauraPDumper/Reco");
 
