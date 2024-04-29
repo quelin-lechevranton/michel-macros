@@ -57,9 +57,9 @@ int Clusters() {
         cout << "Event #" << i_event << ": ";
 
         Reco->GetEntry(i_event);
-        cout << "\tn_track=" << TrackID.size(); 
-        cout << "\tn_particle=" << nParticles;
-        cout << "\tn_particle??=" << nClusters.size();
+        cout << "\tn_track=" << TrackID->size(); 
+        cout << "\tn_particle=" << *nParticles;
+        cout << "\tn_particle??=" << nClusters->size();
     } 
 
     return 0;
