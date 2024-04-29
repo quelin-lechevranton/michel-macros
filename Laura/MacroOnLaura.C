@@ -46,6 +46,7 @@ int Clusters() {
     // TBranch* B_nClusters = Reco->GetBranch("pfpNClusters");
     // B_nClusters->SetAddress(&nClusters);
     // B_nClusters->SetAutoDelete(true);
+
     Reco->SetBranchAddress("pfpNClusters",              &nClusters);
     Reco->SetBranchAddress("nPFParticles",              &nParticles);
     Reco->SetBranchAddress("pfpTrackID",                &TrackID);
@@ -60,20 +61,28 @@ int Clusters() {
 
     // Reco->GetBranch("pfpNClusters")->SetAutoDelete(true);
 
-    Int_t n_event=Reco->GetEntries();
-    for (Int_t i_event=0; i_event < n_event; i_event++) {
-        cout << "Event #" << i_event << ": ";
+    // Int_t n_event=Reco->GetEntries();
+    // for (Int_t i_event=0; i_event < n_event; i_event++) {
+    //     cout << "Event #" << i_event << ": ";
 
-        delete nClusters;
-        nClusters=nullptr;
+    //     // delete nClusters;
+    //     // nClusters=nullptr;
 
-        Reco->GetEntry(i_event);
-        cout << "\tn_track=" << TrackID->size();
-        cout << "\tn_particle=" << nParticles;
-        cout << "\tn_particle=" << nClusters->size();
+    //     Reco->GetEntry(i_event);
+    //     cout << "\tn_track=" << TrackID->size();
+    //     cout << "\tn_particle=" << nParticles;
+    //     cout << "\tn_particle=" << nClusters->size();
 
-        cout << endl;
-    } 
+    //     cout << endl;
+    // } 
+
+
+    Reco->GetEntry(1);
+    cout << "\tn_track=" << TrackID->size();
+    cout << "\tn_particle=" << nParticles;
+    cout << "\tn_particle=" << nClusters->size();
+
+
 
     // Reco->Draw("pfpCluSummedADC","pfp")
 
