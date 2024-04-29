@@ -20,7 +20,7 @@ int Clusters() {
     TFile file(filename);
     TTree *Reco = (TTree*) file.Get("LauraPDumper/Reco");
 
-    unsigned int *nParticles=nullptr;
+    unsigned int nParticles=nullptr;
 
     vector<int> *nClusters=nullptr,
         *TrackID=nullptr;
@@ -54,12 +54,13 @@ int Clusters() {
 
     Int_t n_event=Reco->GetEntries();
     for (Int_t i_event=0; i_event < n_event; i_event++) {
-        cout << "Event #" << i_event << ": ";
+        cout << "\nEvent #" << i_event << ": ";
 
         Reco->GetEntry(i_event);
         cout << "\tn_track=" << TrackID->size(); 
         cout << "\tn_particle=" << nParticles;
         cout << "\tn_clusssss=" << nClusters->size();
+
     } 
 
     return 0;
