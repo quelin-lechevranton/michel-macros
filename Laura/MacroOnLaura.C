@@ -40,7 +40,7 @@ int test(int i_event) {
     // // Reco->SetBranchAddress("pfpTrackEndY",&(TrackEnd[1]));
     // // Reco->SetBranchAddress("pfpTrackEndZ",&(TrackEnd[2]));
 
-    vector<double>* TrackStartX, TrackStartY, TrackStartZ, TrackEndX, TrackEndY, TrackEndZ;
+    vector<double> *TrackStartX, *TrackStartY, *TrackStartZ, *TrackEndX, *TrackEndY, *TrackEndZ;
     
     Reco->SetBranchAddress("pfpTrackStartX",&TrackStartX);
     Reco->SetBranchAddress("pfpTrackStartY",&TrackStartY);
