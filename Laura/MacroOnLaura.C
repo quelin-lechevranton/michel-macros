@@ -73,7 +73,7 @@ int test(Int_t i_event) {
     graph[0]->GetYaxis()->SetTitle("Y (cm)");
     graph[0]->GetZaxis()->SetTitle("Z (cm)");
 
-    for (int j=0; j<-TrackStartX->size(); j++) {        
+    for (int j=0; j< TrackStartX->size(); j++) {        
         graph[0]->SetPoint(
             j_total++,
             TrackStartX->at(j),
