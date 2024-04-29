@@ -21,7 +21,7 @@ int test(int i_event) {
     TTree* Reco=(TTree*) file.Get("LauraPDumper/Reco");
     cout << "bonjour" << endl;
 
-    int n_event = Reco->GetEntries();
+    Int_t n_event = Reco->GetEntries();
     if (i_event<0 || i_event>n_event) {
         cout << "event index out of bound" << endl; 
         file.Close();
