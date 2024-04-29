@@ -22,6 +22,7 @@ int test(int i_event) {
     cout << "bonjour" << endl;
 
     Int_t n_event = Reco->GetEntries();
+    cout << n_event << endl;
     if (i_event<0 || i_event>n_event) {
         cout << "event index out of bound" << endl; 
         file.Close();
