@@ -4,8 +4,6 @@
 #include <sstream>
 #include <iostream>
 
-using namespace std;
-
 // string path = "/silver/DUNE/quelin-lechevranton/out/";
 // string file = "PDVD_100_muon_800MeV_LauraP_dumped.root";
 
@@ -18,13 +16,13 @@ void MacroOnLaura() {
 int test(Int_t i_event) {
     // TFile file(path+file);
     // TFile* file=TFile::Open("/silver/DUNE/quelin-lechevranton/out/PDVD_10_muon_500MeV_LauraP_dumped.root");
-    TFile file1("/eos/user/t/thoudy/pdvd/sims/out/PDVD_10_muon_500MeV_LauraP_dumped.root");
-    TTree* Reco=(TTree*) file1.Get("LauraPDumper/Reco");
+    TFile file("/eos/user/t/thoudy/pdvd/sims/out/PDVD_10_muon_500MeV_LauraP_dumped.root");
+    TTree* Reco=(TTree*) file.Get("LauraPDumper/Reco");
 
     Int_t n_event = Reco->GetEntries();
     if (i_event<0 || i_event>n_event) {
         cout << "event index out of bound" << endl; 
-        file1.Close();
+        file.Close();
         return 1;
     }
 
@@ -49,13 +47,13 @@ int test(Int_t i_event) {
     // Reco->SetBranchAddress("pfpTrackEndY",&TrackEndY);
     // Reco->SetBranchAddress("pfpTrackEndZ",&TrackEndZ);
 
-    vector<double> *fPFPTrackStartDirectionX;
-    Reco->SetBranchAddress("pfpTrackStartDirectionX",&fPFPTrackStartDirectionX);
+    vector<int> *fPFPNClusters=0;
+    Reco->SetBranchAddress("pfpNClusters",&pfpNClusters);
 
     Reco->GetEntry(i_event);
 
     cout << "mode" << endl;
-    cout << fPFPTrackStartDirectionX << endl;
+    cout << pfpNClusters << endl;
 
     // for (Int_t iev=0; iev < Reco->GetEntries(); ++iev) { //Loop over the events
     //     Reco->GetEntry(iev);
@@ -98,6 +96,6 @@ int test(Int_t i_event) {
     // graph[0]->Draw("AP");
     // graph[1]->Draw("P");     
 
-    file1.Close();
+    file.Close();
     return 0;
 }
