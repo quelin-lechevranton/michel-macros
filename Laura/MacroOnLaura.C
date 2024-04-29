@@ -85,7 +85,7 @@ int Clusters() {
 
     auto canvas = new TCanvas("c1","muon's dE");
     canvas->cd();
-    Reco->Draw("pfpCluSummedADC","pfpPdgCode==13 && pfpCluPlane==0");
+    Reco->Draw("pfpCluSummedADC/pfpCluWidth","pfpPdgCode==13 && pfpCluPlane==0");
 
     return 0;
 
