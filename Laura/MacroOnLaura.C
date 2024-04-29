@@ -23,7 +23,7 @@ int Clusters() {
     //POURQUOI PAS UN POINTER ?
     unsigned int nParticles=0; 
 
-    vector<int> nClusters,
+    vector<int> *nClusters=nullptr,
         *TrackID=nullptr,
         *PdgCode=nullptr;
 
@@ -60,9 +60,9 @@ int Clusters() {
         cout << "Event #" << i_event << ": ";
 
         Reco->GetEntry(i_event);
-        cout << "\tn_track=" << TrackID->size(); 
+        cout << "\tn_track=" << TrackID->size();        TrackID=nullptr;
         cout << "\tn_particle=" << nParticles;
-        cout << "\tn_particle=" << nClusters.size();
+        cout << "\tn_particle=" << nClusters->size();   nClusters=nullptr;
 
         cout << endl;
     } 
