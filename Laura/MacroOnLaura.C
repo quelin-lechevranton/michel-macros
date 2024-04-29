@@ -52,7 +52,7 @@ int test(Int_t i_event) {
 
     Reco->GetEntry(i_event);
 
-    cout << (*TrackStartX).size() << endl;
+    // cout << (*TrackStartX).size() << endl;
 
     // for (Int_t iev=0; iev < Reco->GetEntries(); ++iev) { //Loop over the events
     //     Reco->GetEntry(iev);
@@ -60,40 +60,40 @@ int test(Int_t i_event) {
     // }
     // file->Close();
 
-    // vector<TGraph2D*> graph(2);
-    // graph[0] = new TGraph2D();
-    // graph[0]->SetName("Track Start Positions");
-    // graph[0]->SetMarkerColor(kBlue);
+    vector<TGraph2D*> graph(2);
+    graph[0] = new TGraph2D();
+    graph[0]->SetName("Track Start Positions");
+    graph[0]->SetMarkerColor(kBlue);
 
-    // graph[1] = new TGraph2D();
-    // graph[1]->SetName("Track End Positions");
-    // graph[1]->SetMarkerColor(kRed);
+    graph[1] = new TGraph2D();
+    graph[1]->SetName("Track End Positions");
+    graph[1]->SetMarkerColor(kRed);
 
-    // graph[0]->GetXaxis()->SetTitle("X (cm)");
-    // graph[0]->GetYaxis()->SetTitle("Y (cm)");
-    // graph[0]->GetZaxis()->SetTitle("Z (cm)");
+    graph[0]->GetXaxis()->SetTitle("X (cm)");
+    graph[0]->GetYaxis()->SetTitle("Y (cm)");
+    graph[0]->GetZaxis()->SetTitle("Z (cm)");
 
-    // for (int j=0; j<-TrackStartX->size(); j++) {        
-    //     graph[0]->SetPoint(
-    //         j_total++,
-    //         TrackStartX->at(j),
-    //         TrackStartY->at(j),
-    //         TrackStartZ->at(j)
-    //     );
-    //     graph[1]->SetPoint(
-    //         j_total++,
-    //         TrackEndX->at(j),
-    //         TrackEndY->at(j),
-    //         TrackEndZ->at(j)
-    //     );
-    // }
+    for (int j=0; j<-TrackStartX->size(); j++) {        
+        graph[0]->SetPoint(
+            j_total++,
+            TrackStartX->at(j),
+            TrackStartY->at(j),
+            TrackStartZ->at(j)
+        );
+        graph[1]->SetPoint(
+            j_total++,
+            TrackEndX->at(j),
+            TrackEndY->at(j),
+            TrackEndZ->at(j)
+        );
+    }
 
-    // stringstream title;
-    // title << "Tracks Ends of Event #" << i_event;
-    // TCanvas* canvas = new TCanvas("c",title.str().c_str());
-    // canvas->cd();
-    // graph[0]->Draw("AP");
-    // graph[1]->Draw("P");     
+    stringstream title;
+    title << "Tracks Ends of Event #" << i_event;
+    TCanvas* canvas = new TCanvas("c",title.str().c_str());
+    canvas->cd();
+    graph[0]->Draw("AP");
+    graph[1]->Draw("P");     
 
     file.Close();
     return 0;
