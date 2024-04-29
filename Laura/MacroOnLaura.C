@@ -47,13 +47,13 @@ int test(Int_t i_event) {
     // Reco->SetBranchAddress("pfpTrackEndY",&TrackEndY);
     // Reco->SetBranchAddress("pfpTrackEndZ",&TrackEndZ);
 
-    vector<int> *fPFPNClusters=0;
-    Reco->SetBranchAddress("pfpTrackStartX",&fPFPNClusters);
+    vector<int> *TrackStartX=0;
+    Reco->SetBranchAddress("pfpTrackStartX",&TrackStartX);
 
     Reco->GetEntry(i_event);
 
     cout << "mode" << endl;
-    cout << (*fPFPNClusters).size() << endl;
+    cout << (*TrackStartX).size() << endl;
 
     // for (Int_t iev=0; iev < Reco->GetEntries(); ++iev) { //Loop over the events
     //     Reco->GetEntry(iev);
