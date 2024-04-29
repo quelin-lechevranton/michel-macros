@@ -7,17 +7,47 @@
 // string path = "/silver/DUNE/quelin-lechevranton/out/";
 // string file = "PDVD_100_muon_800MeV_LauraP_dumped.root";
 
-int test(void);
+int TrackEnds(void);
+int Clusters(void);
 
 void MacroOnLaura() {
-    test();
+    TrackEnds();
+    // Clusters();
+
 }
 
-int test() {
+int Clusters() {
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+int TrackEnds() {
     // TFile file(path+file);
     // TFile* file=TFile::Open("/silver/DUNE/quelin-lechevranton/out/PDVD_10_muon_500MeV_LauraP_dumped.root");
-    TFile file("/eos/user/t/thoudy/pdvd/sims/out/PDVD_10_muon_500MeV_LauraP_dumped.root");
-    TTree* Reco=(TTree*) file.Get("LauraPDumper/Reco");
+    TFile* file = TFile::Open("/eos/user/t/thoudy/pdvd/sims/out/PDVD_10_muon_500MeV_LauraP_dumped.root");
+    TTree* Reco=(TTree*) file->Get("LauraPDumper/Reco");
 
     // if (i_event<0 || i_event>n_event) {
     //     cout << "event index out of bound" << endl; 
@@ -102,6 +132,6 @@ int test() {
     graph[0]->Draw("AP");
     graph[1]->Draw("P");     
 
-    file.Close();
+    file->Close();
     return 0;
 }
