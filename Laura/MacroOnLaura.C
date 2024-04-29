@@ -23,7 +23,7 @@ int Clusters() {
     //POURQUOI PAS UN POINTER ?
     unsigned int nParticles=0; 
 
-    vector<int> *nClusters=nullptr,
+    vector<int> nClusters,
         *TrackID=nullptr,
         *PdgCode=nullptr;
 
