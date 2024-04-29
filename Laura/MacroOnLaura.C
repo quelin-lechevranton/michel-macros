@@ -99,7 +99,7 @@ int test() {
     canvas->cd();
     graph[0]->Draw("AP");
     graph[1]->Draw("P");     
-    // graph->GetPaintedGraph()->SetMarkerSize(4);
+    graph[1]->GetPaintedGraph()->SetMarkerSize(50);
 
     file.Close();
     return 0;
