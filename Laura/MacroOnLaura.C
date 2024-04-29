@@ -6,6 +6,7 @@
 
 // string path = "/silver/DUNE/quelin-lechevranton/out/";
 // string file = "PDVD_100_muon_800MeV_LauraP_dumped.root";
+string filename = "/eos/user/t/thoudy/pdvd/sims/out/PDVD_10_muon_500MeV_LauraP_dumped.root";
 
 int TrackEnds(void);
 int Clusters(void);
@@ -17,6 +18,7 @@ void MacroOnLaura() {
 }
 
 int Clusters() {
+    TFile file("")
 
 
 
@@ -46,7 +48,7 @@ int Clusters() {
 int TrackEnds() {
     // TFile file(path+file);
     // TFile* file=TFile::Open("/silver/DUNE/quelin-lechevranton/out/PDVD_10_muon_500MeV_LauraP_dumped.root");
-    TFile* file = TFile::Open("/eos/user/t/thoudy/pdvd/sims/out/PDVD_10_muon_500MeV_LauraP_dumped.root");
+    TFile* file = TFile::Open(filename);
     TTree* Reco=(TTree*) file->Get("LauraPDumper/Reco");
 
     // if (i_event<0 || i_event>n_event) {
@@ -91,13 +93,13 @@ int TrackEnds() {
     graph[0]->SetName("Track Start Positions");
     graph[0]->SetMarkerColor(kBlue);
     graph[0]->SetMarkerStyle(20);
-    graph[0]->SetMarkerSize(5);
+    graph[0]->SetMarkerSize(2);
 
     graph[1] = new TGraph2D();
     graph[1]->SetName("Track End Positions");
     graph[1]->SetMarkerColor(kRed);
     graph[1]->SetMarkerStyle(20);
-    graph[1]->SetMarkerSize(5);
+    graph[1]->SetMarkerSize(2);
 
     graph[0]->GetXaxis()->SetTitle("X (cm)");
     graph[0]->GetYaxis()->SetTitle("Y (cm)");
