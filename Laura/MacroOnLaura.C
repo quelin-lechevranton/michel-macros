@@ -60,10 +60,12 @@ int test() {
     graph[0] = new TGraph2D();
     graph[0]->SetName("Track Start Positions");
     graph[0]->SetMarkerColor(kBlue);
+    graph[0]->SetMarkerSize(5);
 
     graph[1] = new TGraph2D();
     graph[1]->SetName("Track End Positions");
     graph[1]->SetMarkerColor(kRed);
+    graph[0]->SetMarkerSize(5);
 
     graph[0]->GetXaxis()->SetTitle("X (cm)");
     graph[0]->GetYaxis()->SetTitle("Y (cm)");
