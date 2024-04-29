@@ -17,9 +17,7 @@ int test(int i_event) {
     // TFile file(path+file);
     // TFile* file=TFile::Open("/silver/DUNE/quelin-lechevranton/out/PDVD_10_muon_500MeV_LauraP_dumped.root");
     TFile file("/eos/user/t/thoudy/pdvd/sims/out/PDVD_10_muon_500MeV_LauraP_dumped.root");
-    // cout << "bonjour" << endl;
     TTree* Reco=(TTree*) file.Get("LauraPDumper/Reco");
-    cout << "bonjour" << endl;
 
     int n_event = Reco->GetEntries();
     cout << n_event << endl;
@@ -50,7 +48,11 @@ int test(int i_event) {
     Reco->SetBranchAddress("pfpTrackEndY",&TrackEndY);
     Reco->SetBranchAddress("pfpTrackEndZ",&TrackEndZ);
 
+    cout << "bonjour" << endl;
+
     Reco->GetEntry(i_event);
+
+    cout << "mode" << endl;
 
     // cout << Reco->GetEntries() << endl;
     // Int_t kiki=(Int_t) i_event;
