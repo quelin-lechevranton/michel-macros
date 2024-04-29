@@ -17,7 +17,7 @@ int MacroOnLaura(int i_event) {
     int n_event = Reco->GetEntries();
     if (i_event<0 || i_event>n_event) {
         cout << "event index out of bound" << endl; 
-        file->Close();
+        file.Close();
         return 1;
     }
 
