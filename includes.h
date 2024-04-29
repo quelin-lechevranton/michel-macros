@@ -62,6 +62,7 @@
 #include <TGraph2D.h>
 #include <TCanvas.h>
 #include <TBranch.h>
+#include <TBranchElement.h>
 #include <TFile.h>
 
 // C++ includes

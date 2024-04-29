@@ -11,7 +11,7 @@ int test(int i_event) {
     TTree* Reco=(TTree*) file->Get("LauraPDumper/Reco");
 
     int n_event = Reco->GetEntries();
-    if (!(0<=i_event<n_event)) {
+    if (i_event<0 || i_event>n_event) {
         cout << "event index out of bound" << endl; 
         file->Close();
         return 1;
@@ -88,9 +88,6 @@ int test(int i_event) {
     graph[0]->Draw("AP");
     graph[1]->Draw("P");     
 
-    for (Int_t i_event=0; i_event<treeco->GetEntries(); i_event++) {
-        auto reco_entry = treeco->GetEntry(i_event);    
-    }
     file->Close();
     return 0;
 }
