@@ -48,7 +48,7 @@ int test(Int_t i_event) {
     // Reco->SetBranchAddress("pfpTrackEndZ",&TrackEndZ);
 
     vector<int> *fPFPNClusters=0;
-    Reco->SetBranchAddress("pfpNClusters",&fPFPNClusters);
+    Reco->SetBranchAddress("pfpTrackStartX",&fPFPNClusters);
 
     Reco->GetEntry(i_event);
 
