@@ -20,7 +20,7 @@ int Clusters() {
     TFile file(filename);
     TTree *Reco = (TTree*) file.Get("LauraPDumper/Reco");
 
-    unsigned int nParticles=nullptr;
+    unsigned int nParticles=0;
 
     vector<int> *nClusters=nullptr,
         *TrackID=nullptr;
