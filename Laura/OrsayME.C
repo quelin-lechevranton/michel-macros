@@ -67,7 +67,8 @@ void GetCharacteristics(string in_root_file="PDVD_cosmics_LauraP_dumped.root", s
 
     unsigned int fNPFParticles = 0;
     
-    TFile file1("/eos/user/t/thoudy/pdvd/sims/out/PDVD_100_muon_800MeV_LauraP_dumped.root");
+    // TFile file1("/eos/user/t/thoudy/pdvd/sims/out/PDVD_100_muon_800MeV_LauraP_dumped.root");
+    TFile file1("/eos/user/t/thoudy/pdvd/sims/out/PDVD_10_muon_500MeV_LauraP_dumped.root");
     TTree* tree_reco = (TTree*) file1.Get("LauraPDumper/Reco");    
     
     tree_reco->SetBranchAddress("pfpTrackStartDirectionX",&fPFPTrackStartDirectionX);
