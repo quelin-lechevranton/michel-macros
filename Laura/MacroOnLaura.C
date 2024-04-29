@@ -91,7 +91,8 @@ int test() {
     }
 
     stringstream title;
-    title << "Tracks Ends of Event #" << i_event;
+    // title << "Tracks Ends of Event #" << i_event;
+    title << "Tracks Ends";
     TCanvas* canvas = new TCanvas("c",title.str().c_str());
     canvas->cd();
     graph[0]->Draw("AP");
