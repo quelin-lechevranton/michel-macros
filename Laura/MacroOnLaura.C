@@ -7,24 +7,23 @@
 // string path = "/silver/DUNE/quelin-lechevranton/out/";
 // string file = "PDVD_100_muon_800MeV_LauraP_dumped.root";
 
-int test(Int_t);
+int test(void);
 
 void MacroOnLaura() {
-    test(1);
+    test();
 }
 
-int test(Int_t i_event) {
+int test() {
     // TFile file(path+file);
     // TFile* file=TFile::Open("/silver/DUNE/quelin-lechevranton/out/PDVD_10_muon_500MeV_LauraP_dumped.root");
     TFile file("/eos/user/t/thoudy/pdvd/sims/out/PDVD_10_muon_500MeV_LauraP_dumped.root");
     TTree* Reco=(TTree*) file.Get("LauraPDumper/Reco");
 
-    Int_t n_event = Reco->GetEntries();
-    if (i_event<0 || i_event>n_event) {
-        cout << "event index out of bound" << endl; 
-        file.Close();
-        return 1;
-    }
+    // if (i_event<0 || i_event>n_event) {
+    //     cout << "event index out of bound" << endl; 
+    //     file.Close();
+    //     return 1;
+    // }
 
     Int_t j_total=0;
 
@@ -49,9 +48,6 @@ int test(Int_t i_event) {
 
     // vector<int> *TrackStartX=0;
     // Reco->SetBranchAddress("pfpTrackEndZ",&TrackStartX);
-
-    Reco->GetEntry(i_event);
-
     // cout << (*TrackStartX).size() << endl;
 
     // for (Int_t iev=0; iev < Reco->GetEntries(); ++iev) { //Loop over the events
@@ -73,19 +69,25 @@ int test(Int_t i_event) {
     graph[0]->GetYaxis()->SetTitle("Y (cm)");
     graph[0]->GetZaxis()->SetTitle("Z (cm)");
 
-    for (int j=0; j< TrackStartX->size(); j++) {        
-        graph[0]->SetPoint(
-            j_total++,
-            TrackStartX->at(j),
-            TrackStartY->at(j),
-            TrackStartZ->at(j)
-        );
-        graph[1]->SetPoint(
-            j_total++,
-            TrackEndX->at(j),
-            TrackEndY->at(j),
-            TrackEndZ->at(j)
-        );
+
+    Int_t n_event = Reco->GetEntries();
+    for (Int_t i_event=0; i_event < n_event; i_event++) {
+        Reco->GetEntry(i_event);
+
+        for (size_t j=0; j< TrackStartX->size(); j++) {        
+            graph[0]->SetPoint(
+                j_total++,
+                TrackStartX->at(j),
+                TrackStartY->at(j),
+                TrackStartZ->at(j)
+            );
+            graph[1]->SetPoint(
+                j_total++,
+                TrackEndX->at(j),
+                TrackEndY->at(j),
+                TrackEndZ->at(j)
+            );
+        }
     }
 
     stringstream title;
