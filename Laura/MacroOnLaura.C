@@ -4,9 +4,8 @@
 #include <sstream>
 #include <iostream>
 
-// string path = "/silver/DUNE/quelin-lechevranton/out/";
-// string file = "PDVD_100_muon_800MeV_LauraP_dumped.root";
-char filename[] = "/eos/user/t/thoudy/pdvd/sims/out/PDVD_10_muon_500MeV_LauraP_dumped.root";
+// const char filename[] = "/silver/DUNE/quelin-lechevranton/out/PDVD_10_muon_500MeV_LauraP_dumped.root"
+const char filename[] = "/eos/user/t/thoudy/pdvd/sims/out/PDVD_10_muon_500MeV_LauraP_dumped.root";
 
 int TrackEnds(void);
 int Clusters(void);
@@ -18,7 +17,23 @@ void MacroOnLaura() {
 }
 
 int Clusters() {
-    // TFile file("")
+    // TFile file(filename);
+    // TTree *Reco = (TTree*) file.Get("LauraPDumper/Reco");
+
+    // vector<double> *fPFPTrackStartDirectionX=nullptr,
+    //     *fPFPTrackStartDirectionY=nullptr,
+    //     *fPFPTrackStartDirectionZ=nullptr,
+    //     *fPFPTrackVertexDirectionX=nullptr,
+    //     *fPFPTrackVertexDirectionY=nullptr,
+    //     *fPFPTrackVertexDirectionZ=nullptr;
+    // vector<int> *fPFPNClusters=nullptr;
+    // vector<vector<double>> *fPFPCluPlane =0    ;
+    // vector<vector<double>> *fPFPCluView  =0    ;
+    // vector<vector<double>> *fPFPCluNHits  =0   ;
+    // vector<vector<double>> *fPFPCluSummedADC  =0;
+    // vector<vector<double>> *fPFPCluIntegral  =0;
+    // vector<vector<double>> *fPFPCluWidth  =0;
+    
 
     return 0;
 
@@ -46,8 +61,6 @@ int Clusters() {
 
 
 int TrackEnds() {
-    // TFile file(path+file);
-    // TFile* file=TFile::Open("/silver/DUNE/quelin-lechevranton/out/PDVD_10_muon_500MeV_LauraP_dumped.root");
     TFile* file = TFile::Open(filename);
     TTree* Reco=(TTree*) file->Get("LauraPDumper/Reco");
 
@@ -69,7 +82,7 @@ int TrackEnds() {
     // // Reco->SetBranchAddress("pfpTrackEndY",&(TrackEnd[1]));
     // // Reco->SetBranchAddress("pfpTrackEndZ",&(TrackEnd[2]));
 
-    vector<double> *TrackStartX=0, *TrackStartY=0, *TrackStartZ=0, *TrackEndX=0, *TrackEndY=0, *TrackEndZ=0;
+    vector<double> *TrackStartX=nullptr, *TrackStartY=nullptr, *TrackStartZ=nullptr, *TrackEndX=nullptr, *TrackEndY=nullptr, *TrackEndZ=nullptr;
     
     Reco->SetBranchAddress("pfpTrackStartX",&TrackStartX);
     Reco->SetBranchAddress("pfpTrackStartY",&TrackStartY);
