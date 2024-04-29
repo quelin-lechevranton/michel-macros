@@ -48,7 +48,7 @@ int Clusters() {
 int TrackEnds() {
     // TFile file(path+file);
     // TFile* file=TFile::Open("/silver/DUNE/quelin-lechevranton/out/PDVD_10_muon_500MeV_LauraP_dumped.root");
-    TFile* file = TFile::Open();
+    TFile* file = TFile::Open(filename);
     TTree* Reco=(TTree*) file->Get("LauraPDumper/Reco");
 
     // if (i_event<0 || i_event>n_event) {
