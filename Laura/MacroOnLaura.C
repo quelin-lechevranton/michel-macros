@@ -43,10 +43,10 @@ int Clusters() {
 
     Reco->SetBranchAddress("pfpTrackStartDirectionX",   &TrackStartDirectionX);
 
-    TBranch* B_nClusters = Reco->GetBranch("pfpNClusters");
-    B_nClusters->SetAddress(&nClusters);
-    B_nClusters->SetAutoDelete(true);
-    // Reco->SetBranchAddress("pfpNClusters",              &nClusters);
+    // TBranch* B_nClusters = Reco->GetBranch("pfpNClusters");
+    // B_nClusters->SetAddress(&nClusters);
+    // B_nClusters->SetAutoDelete(true);
+    Reco->SetBranchAddress("pfpNClusters",              &nClusters);
     Reco->SetBranchAddress("nPFParticles",              &nParticles);
     Reco->SetBranchAddress("pfpTrackID",                &TrackID);
     Reco->SetBranchAddress("pfpPdgCode",                &PdgCode);
@@ -63,6 +63,9 @@ int Clusters() {
     Int_t n_event=Reco->GetEntries();
     for (Int_t i_event=0; i_event < n_event; i_event++) {
         cout << "Event #" << i_event << ": ";
+
+        delete nClusters;
+        nClusters=nullptr;
 
         Reco->GetEntry(i_event);
         cout << "\tn_track=" << TrackID->size();
