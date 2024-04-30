@@ -93,6 +93,8 @@ int Clusters() {
 
                 if(CluPlane->at(i_part)[i_clu]!=0) continue;
 
+                cout << "Event#" << i_event << " Part#" << i_part << " Clu#" << i_clu << " Sum=" << CluSummedADC->at(i_part)[i_clu] << " Int=" << CluIntegral->at(i_part)[i_clu] << endl;
+
                 histo[0]->Fill(CluSummedADC->at(i_part)[i_clu]);
                 histo[1]->Fill(CluIntegral->at(i_part)[i_clu]);
             }
