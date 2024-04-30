@@ -4,8 +4,8 @@
 #include <sstream>
 #include <iostream>
 
-// const char filename[] = "/silver/DUNE/quelin-lechevranton/out/PDVD_10_muon_500MeV_LauraP_dumped.root"
-const char filename[] = "/eos/user/t/thoudy/pdvd/sims/out/PDVD_10_muon_500MeV_LauraP_dumped.root";
+const char filename[] = "/silver/DUNE/quelin-lechevranton/out/PDVD_100_muon_800MeV_LauraP_dumped.root";
+// const char filename[] = "/eos/user/t/thoudy/pdvd/sims/out/PDVD_10_muon_500MeV_LauraP_dumped.root";
 
 // int TrackEnds();
 // void Clusters();
@@ -28,12 +28,14 @@ void MacroOnLaura() {
         *TrackID=nullptr,
         *PdgCode=nullptr;
 
-    vector<double> *TrackStartDirectionX=nullptr,
-        *TrackStartDirectionY=nullptr,
-        *TrackStartDirectionZ=nullptr,
-        *TrackVertexDirectionX=nullptr,
-        *TrackVertexDirectionY=nullptr,
-        *TrackVertexDirectionZ=nullptr;
+    // vector<double> *TrackStartDirectionX=nullptr,
+    //     *TrackStartDirectionY=nullptr,
+    //     *TrackStartDirectionZ=nullptr,
+    //     *TrackVertexDirectionX=nullptr,
+    //     *TrackVertexDirectionY=nullptr,
+    //     *TrackVertexDirectionZ=nullptr;
+
+    vector<vector<double>*> TrackEnd = {nullptr,nullptr,nullptr};
 
     vector<vector<double>> *CluPlane=nullptr,
         *CluView=nullptr,
@@ -42,11 +44,9 @@ void MacroOnLaura() {
         *CluIntegral=nullptr,
         *CluWidth=nullptr;
 
-    Reco->SetBranchAddress("pfpTrackStartDirectionX",   &TrackStartDirectionX);
-
-    // TBranch* B_nClusters = Reco->GetBranch("pfpNClusters");
-    // B_nClusters->SetAddress(&nClusters);
-    // B_nClusters->SetAutoDelete(true);
+    Reco->SetBranchAddress("pfpTrackEndX",   &(TrackEnd[0]));
+    Reco->SetBranchAddress("pfpTrackEndY",   &(TrackEnd[1]));
+    Reco->SetBranchAddress("pfpTrackEndZ",   &(TrackEnd[2]));
 
     Reco->SetBranchAddress("pfpNClusters",              &nClusters);
     Reco->SetBranchAddress("nPFParticles",              &nParticles);
