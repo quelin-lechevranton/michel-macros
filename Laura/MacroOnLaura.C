@@ -115,8 +115,8 @@ int Clusters() {
 
     auto canvas = new TCanvas("c1","muon dE/dx on collection");
     canvas->cd();
-    histo[0]->Draw("hist");
-    histo[1]->Draw("samehist");
+    histo[0]->Draw("HIST");
+    histo[1]->Draw("SAMEHIST");
     // Reco->Draw("pfpCluSummedADC/pfpCluWidth","pfpPdgCode==13 && pfpCluPlane==0");
 
     return 0;
