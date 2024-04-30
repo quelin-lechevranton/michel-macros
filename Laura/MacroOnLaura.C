@@ -62,7 +62,7 @@ int Clusters() {
 
 
     int n_bin=100, x_min=0, x_max=1000;
-    vector<TH1F*> histo();
+    vector<TH1F*> histo(2);
     histo[0] = new TH1F("hSum","CluSummedADC",n_bin,x_min,x_max);
     histo[0]->SetLineColor(kRed+1);
     // histo[0]->SetName("muon CluSummedADC on collection");
@@ -81,20 +81,24 @@ int Clusters() {
         cout << "Event #" << i_event << ": ";
 
         Reco->GetEntry(i_event);
-        cout << "\tn_track=" << TrackID->size();
-        cout << "\tn_particle=" << nParticles;
-        cout << "\tn_particle=" << nClusters->size();
+        // cout << "\tn_track=" << TrackID->size();
+        // cout << "\tn_particle=" << nParticles;
+        // cout << "\tn_particle=" << nClusters->size();
 
         for(Int_t i_part=0; i_part < PdgCode->size(); i_part++) {
-            if (PdgCode[i_part]!=13) continue;
+
+            if (PdgCode->at(i_part)!=13) continue;
+
             for (Int_t i_clu=0; i_clu < CluPlane->at(i_part).size(); i_clu++) {
+
                 if(CluPlane->at(i_part)[i_clu]!=0) continue;
+
                 histo[0]->Fill(CluSummedADC->at(i_part)[i_clu]);
                 histo[1]->Fill(CluIntegral->at(i_part)[i_clu]);
             }
         }
 
-        cout << endl;
+        // cout << endl;
     } 
 
 
@@ -111,8 +115,8 @@ int Clusters() {
 
     auto canvas = new TCanvas("c1","muon dE/dx on collection");
     canvas->cd();
-    histo[0]->Draw();
-    histo[1]->Draw();
+    histo[0]->Draw("hist");
+    histo[1]->Draw("samehist");
     // Reco->Draw("pfpCluSummedADC/pfpCluWidth","pfpPdgCode==13 && pfpCluPlane==0");
 
     return 0;
