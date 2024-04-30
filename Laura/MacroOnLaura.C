@@ -19,6 +19,7 @@ void MacroOnLaura() {
 int Clusters() {
     TFile file(filename);
     TTree *Reco = (TTree*) file.Get("LauraPDumper/Reco");
+    Int_t n_event=Reco->GetEntries();
 
     //POURQUOI PAS UN POINTER ?
     unsigned int nParticles=0; 
@@ -59,7 +60,23 @@ int Clusters() {
     Reco->SetBranchAddress("pfpCluIntegral",            &CluIntegral);
     Reco->SetBranchAddress("pfpCluWidth",               &CluWidth);
 
-    Int_t n_event=Reco->GetEntries();
+
+    int n_bin=100, x_min=0, x_max=1000;
+    vector<TH1F*> histo();
+    histo[0] = new TH1F("hSum","CluSummedADC",n_bin,x_min,x_max);
+    histo[0]->SetLineColor(kRed+1);
+    // histo[0]->SetName("muon CluSummedADC on collection");
+    // histo[0]->GetXaxis()->SetTitle("SummedADC");
+    // histo[0]->GetXaxis()->SetMaximum(1000);
+    // histo[0]->GetYaxis()->SetTitle("count");
+
+    histo[1] = new TH1F("hInt","CluIntegral",n_bin,x_min,x_max);
+    histo[0]->SetLineColor(kBlue-3);
+    // histo[1]->SetName("muon CluIntegral on collection");
+    // histo[0]->GetXaxis()->SetTitle("Integral");
+    // histo[0]->GetXaxis()->SetMaximum(1000);
+
+
     for (Int_t i_event=0; i_event < n_event; i_event++) {
         cout << "Event #" << i_event << ": ";
 
@@ -67,6 +84,15 @@ int Clusters() {
         cout << "\tn_track=" << TrackID->size();
         cout << "\tn_particle=" << nParticles;
         cout << "\tn_particle=" << nClusters->size();
+
+        for(Int_t i_part=0; i_part < PdgCode->size(); i_part++) {
+            if (PdgCode[i_part]!=13) continue;
+            for (Int_t i_clu=0; i_clu < CluPlane->at(i_part).size(); i_clu++) {
+                if(CluPlane->at(i_part)[i_clu]!=0) continue;
+                histo[0]->Fill(CluSummedADC->at(i_part)[i_clu]);
+                histo[1]->Fill(CluIntegral->at(i_part)[i_clu]);
+            }
+        }
 
         cout << endl;
     } 
@@ -83,9 +109,11 @@ int Clusters() {
     // cout << endl;
 
 
-    auto canvas = new TCanvas("c1","muon's dE");
+    auto canvas = new TCanvas("c1","muon dE/dx on collection");
     canvas->cd();
-    Reco->Draw("pfpCluSummedADC/pfpCluWidth","pfpPdgCode==13 && pfpCluPlane==0");
+    histo[0]->Draw();
+    histo[1]->Draw();
+    // Reco->Draw("pfpCluSummedADC/pfpCluWidth","pfpPdgCode==13 && pfpCluPlane==0");
 
     return 0;
 
