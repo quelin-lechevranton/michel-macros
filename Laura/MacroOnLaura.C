@@ -63,8 +63,8 @@ int Clusters() {
 
     int n_bin=100, x_min=0, x_max=100000;
     vector<TH1D*> histo(2);
-    auto histo0 = new TH1D("hSum","CluSummedADC",n_bin,x_min,x_max);
-    histo0->SetLineColor(kRed+1);
+    histo[0] = new TH1D("hSum","CluSummedADC",n_bin,x_min,x_max);
+    histo[0]->SetLineColor(kRed+1);
     // histo[0]->SetName("muon CluSummedADC on collection");
     // histo[0]->GetXaxis()->SetTitle("SummedADC");
     // histo[0]->GetXaxis()->SetMaximum(1000);
@@ -101,7 +101,7 @@ int Clusters() {
 
                 cout << "Event#" << i_event << "\tPart#" << i_part << "\tClu#" << i_clu << "\tSum=" << Sum << "\tInt=" << Int << "\tWidth=" << Width << endl;
 
-                histo0->Fill(Sum);
+                histo[0]->Fill(Sum);
                 histo[1]->Fill(Int);
             }
         }
@@ -123,8 +123,8 @@ int Clusters() {
 
     auto canvas = new TCanvas("c1","muon dE/dx on collection");
     canvas->cd();
-    histo0->Draw("HIST");
-    // histo[1]->Draw("SAMEHIST");
+    histo[0]->Draw();
+    histo[1]->Draw();
     // Reco->Draw("pfpCluSummedADC/pfpCluWidth","pfpPdgCode==13 && pfpCluPlane==0");
 
     return 0;
