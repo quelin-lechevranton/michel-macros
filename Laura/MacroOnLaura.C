@@ -64,14 +64,14 @@ int Clusters() {
     int n_bin=100, x_min=0, x_max=100000;
     vector<TH1D*> histo(2);
     histo[0] = new TH1D("hSum","CluSummedADC",n_bin,x_min,x_max);
-    // histo[0]->SetLineColor(kRed+1);
+    histo[0]->SetLineColor(kRed+1);
     // histo[0]->SetName("muon CluSummedADC on collection");
     // histo[0]->GetXaxis()->SetTitle("SummedADC");
     // histo[0]->GetXaxis()->SetMaximum(1000);
     // histo[0]->GetYaxis()->SetTitle("count");
 
     histo[1] = new TH1D("hInt","CluIntegral",n_bin,x_min,x_max);
-    // histo[1]->SetLineColor(kBlue-3);
+    histo[1]->SetLineColor(kBlue-3);
     // histo[1]->SetName("muon CluIntegral on collection");
     // histo[0]->GetXaxis()->SetTitle("Integral");
     // histo[0]->GetXaxis()->SetMaximum(1000);
@@ -101,8 +101,9 @@ int Clusters() {
 
                 cout << "Event#" << i_event << "\tPart#" << i_part << "\tClu#" << i_clu << "\tSum=" << Sum << "\tInt=" << Int << "\tWidth=" << Width << endl;
 
-                histo[0]->Fill(Sum);
-                histo[1]->Fill(Int);
+
+
+                cout << histo[0]->Fill(Sum) << histo[1]->Fill(Int) << endl;
             }
         }
 
@@ -125,7 +126,7 @@ int Clusters() {
     canvas->cd();
     histo[0]->Draw();
     histo[1]->Draw();
-    // Reco->Draw("pfpCluSummedADC/pfpCluWidth","pfpPdgCode==13 && pfpCluPlane==0");
+    Reco->Draw("pfpCluSummedADC/pfpCluWidth","pfpPdgCode==13 && pfpCluPlane==0");
 
     return 0;
 
