@@ -103,7 +103,7 @@ int Clusters() {
 
 
 
-                cout << histo[0]->Fill(Sum) << histo[1]->Fill(Int) << endl;
+                cout << histo[0]->Fill(Sum) << " " << histo[1]->Fill(Int) << endl;
             }
         }
 
@@ -121,12 +121,13 @@ int Clusters() {
     // }
     // cout << endl;
 
+    cout << histo[0]->GetEntries() << endl;
 
     auto canvas = new TCanvas("c1","muon dE/dx on collection");
     canvas->cd();
     histo[0]->Draw();
     histo[1]->Draw();
-    Reco->Draw("pfpCluSummedADC/pfpCluWidth","pfpPdgCode==13 && pfpCluPlane==0");
+    // Reco->Draw("pfpCluSummedADC/pfpCluWidth","pfpPdgCode==13 && pfpCluPlane==0");
 
     return 0;
 
