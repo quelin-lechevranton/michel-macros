@@ -102,8 +102,9 @@ int Clusters() {
                 cout << "Event#" << i_event << "\tPart#" << i_part << "\tClu#" << i_clu << "\tSum=" << Sum << "\tInt=" << Int << "\tWidth=" << Width << endl;
 
 
-
-                cout << histo[0]->Fill(Sum) << " " << histo[1]->Fill(Int) << endl;
+                histo[0]->Fill(Sum);
+                histo[1]->Fill(Int);
+                // cout << histo[0]->Fill(Sum) << " " << histo[1]->Fill(Int) << endl;
             }
         }
 
@@ -127,7 +128,7 @@ int Clusters() {
     auto canvas = new TCanvas("c1","muon dE/dx on collection");
     canvas->cd();
     histo[0]->Draw("hist");
-    // histo[1]->Draw();
+    histo[1]->Draw();
     // Reco->Draw("pfpCluSummedADC/pfpCluWidth","pfpPdgCode==13 && pfpCluPlane==0");
     canvas->SaveAs("Cluster.root");
     canvas->SaveAs("Cluster.pdf");
