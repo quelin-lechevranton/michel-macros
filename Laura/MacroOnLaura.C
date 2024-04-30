@@ -76,6 +76,8 @@ int Clusters() {
     // histo[0]->GetXaxis()->SetTitle("Integral");
     // histo[0]->GetXaxis()->SetMaximum(1000);
 
+    double Sum,Int,Width;
+
 
     for (Int_t i_event=0; i_event < n_event; i_event++) {
         // cout << "Event #" << i_event << ": ";
@@ -93,10 +95,14 @@ int Clusters() {
 
                 if(CluPlane->at(i_part)[i_clu]!=0) continue;
 
-                cout << "Event#" << i_event << " Part#" << i_part << " Clu#" << i_clu << " Sum=" << CluSummedADC->at(i_part)[i_clu] << " Int=" << CluIntegral->at(i_part)[i_clu] << endl;
+                Sum=CluSummedADC->at(i_part)[i_clu];
+                Int=CluIntegral->at(i_part)[i_clu];
+                Width=CluWidth->at(i_part)[i_clu];
 
-                histo[0]->Fill(CluSummedADC->at(i_part)[i_clu]);
-                histo[1]->Fill(CluIntegral->at(i_part)[i_clu]);
+                cout << "Event#" << i_event << "\tPart#" << i_part << "\tClu#" << i_clu << "\tSum=" << Sum << "\tInt=" << Int << "\tWidth=" << Width << endl;
+
+                histo[0]->Fill(Sum/Width);
+                histo[1]->Fill(Int/Width);
             }
         }
 
