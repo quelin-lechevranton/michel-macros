@@ -62,10 +62,11 @@ void MacroOnLaura() {
     Reco->SetBranchAddress("pfpCluWidth",               &CluWidth);
 
 
-    int n_bin=10, x_min=0, x_max=5000;
+    int n_bin=100, x_min=0, x_max=5000;
     vector<TH1D*> histo(2);
     histo[0] = new TH1D("hSum",";SummedADC/Width;count",n_bin,x_min,x_max);
     histo[0]->SetLineColor(kRed+1);
+    histo[0]->SetLineWidth(2);
     // histo[0]->SetName("muon CluSummedADC on collection");
     // histo[0]->GetXaxis()->SetTitle("SummedADC");
     // histo[0]->GetXaxis()->SetMaximum(1000);
@@ -73,6 +74,7 @@ void MacroOnLaura() {
 
     histo[1] = new TH1D("hInt",";Integral/Width;count",n_bin,x_min,x_max);
     histo[1]->SetLineColor(kBlue-3);
+    histo[1]->SetLineWidth(2);
     // histo[1]->SetName("muon CluIntegral on collection");
     // histo[0]->GetXaxis()->SetTitle("Integral");
     // histo[0]->GetXaxis()->SetMaximum(1000);
