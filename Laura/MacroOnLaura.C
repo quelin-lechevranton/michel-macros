@@ -122,6 +122,7 @@ int Clusters() {
     // cout << endl;
 
     cout << histo[0]->GetEntries() << endl;
+    cout << histo[1]->GetEntries() << endl;
 
     auto canvas = new TCanvas("c1","muon dE/dx on collection");
     canvas->cd();
