@@ -129,11 +129,10 @@ int Clusters() {
     histo[0]->Draw("hist");
     // histo[1]->Draw();
     // Reco->Draw("pfpCluSummedADC/pfpCluWidth","pfpPdgCode==13 && pfpCluPlane==0");
+    canvas->SaveAs("Cluster.root");
+    canvas->SaveAs("Cluster.pdf");
 
     return 0;
-
-
-
 }
 
 
