@@ -61,7 +61,7 @@ void MacroOnLaura() {
     Reco->SetBranchAddress("pfpCluWidth",               &CluWidth);
 
 
-    int n_bin=100, x_min=0, x_max=100000;
+    int n_bin=100, x_min=0, x_max=5000;
     vector<TH1D*> histo(2);
     histo[0] = new TH1D("hSum",";SummedADC/Width;count",n_bin,x_min,x_max);
     histo[0]->SetLineColor(kRed+1);
@@ -127,11 +127,11 @@ void MacroOnLaura() {
 
     auto canvas = new TCanvas("c1","muon dE/dx on collection");
     canvas->cd();
-    // histo[0]->Draw("hist");
+    histo[0]->Draw("hist");
     // histo[1]->Draw("SameHist");
-    Reco->Draw("pfpCluSummedADC/pfpCluWidth","pfpPdgCode==13 && pfpCluPlane==0");
-    // canvas->SaveAs("Cluster.root");
-    // canvas->SaveAs("Cluster.pdf");
+    // Reco->Draw("pfpCluSummedADC/pfpCluWidth","pfpPdgCode==13 && pfpCluPlane==0");
+    canvas->SaveAs("Cluster.root");
+    canvas->SaveAs("Cluster.pdf");
 }
 
 
