@@ -7,16 +7,16 @@
 // const char filename[] = "/silver/DUNE/quelin-lechevranton/out/PDVD_10_muon_500MeV_LauraP_dumped.root"
 const char filename[] = "/eos/user/t/thoudy/pdvd/sims/out/PDVD_10_muon_500MeV_LauraP_dumped.root";
 
-int TrackEnds(void);
-void Clusters(void);
+// int TrackEnds();
+// void Clusters();
+
+// void MacroOnLaura() {
+//     // TrackEnds();
+//     Clusters();
+
+// }
 
 void MacroOnLaura() {
-    // TrackEnds();
-    Clusters();
-
-}
-
-void Clusters() {
     TFile file(filename);
     TTree *Reco = (TTree*) file.Get("LauraPDumper/Reco");
     Int_t n_event=Reco->GetEntries();
