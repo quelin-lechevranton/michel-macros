@@ -8,7 +8,7 @@
 const char filename[] = "/eos/user/t/thoudy/pdvd/sims/out/PDVD_10_muon_500MeV_LauraP_dumped.root";
 
 int TrackEnds(void);
-int Clusters(void);
+void Clusters(void);
 
 void MacroOnLaura() {
     // TrackEnds();
@@ -16,7 +16,7 @@ void MacroOnLaura() {
 
 }
 
-int Clusters() {
+void Clusters() {
     TFile file(filename);
     TTree *Reco = (TTree*) file.Get("LauraPDumper/Reco");
     Int_t n_event=Reco->GetEntries();
@@ -133,7 +133,6 @@ int Clusters() {
     canvas->SaveAs("Cluster.root");
     canvas->SaveAs("Cluster.pdf");
 
-    return 0;
 }
 
 
