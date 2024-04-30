@@ -63,7 +63,7 @@ void MacroOnLaura() {
     Reco->SetBranchAddress("pfpCluWidth",    &CluWidth);
 
 
-    int n_bin=50, x_min=0, x_max=1200;
+    int n_bin=50, x_min=0, x_max=10000;
     vector<TH1D*> histo(2);
     histo[0] = new TH1D("hSum",";SummedADC/Width;count",n_bin,x_min,x_max);
     histo[0]->SetLineColor(kRed+1);
