@@ -4,9 +4,10 @@
 #include <sstream>
 #include <iostream>
 
-// const char filename[] = "/silver/DUNE/quelin-lechevranton/out/PDVD_10_muon_500MeV_LauraP_dumped.root"
+// const char filename[] = "/silver/DUNE/quelin-lechevranton/out/PDVD_10_muon_500MeV_LauraP_dumped.root";
 // const char filename[] = "/eos/user/t/thoudy/pdvd/sims/out/PDVD_10_muon_500MeV_LauraP_dumped.root";
-const char filename[] = "/eos/user/t/thoudy/pdvd/sims/out/PDVD_100_muon_800MeV_LauraP_dumped.root";
+const char filename[] = "/eos/user/t/thoudy/pdvd/sims/out/pdvd_100_muon_1GeV_dumped.root";
+// const char filename[] = "/eos/user/t/thoudy/pdvd/sims/out/PDVD_100_muon_800MeV_LauraP_dumped.root";
 
 // int TrackEnds();
 // void Clusters();
@@ -49,17 +50,17 @@ void MacroOnLaura() {
     Reco->SetBranchAddress("pfpTrackEndY",   &(TrackEnd[1]));
     Reco->SetBranchAddress("pfpTrackEndZ",   &(TrackEnd[2]));
 
-    Reco->SetBranchAddress("pfpNClusters",              &nClusters);
-    Reco->SetBranchAddress("nPFParticles",              &nParticles);
-    Reco->SetBranchAddress("pfpTrackID",                &TrackID);
-    Reco->SetBranchAddress("pfpPdgCode",                &PdgCode);
+    Reco->SetBranchAddress("pfpNClusters",   &nClusters);
+    Reco->SetBranchAddress("nPFParticles",   &nParticles);
+    Reco->SetBranchAddress("pfpTrackID",     &TrackID);
+    Reco->SetBranchAddress("pfpPdgCode",     &PdgCode);
 
-    Reco->SetBranchAddress("pfpCluPlane",               &CluPlane);
-    Reco->SetBranchAddress("pfpCluView",                &CluView);
-    Reco->SetBranchAddress("pfpCluNHits",               &CluNHits);
-    Reco->SetBranchAddress("pfpCluSummedADC",           &CluSummedADC);
-    Reco->SetBranchAddress("pfpCluIntegral",            &CluIntegral);
-    Reco->SetBranchAddress("pfpCluWidth",               &CluWidth);
+    Reco->SetBranchAddress("pfpCluPlane",    &CluPlane);
+    Reco->SetBranchAddress("pfpCluView",     &CluView);
+    Reco->SetBranchAddress("pfpCluNHits",    &CluNHits);
+    Reco->SetBranchAddress("pfpCluSummedADC",&CluSummedADC);
+    Reco->SetBranchAddress("pfpCluIntegral", &CluIntegral);
+    Reco->SetBranchAddress("pfpCluWidth",    &CluWidth);
 
 
     int n_bin=50, x_min=0, x_max=1200;
@@ -90,7 +91,7 @@ void MacroOnLaura() {
         // cout << "\tn_particle=" << nParticles;
         // cout << "\tn_particle=" << nClusters->size();
 
-        for(Int_t i_part=0; i_part < PdgCode->size(); i_part++) {
+        for(Int_t i_part=0; i_part < nParticles; i_part++) {
 
             if (PdgCode->at(i_part)!=13) continue;
 
@@ -109,6 +110,11 @@ void MacroOnLaura() {
                 histo[1]->Fill(Int/Width);
                 // cout << histo[0]->Fill(Sum) << " " << histo[1]->Fill(Int) << endl;
             }
+        }
+
+        for(int i_track : *TrackID) {
+
+
         }
 
         // cout << endl;
