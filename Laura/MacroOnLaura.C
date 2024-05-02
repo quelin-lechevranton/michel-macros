@@ -11,9 +11,9 @@
 
 vector<string> filelist = {
     // "/silver/DUNE/quelin-lechevranton/out/PDVD_10_muon_500MeV_LauraP_dumped.root",
-    "/eos/user/t/thoudy/pdvd/sims/out/PDVD_10_muon_500MeV_LauraP_dumped.root",
+    "/eos/user/t/thoudy/pdvd/sims/out/protodunevd_10_muon_500MeV_LauraP_dumped.root",
     "/eos/user/t/thoudy/pdvd/sims/out/pdvd_100_muon_1GeV_dumped.root",
-    "/eos/user/t/thoudy/pdvd/sims/out/PDVD_100_muon_800MeV_LauraP_dumped.root"
+    "/eos/user/t/thoudy/pdvd/sims/out/protodunevd_100_muon_800MeV_dumped.root"
 };
 
 // int TrackEnds();
