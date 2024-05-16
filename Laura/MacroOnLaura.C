@@ -13,11 +13,11 @@
 // };
 
 vector<string> filelist = {
-    "/silver/DUNE/quelin-lechevranton/out/protodunevd_10_muon_500MeV_dumped.root",
-    "/silver/DUNE/quelin-lechevranton/out/pdvd_100_muon_1GeV_dumped.root",
-    "/silver/DUNE/quelin-lechevranton/out/protodunevd_100_muon_800MeV_dumped.root",
-    "/silver/DUNE/quelin-lechevranton/out/pdvd_1k_muon_1500MeV_dumped.root",
-    "/silver/DUNE/quelin-lechevranton/out/pdvd_1k_muon_2GeV_allangles_dumped.root"
+    "/silver/DUNE/quelin-lechevranton/out/protodunevd_10_muon_500MeV_LPdumped.root",
+    "/silver/DUNE/quelin-lechevranton/out/pdvd_100_muon_1GeV_LPdumped.root",
+    "/silver/DUNE/quelin-lechevranton/out/protodunevd_100_muon_800MeV_LPdumped.root",
+    "/silver/DUNE/quelin-lechevranton/out/pdvd_1k_muon_1500MeV_LPdumped.root",
+    "/silver/DUNE/quelin-lechevranton/out/pdvd_1k_muon_2GeV_allangles_LPdumped.root"
 };
 
 void TrackEnds();
