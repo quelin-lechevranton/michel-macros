@@ -1,5 +1,6 @@
 #include <vector>
 #include <string>
+#include <iostream>
 
 using namespace std;
 
@@ -46,17 +47,17 @@ void Macro() {
         TFile file(filename.c_str());
         TTree *Reco = file.Get<TTree>("JDumper/Reco");
         TTree *Truth = file.Get<TTree>("JDumper/Truth");
-        int n_ev=Reco->GetEntries();
-        nEvent+=n_ev;
+        int n_evt=Reco->GetEntries();
+        nEvent+=n_evt;
 
         Reco->SetBranchAddress("", &);
 
         Truth->SetBranchAddress("", &);
 
-        for (int i_ev=0; i_ev < n_ev; i_ev++) {
+        for (int i_evt=0; i_evt < n_evt; i_evt++) {
 
-            Reco->GetEntry(i_ev);
-            Truth->GetEntry(i_ev);
+            Reco->GetEntry(i_evt);
+            Truth->GetEntry(i_evt);
 
             for(int i_trk=0; i_trk < nTracks ; i_trk++) {
 
