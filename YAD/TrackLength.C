@@ -4,7 +4,7 @@
 
 using namespace std;
 
-// const vector<string> filelist = {
+const vector<string> filelist = {
 //     "~/Code/out/protodunevd_10_muon_500MeV_Jdumped.root",
 //     "~/Code/out/protodunevd_100_muon_800MeV_Jdumped.root",
 //     "~/Code/out/pdvd_1k_muon_2GeV_allangles_Jdumped.root",
