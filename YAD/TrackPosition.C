@@ -89,11 +89,11 @@ void TrackPosition() {
 
             R.GetEntry(i_evt);
 
-            N_trk+=n_trk;
+            N_trk+=R.NTrk;
 
             for(int i_pfp=0; i_pfp < R.NPfp ; i_pfp++) {
 
-                int i_trk = R.PfpTrkID->at(i_pfp)
+                int i_trk = R.PfpTrkID->at(i_pfp);
                 if (i_trk < 0) {continue;}
 
                 bool is_inside = true;
@@ -187,8 +187,6 @@ void TrackPosition() {
             }
         
         } //end of event loop
-
-        file.Close();
     
     } //end of file loop
 
