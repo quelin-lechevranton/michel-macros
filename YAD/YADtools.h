@@ -54,13 +54,13 @@ public:
     vector<Vec4D>   *Dep=nullptr;
     vector<double>  *DepE=nullptr;
 
-    Reco(const char* filename) : file{new TFile(filename)} {
-        reco = file->Get<TTree>("YAD/Reco");
+    Truth(const char* filename) : file{new TFile(filename)} {
+        truth = file->Get<TTree>("YAD/Truth");
 
         //Events
-        reco->SetBranchAddress("fEvent",          &Event);
-        reco->SetBranchAddress("fRun",            &Run);
-        reco->SetBranchAddress("fSubrun",         &SubRun);
+        truth->SetBranchAddress("fEvent",          &Event);
+        truth->SetBranchAddress("fRun",            &Run);
+        truth->SetBranchAddress("fSubrun",         &SubRun);
 
         //MCTruth
         truth->SetBranchAddress("fNPrt",   &NPrt);
@@ -87,17 +87,37 @@ public:
         truth->SetBranchAddress("fDepE",         &DepE); 
 
     }
-    ~Reco() { file-> Close(); }
+    ~Truth() { file-> Close(); }
     
     int GetEntries() { return reco->GetEntries(); }
     void GetEntry(int i) { 
         
         truth->GetEntry(i); 
 
-        PrtStPt->SetPxPyPzE( *PrtStX, *PrtStY, *PrtStZ, *PrtStT);
-        PrtStP->SetPxPyPzE( *PrtStPx, *PrtStPy, *PrtStPz, *PrtStE);
+        for(int i_prt=0; i_prt<NPrt; i_prt++) {
 
-        Dep->SetPxPyPzE( *DepX, *DepY, *DepZ, *DepT);
+            PrtStPt->at(i_prt).SetPxPyPzE( 
+                PrtStX->at(i_prt),
+                PrtStY->at(i_prt),
+                PrtStZ->at(i_prt),
+                PrtStT->at(i_prt)
+            );
+            PrtStP->at(i_prt).SetPxPyPzE(
+                PrtStPx->at(i_prt),
+                PrtStPy->at(i_prt),
+                PrtStPz->at(i_prt),
+                PrtStE->at(i_prt)
+            );
+        }
+
+        for(int i_dep=0; i_dep<NDep; i_dep++) {
+            Dep->at(i_dep).SetPxPyPzE(
+                DepX->at(i_dep),
+                DepY->at(i_dep),
+                DepZ->at(i_dep),
+                DepT->at(i_dep)
+            );
+        }
 
     }
     
