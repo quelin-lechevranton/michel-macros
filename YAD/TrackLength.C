@@ -106,8 +106,6 @@ void TrackLength() {
         int n_ev=R.GetEntries();
         nEvent+=n_ev;
 
-        int nTracks=R.NTrk;
-        vector<double>* TrackLength=R.TrkLength;
 
         for (int i_ev=0; i_ev < n_ev; i_ev++) {
 
@@ -117,6 +115,9 @@ void TrackLength() {
             double TruStPx= T.PrtStP[0].X();
             double TruStP = T.PrtStP[0].M();
             double TruZen = ZenithAngle(-TruStPx,TruStP);
+
+            int nTracks=R.NTrk;
+            vector<double>* TrackLength=R.TrkLength;
 
             hStartP[0]->Fill(TruStP);
             hZen[0]->Fill(TruZen);
