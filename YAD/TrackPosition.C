@@ -203,7 +203,7 @@ void TrackPosition() {
     c1->cd();
     // gTrkEnds[0]->GetXaxis()->SetLimits(-500,500);
     gTrkEnds[0]->Draw("p");
-    gTrkEnds[1]->Draw("samep");
+    // gTrkEnds[1]->Draw("samep");
     // gSpt->Draw("samep");
     // gTrkPt->Draw("samep");
     // c1->cd(2);
