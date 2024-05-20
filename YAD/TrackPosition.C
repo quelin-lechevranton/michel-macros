@@ -1,43 +1,10 @@
-#include <vector>
-#include <string>
-#include <iostream>
+#include "YADtools.h"
 
 using namespace std;
 
-// const vector<string> filelist = {
-//     "~/Code/out/protodunevd_10_muon_500MeV_Jdumped.root",
-//     "~/Code/out/protodunevd_100_muon_800MeV_Jdumped.root",
-//     "~/Code/out/pdvd_1k_muon_2GeV_allangles_Jdumped.root",
-//     "~/Code/out/pdvd_1k_muon_1500MeV_Jdumped.root",
-//     "~/Code/out/pdvd_100_muon_1GeV_Jdumped.root"
-// };
-
-const vector<string> filelist = {
-    // "/silver/DUNE/quelin-lechevranton/out/pdvd_10_muon_test_Jdumped.root"
-    "/silver/DUNE/quelin-lechevranton/out/protodunevd_10_muon_500MeV_Jdumped.root",
-    "/silver/DUNE/quelin-lechevranton/out/protodunevd_100_muon_800MeV_Jdumped.root",
-    // "/silver/DUNE/quelin-lechevranton/out/pdvd_1k_muon_2GeV_allangles_Jdumped.root"
-    "/silver/DUNE/quelin-lechevranton/out/pdvd_1k_muon_1500MeV_Jdumped.root",
-    "/silver/DUNE/quelin-lechevranton/out/pdvd_100_muon_1GeV_Jdumped.root"
-};
+const vector<string> filelist = yad::ReadFileList(1,"jeremy.list");
 
 void TrackPosition() {
-
-    int n_trk,
-        n_spt;
-
-    vector<int> *SptTrkID=nullptr,
-                *TrkNPt=nullptr;
-
-    vector<double>  *TrkLen=nullptr;
-
-    vector<vector<vector<double>>*> TrkPt = {nullptr,nullptr,nullptr};
-
-    vector<vector<double>*> Spt={nullptr,nullptr,nullptr},
-                            TrkSt={nullptr,nullptr,nullptr},
-                            TrkEnd={nullptr,nullptr,nullptr};
-
-    // Hist ==================================================
 
     vector<TGraph2D*> gTrkEnds(8);
     gTrkEnds[0] = new TGraph2D();
@@ -113,56 +80,28 @@ void TrackPosition() {
 
         cout << "\e[3mOpening file #" << i_file+1 << ": " << filename << "\e[0m" << endl;
 
-        TFile file(filename.c_str());
-        TTree *Reco = file.Get<TTree>("JDumper/Reco");
-        // TTree *Truth = file.Get<TTree>("JDumper/Truth");
-        int n_evt=Reco->GetEntries();
-
-        Reco->SetBranchAddress("fNTracks",      &n_trk);
-        Reco->SetBranchAddress("fNPoints",      &n_spt);
-
-        Reco->SetBranchAddress("fTrackLength",  &TrkLen);
-        Reco->SetBranchAddress("fTrackStartX",  &TrkSt[0]);
-        Reco->SetBranchAddress("fTrackStartY",  &TrkSt[1]);
-        Reco->SetBranchAddress("fTrackStartZ",  &TrkSt[2]);
-        Reco->SetBranchAddress("fTrackEndX",    &TrkEnd[0]);
-        Reco->SetBranchAddress("fTrackEndY",    &TrkEnd[1]);
-        Reco->SetBranchAddress("fTrackEndZ",    &TrkEnd[2]);
-
-        Reco->SetBranchAddress("fTrackNPoints", &TrkNPt);
-        Reco->SetBranchAddress("fTrackPtX",     &TrkPt[0]);
-        Reco->SetBranchAddress("fTrackPtY",     &TrkPt[1]);
-        Reco->SetBranchAddress("fTrackPtZ",     &TrkPt[2]);
-
-        Reco->SetBranchAddress("fPointTrackID", &SptTrkID);
-        Reco->SetBranchAddress("fPointX",       &Spt[0]);
-        Reco->SetBranchAddress("fPointY",       &Spt[1]);
-        Reco->SetBranchAddress("fPointZ",       &Spt[2]);
-
-        // Truth->SetBranchAddress("", &);
+        yad::Reco R(filename.c_str);
+        int n_evt=R.GetEntries();
 
         N_evt+=n_evt;
 
         for (int i_evt=0; i_evt < n_evt; i_evt++) {
 
-            Reco->GetEntry(i_evt);
-            // Truth->GetEntry(i_evt);
+            R.GetEntry(i_evt);
 
             N_trk+=n_trk;
 
             for(int i_trk=0; i_trk < n_trk ; i_trk++) {
 
-                // if(TrkLen->at(i_trk) <20) {cout << "too short\n"; continue;}
-
                 bool is_inside = true;
 
                 for (int i_spt=0; i_spt < n_spt; i_spt++) {
 
-                    if (SptTrkID->at(i_spt) != i_trk) {continue;}               
+                    if (R.SptTrkID->at(i_spt) != i_trk) {continue;}               
 
-                    double X = Spt[0]->at(i_spt);     
-                    double Y = Spt[1]->at(i_spt);     
-                    double Z = Spt[2]->at(i_spt);     
+                    double X = R.Spt->at(i_spt).X();     
+                    double Y = R.Spt->at(i_spt).Y();     
+                    double Z = R.Spt->at(i_spt).Z();     
 
                     gSpt->SetPoint(iSpt++,Y,Z,X);
                 
@@ -170,21 +109,17 @@ void TrackPosition() {
                     bool y_inside = -317 <= Y && Y <= 317;
                     bool z_inside = 20 <= Z && Z <= 180;
 
-                    // if (!x_inside) {cout << "X overflow: " << X << endl; }
-                    // if (!y_inside) {cout << "Y overflow: " << Y << endl; }
-                    // if (!z_inside) {cout << "Z overflow: " << Z << endl; }
-
                     is_inside = is_inside && x_inside && y_inside && z_inside;
 
                     if (!is_inside) {break;}
                 } //end of spt loop 
 
-                double StX =  TrkSt[0]->at(i_trk);
-                double StY =  TrkSt[1]->at(i_trk);
-                double StZ =  TrkSt[2]->at(i_trk);
-                double EndX = TrkEnd[0]->at(i_trk);
-                double EndY = TrkEnd[1]->at(i_trk);
-                double EndZ = TrkEnd[2]->at(i_trk);
+                double StX =  R.TrkPt->at(i_trk)[0].X();
+                double StY =  R.TrkPt->at(i_trk)[0].Y();
+                double StZ =  R.TrkPt->at(i_trk)[0].Z();
+                double EndX = R.TrkPt->at(i_trk).back().X();
+                double EndY = R.TrkPt->at(i_trk).back().Y();
+                double EndZ = R.TrkPt->at(i_trk).back().Z();
 
                 gTrkEnds[0]->SetPoint(iTrkAll,
                     StY,
@@ -213,9 +148,9 @@ void TrackPosition() {
                     EndX
                 );
 
-                for (int i_pt=0; i_pt<TrkNPt->at(i_trk); i_pt++) {
-                    gTrkPt->SetPoint(iTrkPt++,TrkPt[0]->at(i_trk)[i_pt],TrkPt[1]->at(i_trk)[i_pt],TrkPt[2]->at(i_trk)[i_pt]);
-                }
+                // for (int i_pt=0; i_pt<TrkNPt->at(i_trk); i_pt++) {
+                //     gTrkPt->SetPoint(iTrkPt++,TrkPt[0]->at(i_trk)[i_pt],TrkPt[1]->at(i_trk)[i_pt],TrkPt[2]->at(i_trk)[i_pt]);
+                // }
 
                 if (!is_inside) {continue;}
 

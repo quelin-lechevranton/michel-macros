@@ -50,7 +50,7 @@ public:
 
     //SimEnergy*Deposit
     int NDep;
-    vector<double>  *DepPdg=nullptr;
+    vector<int>  *DepPdg=nullptr;
     vector<Vec4D>   *Dep=nullptr;
     vector<double>  *DepE=nullptr;
 
@@ -74,7 +74,6 @@ public:
         truth->SetBranchAddress("fPrtStPx",  &PrtStPx); 
         truth->SetBranchAddress("fPrtStPy",  &PrtStPy); 
         truth->SetBranchAddress("fPrtStPz",  &PrtStPz); 
-        // truth->SetBranchAddress("fPrtStP",   &PrtStP); 
         truth->SetBranchAddress("fPrtStE",   &PrtStE); 
 
         //SimEnergyDeposit
@@ -86,7 +85,7 @@ public:
         truth->SetBranchAddress("fDepT",         &DepT); 
         truth->SetBranchAddress("fDepE",         &DepE); 
 
-    }
+    size_t}
     ~Truth() { file-> Close(); }
     
     int GetEntries() { return truth->GetEntries(); }
@@ -118,9 +117,7 @@ public:
                 DepT->at(i_dep)
             );
         }
-
     }
-    
 };
 
 class Reco {
@@ -234,7 +231,7 @@ public:
     void GetEntry(int i) { 
 
         reco->GetEntry(i); 
-
+size_t
         for (int i_trk=0; i_trk<NTrk; i_trk++) {
             for (int i_tpt=0; i_tpt<TrkNPt->at(i_trk); i_tpt++) {
 
@@ -267,34 +264,34 @@ public:
     
 };
 
-// vector<string> ReadFileList(int nfiles, string FileName)
-// {
-//   if(Debug) std::cout << "    ReadFileList - start " << endl;
-//   vector<string> vec;
-//   string file;
-//   string filename = FileName;
-//   ifstream File(filename.c_str());
+vector<string> ReadFileList(int nfiles, string FileName)
+{
+  if(Debug) std::cout << "    ReadFileList - start " << endl;
+  vector<string> vec;
+  string file;
+  string filename = FileName;
+  ifstream File(filename.c_str());
 
-//   if(File){
-//     cout << "    ReadFileList - " << filename << " opened"<< endl;
-//     while(File.good()){
-//       File >> file;
-//       vec.push_back(file);
-//       if(nfiles>0 && vec.size() == nfiles) break;
-//     }
-//   }
-//   else{
-//     cerr << "    ReadFileList - " << filename << " not found. Exit." << endl;
-//     exit(1);
-//   }
+  if(File){
+    cout << "    ReadFileList - " << filename << " opened"<< endl;
+    while(File.good()){
+      File >> file;
+      vec.push_back(file);
+      if(nfiles>0 && vec.size() == nfiles) break;
+    }
+  }
+  else{
+    cerr << "    ReadFileList - " << filename << " not found. Exit." << endl;
+    exit(1);
+  }
 
-//   File.close();
+  File.close();
 
-//   if(nfiles == 0) vec.pop_back();
-//   cout << "    ReadFileList - " << vec.size() << " files found in " << FileName << endl;
-//   cout << "    finished" << endl;
+  if(nfiles == 0) vec.pop_back();
+  cout << "    ReadFileList - " << vec.size() << " files found in " << FileName << endl;
+  cout << "    finished" << endl;
 
-//   return vec;
-// }
+  return vec;
+}
 
 }
