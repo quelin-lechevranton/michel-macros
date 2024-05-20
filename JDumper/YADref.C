@@ -28,6 +28,7 @@ void YADref() {
 
             Reco->GetEntry(i_evt);
             cout << TrkLen->at(0) << endl;
+        }
 
         file.Close();
 
