@@ -95,13 +95,13 @@ public:
 
         for(int i_prt=0; i_prt<NPrt; i_prt++) {
 
-            PrtStPt->at(i_prt).SetPxPyPzE( 
+            PrtStPt->at(i_prt).emplace_back( 
                 PrtStX->at(i_prt),
                 PrtStY->at(i_prt),
                 PrtStZ->at(i_prt),
                 PrtStT->at(i_prt)
             );
-            PrtStP->at(i_prt).SetPxPyPzE(
+            PrtStP->at(i_prt).emplace_back(
                 PrtStPx->at(i_prt),
                 PrtStPy->at(i_prt),
                 PrtStPz->at(i_prt),
@@ -110,7 +110,7 @@ public:
         }
 
         for(int i_dep=0; i_dep<NDep; i_dep++) {
-            Dep->at(i_dep).SetPxPyPzE(
+            Dep->at(i_dep).emplace_back(
                 DepX->at(i_dep),
                 DepY->at(i_dep),
                 DepZ->at(i_dep),
@@ -232,33 +232,33 @@ public:
 
         reco->GetEntry(i); 
 
-        // for (int i_trk=0; i_trk<NTrk; i_trk++) {
-        //     for (int i_tpt=0; i_tpt<TrkNPt->at(i_trk); i_tpt++) {
+        for (int i_trk=0; i_trk<NTrk; i_trk++) {
+            for (int i_tpt=0; i_tpt<TrkNPt->at(i_trk); i_tpt++) {
 
-        //         TrkPt->at(i_trk)[i_tpt].SetXYZ(
-        //             TrkPtX->at(i_trk)[i_tpt],
-        //             TrkPtY->at(i_trk)[i_tpt],
-        //             TrkPtZ->at(i_trk)[i_tpt]
-        //         );
+                TrkPt->at(i_trk)[i_tpt].emplace_back(
+                    TrkPtX->at(i_trk)[i_tpt],
+                    TrkPtY->at(i_trk)[i_tpt],
+                    TrkPtZ->at(i_trk)[i_tpt]
+                );
 
-        //         TrkDir->at(i_trk)[i_tpt].SetXYZ(
-        //             TrkDirX->at(i_trk)[i_tpt],
-        //             TrkDirY->at(i_trk)[i_tpt],
-        //             TrkDirZ->at(i_trk)[i_tpt]
-        //         );
-        //     }
-        // }
+                TrkDir->at(i_trk)[i_tpt].emplace_back(
+                    TrkDirX->at(i_trk)[i_tpt],
+                    TrkDirY->at(i_trk)[i_tpt],
+                    TrkDirZ->at(i_trk)[i_tpt]
+                );
+            }
+        }
         
-        // for (int i_pfp=0; i_pfp<NPfp; i_pfp++) {
-        //     for (int i_spt=0; i_spt<PfpNSpt->at(i_pfp); i_spt++) {
+        for (int i_pfp=0; i_pfp<NPfp; i_pfp++) {
+            for (int i_spt=0; i_spt<PfpNSpt->at(i_pfp); i_spt++) {
                 
-        //         Spt->at(i_pfp)[i_spt].SetXYZ(
-        //             SptX->at(i_pfp)[i_spt],
-        //             SptY->at(i_pfp)[i_spt],
-        //             SptZ->at(i_pfp)[i_spt]
-        //         );
-        //     }
-        // }
+                Spt->at(i_pfp)[i_spt].emplace_back(
+                    SptX->at(i_pfp)[i_spt],
+                    SptY->at(i_pfp)[i_spt],
+                    SptZ->at(i_pfp)[i_spt]
+                );
+            }
+        }
 
     }
     
