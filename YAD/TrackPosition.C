@@ -11,7 +11,7 @@ void TrackPosition() {
     gTrkEnds[0]->SetName("All Track Start Positions");
     gTrkEnds[0]->SetMarkerColor(kBlue);
     gTrkEnds[0]->SetMarkerStyle(20);
-    gTrkEnds[0]->SetMarkerSize(0.8);
+    // gTrkEnds[0]->SetMarkerSize(0.8);
 
     gTrkEnds[1] = new TGraph2D();
     gTrkEnds[1]->SetName("All Track End Positions");
