@@ -106,11 +106,11 @@ void TrackPosition() {
 
                     gSpt->SetPoint(iSpt++,Y,Z,X);
                 
-                    bool x_inside = -320 <= X && X <= 350;
-                    bool y_inside = -317 <= Y && Y <= 317;
-                    bool z_inside = 20 <= Z && Z <= 180;
+                    // bool x_inside = -320 <= X && X <= 350;
+                    // bool y_inside = -317 <= Y && Y <= 317;
+                    // bool z_inside = 20 <= Z && Z <= 180;
 
-                    is_inside = is_inside && x_inside && y_inside && z_inside;
+                    // is_inside = is_inside && x_inside && y_inside && z_inside;
 
                     if (!is_inside) {break;}
                 } //end of spt loop 
