@@ -1,7 +1,7 @@
 
 #include "YADtools.h"
 
-const vector<string> filelist = yad::ReadFileList(2,"jeremy.list");
+const vector<string> filelist = yad::ReadFileList(1,"jeremy.list");
 
 double ZenithAngle(double x, double m) {
     return TMath::RadToDeg()*TMath::ACos(x/m);
