@@ -29,30 +29,30 @@ public:
 
     //MCParticle
     vector<int> *PrtPdg=nullptr;
-    vector<double>  *PrtStX=nullptr;
-                    *PrtStY=nullptr;
-                    *PrtStZ=nullptr;
-                    *PrtStT=nullptr;
-                    *PrtStPx=nullptr; 
-                    *PrtStPy=nullptr; 
-                    *PrtStPz=nullptr; 
-                    *PrtStP=nullptr; 
+    vector<double>  *PrtStX=nullptr,
+                    *PrtStY=nullptr,
+                    *PrtStZ=nullptr,
+                    *PrtStT=nullptr,
+                    *PrtStPx=nullptr, 
+                    *PrtStPy=nullptr, 
+                    *PrtStPz=nullptr, 
+                    *PrtStP=nullptr, 
                     *PrtStE=nullptr;
 
     //SimEnergy*Deposit
     int NDep;
-    vector<double>  *DepPdg=nullptr;
-                    *DepX=nullptr;
-                    *DepY=nullptr;
-                    *DepZ=nullptr;
-                    *DepT=nullptr;
+    vector<double>  *DepPdg=nullptr,
+                    *DepX=nullptr,
+                    *DepY=nullptr,
+                    *DepZ=nullptr,
+                    *DepT=nullptr,
                     *DepE=nullptr;
 
     //PFParticle
     int NPfp;
-    vector<int> *PfpTrackID=nullptr;
-                *PfpShowerID=nullptr;
-                *PfpID=nullptr;
+    vector<int> *PfpTrackID=nullptr,
+                *PfpShowerID=nullptr,
+                *PfpID=nullptr,
                 *PfpPdg=nullptr;
 
     //Track
@@ -60,7 +60,7 @@ public:
     vector<int> *TrkID=nullptr,
                 *TrkNPt=nullptr;
     vector<double>  *TrkLength=nullptr;
-    vector<vector<Vec3D>>   *TrkPt=nullptr;
+    vector<vector<Vec3D>>   *TrkPt=nullptr,
                             *TrkDir=nullptr;
 
     //Calorimetry
@@ -72,10 +72,10 @@ public:
 
     //Cluster
     vector<int> *PfpNClu=nullptr;
-    vector<vector<int>>     *CluNHit=nullptr;
+    vector<vector<int>>     *CluNHit=nullptr,
                             *CluPlane=nullptr;
-    vector<vector<double>>  *CluIntFit=nullptr;
-                            *CluSumADC=nullptr;
+    vector<vector<double>>  *CluIntFit=nullptr,
+                            *CluSumADC=nullptr,
                             *CluWidth=nullptr;
 
     //SpacePoint
