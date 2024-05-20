@@ -89,7 +89,7 @@ public:
     }
     ~Truth() { file-> Close(); }
     
-    int GetEntries() { return reco->GetEntries(); }
+    int GetEntries() { return truth->GetEntries(); }
     void GetEntry(int i) { 
         
         truth->GetEntry(i); 
