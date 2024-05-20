@@ -10,7 +10,7 @@ using namespace std;
 // #include "Math/GenVector/LorentzVector.h"
 
 using Vec3D = ROOT::Math::XYZVector;
-using Vec4D = ROOT::Math::Lorentz<ROOT::Math::PxPyPzEVector>;
+using Vec4D = ROOT::Math::LorentzVector<ROOT::Math::PxPyPzEVector>;
 
 namespace YAD {
 
@@ -88,7 +88,7 @@ public:
         reco->SetBranchAddress("fTrkLength",  &TrkLength);
 
     }
-    ~Reco() { file-> Close; }
+    ~Reco() { file-> Close(); }
     
     int GetEntries() { return reco->GetEntries(); }
     void GetEntry(int i) { reco->GetEntry(i); }
