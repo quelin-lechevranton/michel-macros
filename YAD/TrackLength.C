@@ -112,8 +112,10 @@ void TrackLength() {
             R.GetEntry(i_ev);
             T.GetEntry(i_ev);
 
-            double TruStPx= T.PrtStP[0].Px();
-            double TruStP = T.PrtStP[0].P();
+            double TruStPx= T.PrtStPx->at(0);
+            double TruStPy= T.PrtStPy->at(0);
+            double TruStPz= T.PrtStPz->at(0);
+            double TruStP = TMath::Sqrt(TruStPx*TruStPx + TruStPy*TruStPy+ TruStPz*TruStPz);
             double TruZen = ZenithAngle(-TruStPx,TruStP);
 
             int nTracks=R.NTrk;
@@ -134,7 +136,7 @@ void TrackLength() {
             else if (nTracks==1) {
 
                 double TrkLen = TrackLength->at(0);
-                double TrkStDirX= R.TrkDir[0][0].X();
+                double TrkStDirX= R.TrkDirX->at(0)[0];
                 double TrkZen = ZenithAngle(-TrkStDirX,1.);
 
                 hTrkLen[0]->Fill(TrkLen); 

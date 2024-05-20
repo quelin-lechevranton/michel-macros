@@ -9,8 +9,8 @@ using namespace std;
 // #include <Vector3D.h>
 // #include "Math/GenVector/LorentzVector.h"
 
-using Vec3D = ROOT::Math::XYZVector;
-using Vec4D = ROOT::Math::LorentzVector<ROOT::Math::PxPyPzEVector>;
+// using Vec3D = ROOT::Math::XYZVector;
+// using Vec4D = ROOT::Math::LorentzVector<ROOT::Math::PxPyPzEVector>;
 
 namespace yad {
 
@@ -20,6 +20,7 @@ private:
     TFile* file;
     TTree* truth;
 
+public:
 
     vector<double>  *PrtStX=nullptr,
                     *PrtStY=nullptr,
@@ -35,7 +36,7 @@ private:
                     *DepZ=nullptr,
                     *DepT=nullptr;
 
-public:
+// public:
 
     //Events
     int Event, Run, SubRun;
@@ -45,13 +46,13 @@ public:
 
     //MCParticle
     vector<int> *PrtPdg=nullptr;
-    vector<Vec4D>   PrtStPt,
-                    PrtStP;
+    // vector<Vec4D>   PrtStPt,
+    //                 PrtStP;
 
     //SimEnergy*Deposit
     int NDep;
     vector<int>  *DepPdg=nullptr;
-    vector<Vec4D>   Dep;
+    // vector<Vec4D>   Dep;
     vector<double>  *DepE=nullptr;
 
     Truth(const char* filename) : file{new TFile(filename)} {
@@ -93,30 +94,30 @@ public:
         
         truth->GetEntry(i); 
 
-        for(int i_prt=0; i_prt<NPrt; i_prt++) {
+        // for(int i_prt=0; i_prt<NPrt; i_prt++) {
 
-            PrtStPt.emplace_back( 
-                PrtStX->at(i_prt),
-                PrtStY->at(i_prt),
-                PrtStZ->at(i_prt),
-                PrtStT->at(i_prt)
-            );
-            PrtStP.emplace_back(
-                PrtStPx->at(i_prt),
-                PrtStPy->at(i_prt),
-                PrtStPz->at(i_prt),
-                PrtStE->at(i_prt)
-            );
-        }
+        //     PrtStPt.emplace_back( 
+        //         PrtStX->at(i_prt),
+        //         PrtStY->at(i_prt),
+        //         PrtStZ->at(i_prt),
+        //         PrtStT->at(i_prt)
+        //     );
+        //     PrtStP.emplace_back(
+        //         PrtStPx->at(i_prt),
+        //         PrtStPy->at(i_prt),
+        //         PrtStPz->at(i_prt),
+        //         PrtStE->at(i_prt)
+        //     );
+        // }
 
-        for(int i_dep=0; i_dep<NDep; i_dep++) {
-            Dep.emplace_back(
-                DepX->at(i_dep),
-                DepY->at(i_dep),
-                DepZ->at(i_dep),
-                DepT->at(i_dep)
-            );
-        }
+        // for(int i_dep=0; i_dep<NDep; i_dep++) {
+        //     Dep.emplace_back(
+        //         DepX->at(i_dep),
+        //         DepY->at(i_dep),
+        //         DepZ->at(i_dep),
+        //         DepT->at(i_dep)
+        //     );
+        // }
     }
 };
 
@@ -125,6 +126,8 @@ private:
 
     TFile* file;
     TTree* reco;
+
+public:
 
     vector<vector<double>>  *TrkPtX=nullptr,
                             *TrkPtY=nullptr,
@@ -137,7 +140,7 @@ private:
                             *SptY=nullptr,
                             *SptZ=nullptr;
 
-public:
+// public:
 
     //Events
     int Event, Run, SubRun;
@@ -154,8 +157,8 @@ public:
     vector<int> *TrkID=nullptr,
                 *TrkNPt=nullptr;
     vector<double>  *TrkLength=nullptr;
-    vector<vector<Vec3D>>   TrkPt,
-                            TrkDir;
+    // vector<vector<Vec3D>>   TrkPt,
+    //                         TrkDir;
 
     //Calorimetry
     vector<double>  *TrkCalRange=nullptr;
@@ -174,7 +177,7 @@ public:
 
     //SpacePoint
     vector<int> *PfpNSpt=nullptr;
-    vector<vector<Vec3D>>   Spt;
+    // vector<vector<Vec3D>>   Spt;
 
     Reco(const char* filename) : file{new TFile(filename)} {
         reco = file->Get<TTree>("YAD/Reco");
@@ -232,43 +235,43 @@ public:
 
         reco->GetEntry(i); 
 
-        for (int i_trk=0; i_trk<NTrk; i_trk++) {
+        // for (int i_trk=0; i_trk<NTrk; i_trk++) {
 
-            vector<Vec3D> tpTrkPt, tpTrkDir;
-            for (size_t i_tpt=0; i_tpt<TrkPtX->at(i_trk).size(); i_tpt++) {
+        //     vector<Vec3D> tpTrkPt, tpTrkDir;
+        //     for (size_t i_tpt=0; i_tpt<TrkPtX->at(i_trk).size(); i_tpt++) {
 
-                tpTrkPt.emplace_back(
-                    TrkPtX->at(i_trk)[i_tpt],
-                    TrkPtY->at(i_trk)[i_tpt],
-                    TrkPtZ->at(i_trk)[i_tpt]
-                );
+        //         tpTrkPt.emplace_back(
+        //             TrkPtX->at(i_trk)[i_tpt],
+        //             TrkPtY->at(i_trk)[i_tpt],
+        //             TrkPtZ->at(i_trk)[i_tpt]
+        //         );
 
-                tpTrkDir.emplace_back(
-                    TrkDirX->at(i_trk)[i_tpt],
-                    TrkDirY->at(i_trk)[i_tpt],
-                    TrkDirZ->at(i_trk)[i_tpt]
-                );
-            }
+        //         tpTrkDir.emplace_back(
+        //             TrkDirX->at(i_trk)[i_tpt],
+        //             TrkDirY->at(i_trk)[i_tpt],
+        //             TrkDirZ->at(i_trk)[i_tpt]
+        //         );
+        //     }
 
-            TrkPt.push_back(tpTrkPt);
-            TrkDir.push_back(tpTrkDir);
+        //     TrkPt.push_back(tpTrkPt);
+        //     TrkDir.push_back(tpTrkDir);
 
-        }
+        // }
         
-        for (int i_pfp=0; i_pfp<NPfp; i_pfp++) {
+        // for (int i_pfp=0; i_pfp<NPfp; i_pfp++) {
 
-            vector<Vec3D> tpSpt;
-            for (int i_spt=0; i_spt<PfpNSpt->at(i_pfp); i_spt++) {
+        //     vector<Vec3D> tpSpt;
+        //     for (int i_spt=0; i_spt<PfpNSpt->at(i_pfp); i_spt++) {
                 
-                tpSpt.emplace_back(
-                    SptX->at(i_pfp)[i_spt],
-                    SptY->at(i_pfp)[i_spt],
-                    SptZ->at(i_pfp)[i_spt]
-                );
-            }
+        //         tpSpt.emplace_back(
+        //             SptX->at(i_pfp)[i_spt],
+        //             SptY->at(i_pfp)[i_spt],
+        //             SptZ->at(i_pfp)[i_spt]
+        //         );
+        //     }
 
-            Spt.push_back(tpSpt);
-        }
+        //     Spt.push_back(tpSpt);
+        // }
 
     }
     
