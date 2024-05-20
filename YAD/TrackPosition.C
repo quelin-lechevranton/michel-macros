@@ -198,21 +198,22 @@ void TrackPosition() {
 
 
     TCanvas* c1 = new TCanvas("c1","Track Ends");
-    c1->Divide(2,2);
-    c1->cd(1);
+    // c1->Divide(2,2);
+    // c1->cd(1);
+    c1->cd();
     // gTrkEnds[0]->GetXaxis()->SetLimits(-500,500);
     gTrkEnds[0]->Draw("p");
     gTrkEnds[1]->Draw("samep");
-    gSpt->Draw("samep");
+    // gSpt->Draw("samep");
     // gTrkPt->Draw("samep");
-    c1->cd(2);
-    gTrkEnds[2]->Draw("p");
-    gTrkEnds[3]->Draw("samep");  
-    c1->cd(3);
-    gTrkEnds[4]->Draw("p");
-    gTrkEnds[5]->Draw("samep");  
-    gSpt->Draw("samep");
-    c1->cd(4);
-    gTrkEnds[6]->Draw("p");
-    gTrkEnds[7]->Draw("samep");  
+    // c1->cd(2);
+    // gTrkEnds[2]->Draw("p");
+    // gTrkEnds[3]->Draw("samep");  
+    // c1->cd(3);
+    // gTrkEnds[4]->Draw("p");
+    // gTrkEnds[5]->Draw("samep");  
+    // gSpt->Draw("samep");
+    // c1->cd(4);
+    // gTrkEnds[6]->Draw("p");
+    // gTrkEnds[7]->Draw("samep");  
 }
