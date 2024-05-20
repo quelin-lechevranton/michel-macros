@@ -186,8 +186,8 @@ public:
 
         //PFParticle
         reco->SetBranchAddress("fNPfp",  &NPfp);
-        reco->SetBranchAddress("fPfpTrackID",    &PfpTrackID);
-        reco->SetBranchAddress("fPfpShowerID",     &PfpShowerID);
+        reco->SetBranchAddress("fPfpTrkID",    &PfpTrkID);
+        reco->SetBranchAddress("fPfpShwID",     &PfpShwID);
         reco->SetBranchAddress("fPfpID",         &PfpID);
         reco->SetBranchAddress("fPfpPdg",        &PfpPdg);
 
