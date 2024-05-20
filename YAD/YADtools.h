@@ -28,59 +28,59 @@ public:
     int NPrt;
 
     //MCParticle
-    vector<int> *PrtPdg;
-    vector<double>  *PrtStX,
-                    *PrtStY,
-                    *PrtStZ,
-                    *PrtStT,
-                    *PrtStPx, 
-                    *PrtStPy, 
-                    *PrtStPz, 
-                    *PrtStP, 
-                    *PrtStE;
+    vector<int> *PrtPdg=nullptr;
+    vector<double>  *PrtStX=nullptr;
+                    *PrtStY=nullptr;
+                    *PrtStZ=nullptr;
+                    *PrtStT=nullptr;
+                    *PrtStPx=nullptr; 
+                    *PrtStPy=nullptr; 
+                    *PrtStPz=nullptr; 
+                    *PrtStP=nullptr; 
+                    *PrtStE=nullptr;
 
     //SimEnergy*Deposit
     int NDep;
-    vector<double>  *DepPdg,
-                    *DepX,
-                    *DepY,
-                    *DepZ,
-                    *DepT,
-                    *DepE;
+    vector<double>  *DepPdg=nullptr;
+                    *DepX=nullptr;
+                    *DepY=nullptr;
+                    *DepZ=nullptr;
+                    *DepT=nullptr;
+                    *DepE=nullptr;
 
     //PFParticle
     int NPfp;
-    vector<int> *PfpTrackID,
-                *PfpShowerID,
-                *PfpID,
-                *PfpPdg;
+    vector<int> *PfpTrackID=nullptr;
+                *PfpShowerID=nullptr;
+                *PfpID=nullptr;
+                *PfpPdg=nullptr;
 
     //Track
     int NTrk;
-    vector<int> *TrkID;
-    vector<double>  *TrkLength;
-    vector<int> *TrkNPt;
-    vector<vector<Vec3D>>   *TrkPt,
-                            *TrkDir;
+    vector<int> *TrkID=nullptr,
+                *TrkNPt=nullptr;
+    vector<double>  *TrkLength=nullptr;
+    vector<vector<Vec3D>>   *TrkPt=nullptr;
+                            *TrkDir=nullptr;
 
     //Calorimetry
-    vector<double>  *TrkCalRange;
+    vector<double>  *TrkCalRange=nullptr;
 
     //Shower
     int NShw;
-    vector<int> *ShwID;
+    vector<int> *ShwID=nullptr;
 
     //Cluster
-    vector<int> *PfpNClu;
-    vector<vector<int>>     *CluNHit,
-                            *CluPlane;
-    vector<vector<double>>  *CluIntFit,
-                            *CluSumADC,
-                            *CluWidth;
+    vector<int> *PfpNClu=nullptr;
+    vector<vector<int>>     *CluNHit=nullptr;
+                            *CluPlane=nullptr;
+    vector<vector<double>>  *CluIntFit=nullptr;
+                            *CluSumADC=nullptr;
+                            *CluWidth=nullptr;
 
     //SpacePoint
-    vector<int> *PfpNSpt;
-    vector<vector<Vec3D>>   *Spt;
+    vector<int> *PfpNSpt=nullptr;
+    vector<vector<Vec3D>>   *Spt=nullptr;
 
     Reco(const char* filename) : file{new TFile(filename)} {
         reco = file->Get<TTree>("YAD/Reco");
