@@ -256,14 +256,18 @@ public:
         }
         
         for (int i_pfp=0; i_pfp<NPfp; i_pfp++) {
+
+            vector<Vec3D> tpSpt;
             for (int i_spt=0; i_spt<PfpNSpt->at(i_pfp); i_spt++) {
                 
-                Spt->at(i_pfp)[i_spt].emplace_back(
+                tpSpt.emplace_back(
                     SptX->at(i_pfp)[i_spt],
                     SptY->at(i_pfp)[i_spt],
                     SptZ->at(i_pfp)[i_spt]
                 );
             }
+
+            Spt->push_back(tpSpt);
         }
 
     }
