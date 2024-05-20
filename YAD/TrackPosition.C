@@ -80,7 +80,8 @@ void TrackPosition() {
 
         cout << "\e[3mOpening file #" << i_file+1 << ": " << filename << "\e[0m" << endl;
 
-        yad::Reco R(filename.c_str());
+        // yad::Reco R(filename.c_str());
+        yad::Reco R("~Code/out/pdvd_1k_mu_1GeV_YAdumped.root");
         int n_evt=R.GetEntries();
 
         N_evt+=n_evt;
