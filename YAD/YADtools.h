@@ -85,7 +85,7 @@ public:
         truth->SetBranchAddress("fDepT",         &DepT); 
         truth->SetBranchAddress("fDepE",         &DepE); 
 
-    size_t}
+    }
     ~Truth() { file-> Close(); }
     
     int GetEntries() { return truth->GetEntries(); }
