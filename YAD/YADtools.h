@@ -28,59 +28,59 @@ public:
     int NPrt;
 
     //MCParticle
-    vector<int> PrtPdg;
-    vector<double>  PrtStX,
-                    PrtStY,
-                    PrtStZ,
-                    PrtStT,
-                    PrtStPx, 
-                    PrtStPy, 
-                    PrtStPz, 
-                    PrtStP, 
-                    PrtStE;
+    vector<int> *PrtPdg;
+    vector<double>  *PrtStX,
+                    *PrtStY,
+                    *PrtStZ,
+                    *PrtStT,
+                    *PrtStPx, 
+                    *PrtStPy, 
+                    *PrtStPz, 
+                    *PrtStP, 
+                    *PrtStE;
 
-    //SimEnergyDeposit
+    //SimEnergy*Deposit
     int NDep;
-    vector<double>  DepPdg,
-                    DepX,
-                    DepY,
-                    DepZ,
-                    DepT,
-                    DepE;
+    vector<double>  *DepPdg,
+                    *DepX,
+                    *DepY,
+                    *DepZ,
+                    *DepT,
+                    *DepE;
 
     //PFParticle
     int NPfp;
-    vector<int> PfpTrackID,
-                PfpShowerID,
-                PfpID,
-                PfpPdg;
+    vector<int> *PfpTrackID,
+                *PfpShowerID,
+                *PfpID,
+                *PfpPdg;
 
     //Track
     int NTrk;
-    vector<int> TrkID;
-    vector<double>  TrkLength;
-    vector<int> TrkNPt;
-    vector<vector<Vec3D>>   TrkPt,
-                            TrkDir;
+    vector<int> *TrkID;
+    vector<double>  *TrkLength;
+    vector<int> *TrkNPt;
+    vector<vector<Vec3D>>   *TrkPt,
+                            *TrkDir;
 
     //Calorimetry
-    vector<double>  TrkCalRange;
+    vector<double>  *TrkCalRange;
 
     //Shower
     int NShw;
-    vector<int> ShwID;
+    vector<int> *ShwID;
 
     //Cluster
-    vector<int> PfpNClu;
-    vector<vector<int>>     CluNHit,
-                            CluPlane;
-    vector<vector<double>>  CluIntFit,
-                            CluSumADC,
-                            CluWidth;
+    vector<int> *PfpNClu;
+    vector<vector<int>>     *CluNHit,
+                            *CluPlane;
+    vector<vector<double>>  *CluIntFit,
+                            *CluSumADC,
+                            *CluWidth;
 
     //SpacePoint
-    vector<int> PfpNSpt;
-    vector<vector<Vec3D>>  Spt;
+    vector<int> *PfpNSpt;
+    vector<vector<Vec3D>>   *Spt;
 
     Reco(const char* filename) : file{new TFile(filename)} {
         reco = file->Get<TTree>("YAD/Reco");
