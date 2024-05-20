@@ -191,7 +191,7 @@ void TrackPosition() {
     } //end of file loop
 
     cout << "nEvent=" << N_evt << endl;
-    cout << "nTrack=" << N_trk << endl;
+    cout << "nTrack=" << N_trk << "\t\t" << iTrkAll << endl;
     cout << "nInsde=" << N_trkIn << endl;
     cout << "nSpPts=" << iSpt << endl;
     cout << "nTrkPt=" << iTrkPt << endl;
@@ -200,7 +200,7 @@ void TrackPosition() {
     TCanvas* c1 = new TCanvas("c1","Track Ends");
     c1->Divide(2,2);
     c1->cd(1);
-    gTrkEnds[0]->GetXaxis()->SetLimits(-500,500);
+    // gTrkEnds[0]->GetXaxis()->SetLimits(-500,500);
     gTrkEnds[0]->Draw("p");
     gTrkEnds[1]->Draw("samep");
     gSpt->Draw("samep");
