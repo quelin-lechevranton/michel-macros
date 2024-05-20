@@ -89,6 +89,8 @@ void TrackPosition() {
 
             R.GetEntry(i_evt);
 
+            cout << "\tEvent#" << i_evt+1 << endl;
+
             N_trk+=R.NTrk;
 
             for(int i_pfp=0; i_pfp < R.NPfp ; i_pfp++) {
