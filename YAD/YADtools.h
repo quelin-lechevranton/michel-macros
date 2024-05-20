@@ -212,11 +212,11 @@ public:
 
         //Cluster
         reco->SetBranchAddress("fPfpNClu",     &PfpNClu);
-        reco->SetBranchAddress("fCluNHit",      &CluNHit);
+        // reco->SetBranchAddress("fCluNHit",      &CluNHit);
         reco->SetBranchAddress("fCluIntFit",     &CluIntFit);
         reco->SetBranchAddress("fCluSumADC",     &CluSumADC);
         reco->SetBranchAddress("fCluWidth",      &CluWidth);
-        reco->SetBranchAddress("fCluPlane",    &CluPlane);
+        // reco->SetBranchAddress("fCluPlane",    &CluPlane);
 
         //SpacePoint
         reco->SetBranchAddress("fPfpNSpt",       &PfpNSpt);
