@@ -100,9 +100,9 @@ void TrackPosition() {
 
                 for (int i_spt=0; i_spt < R.PfpNSpt->at(i_pfp); i_spt++) {              
 
-                    double X = R.Spt->at(i_pfp)[i_spt].X();     
-                    double Y = R.Spt->at(i_pfp)[i_spt].Y();     
-                    double Z = R.Spt->at(i_pfp)[i_spt].Z();     
+                    double X = R.Spt[i_pfp][i_spt].X();     
+                    double Y = R.Spt[i_pfp][i_spt].Y();     
+                    double Z = R.Spt[i_pfp][i_spt].Z();     
 
                     gSpt->SetPoint(iSpt++,Y,Z,X);
                 
@@ -115,12 +115,12 @@ void TrackPosition() {
                     if (!is_inside) {break;}
                 } //end of spt loop 
 
-                double StX =  R.TrkPt->at(i_trk)[0].X();
-                double StY =  R.TrkPt->at(i_trk)[0].Y();
-                double StZ =  R.TrkPt->at(i_trk)[0].Z();
-                double EndX = R.TrkPt->at(i_trk).back().X();
-                double EndY = R.TrkPt->at(i_trk).back().Y();
-                double EndZ = R.TrkPt->at(i_trk).back().Z();
+                double StX =  R.TrkPt[i_trk][0].X();
+                double StY =  R.TrkPt[i_trk][0].Y();
+                double StZ =  R.TrkPt[i_trk][0].Z();
+                double EndX = R.TrkPt[i_trk].back().X();
+                double EndY = R.TrkPt[i_trk].back().Y();
+                double EndZ = R.TrkPt[i_trk].back().Z();
 
                 gTrkEnds[0]->SetPoint(iTrkAll,
                     StY,
