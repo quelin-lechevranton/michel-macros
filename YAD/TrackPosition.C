@@ -11,7 +11,7 @@ void TrackPosition() {
     gTrkEnds[0]->SetName("All Track Start Positions");
     gTrkEnds[0]->SetMarkerColor(kBlue);
     gTrkEnds[0]->SetMarkerStyle(20);
-    // gTrkEnds[0]->SetMarkerSize(0.8);
+    gTrkEnds[0]->SetMarkerSize(0.8);
 
     gTrkEnds[1] = new TGraph2D();
     gTrkEnds[1]->SetName("All Track End Positions");
@@ -121,6 +121,10 @@ void TrackPosition() {
                 double EndX = R.TrkPt[i_trk].back().X();
                 double EndY = R.TrkPt[i_trk].back().Y();
                 double EndZ = R.TrkPt[i_trk].back().Z();
+
+                cout << "pt#" << iTrkAll << endl
+                    << "trk#" << i_trk << endl
+                    << "(" << StX <<"," << StY << "," << StZ << ")" << endl;
 
                 gTrkEnds[0]->SetPoint(iTrkAll,
                     StY,
