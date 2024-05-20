@@ -144,8 +144,8 @@ public:
 
     //PFParticle
     int NPfp;
-    vector<int> *PfpTrackID=nullptr,
-                *PfpShowerID=nullptr,
+    vector<int> *PfpTrkID=nullptr,
+                *PfpShwID=nullptr,
                 *PfpID=nullptr,
                 *PfpPdg=nullptr;
 
@@ -231,7 +231,7 @@ public:
     void GetEntry(int i) { 
 
         reco->GetEntry(i); 
-size_t
+
         for (int i_trk=0; i_trk<NTrk; i_trk++) {
             for (int i_tpt=0; i_tpt<TrkNPt->at(i_trk); i_tpt++) {
 
@@ -266,7 +266,6 @@ size_t
 
 vector<string> ReadFileList(int nfiles, string FileName)
 {
-  if(Debug) std::cout << "    ReadFileList - start " << endl;
   vector<string> vec;
   string file;
   string filename = FileName;

@@ -80,7 +80,7 @@ void TrackPosition() {
 
         cout << "\e[3mOpening file #" << i_file+1 << ": " << filename << "\e[0m" << endl;
 
-        yad::Reco R(filename.c_str);
+        yad::Reco R(filename.c_str());
         int n_evt=R.GetEntries();
 
         N_evt+=n_evt;
@@ -91,17 +91,18 @@ void TrackPosition() {
 
             N_trk+=n_trk;
 
-            for(int i_trk=0; i_trk < n_trk ; i_trk++) {
+            for(int i_pfp=0; i_pfp < R.NPfp ; i_pfp++) {
+
+                int i_trk = R.PfpTrkID->at(i_pfp)
+                if (i_trk < 0) {continue;}
 
                 bool is_inside = true;
 
-                for (int i_spt=0; i_spt < n_spt; i_spt++) {
+                for (int i_spt=0; i_spt < R.PfpNSpt->at(i_pfp); i_spt++) {              
 
-                    if (R.SptTrkID->at(i_spt) != i_trk) {continue;}               
-
-                    double X = R.Spt->at(i_spt).X();     
-                    double Y = R.Spt->at(i_spt).Y();     
-                    double Z = R.Spt->at(i_spt).Z();     
+                    double X = R.Spt->at(i_pfp)[i_spt].X();     
+                    double Y = R.Spt->at(i_pfp)[i_spt].Y();     
+                    double Z = R.Spt->at(i_pfp)[i_spt].Z();     
 
                     gSpt->SetPoint(iSpt++,Y,Z,X);
                 
