@@ -56,7 +56,7 @@ void TrackLength() {
     for (int i=0; i<hStartP.size(); i++) {hsStartP->Add(hStartP[i]);}
  
     // Zenith Angle ==================================================
-    vector<TH1D*> hZen(5);
+    vector<TH1D*> hZen(4);
     int binZen=30, minZen=0, maxZen=90;
 
     hZen[0] = new TH1D("hTrackeverTrueZen","",binZen,minZen,maxZen);
@@ -71,14 +71,9 @@ void TrackLength() {
     hZen[2]->SetLineColor(kGreen+2);
     hZen[2]->SetLineWidth(2);
 
-    hZen[3] = new TH1D("hTrackoneZen","",binZen,minZen,maxZen);
-    hZen[3]->SetLineColor(kGreen+2);
+    hZen[3] = new TH1D("hTrackfulTrueZen","",binZen,minZen,maxZen);
+    hZen[3]->SetLineColor(kRed+1);
     hZen[3]->SetLineWidth(2);
-    hZen[3]->SetLineStyle(kDashed);
-
-    hZen[4] = new TH1D("hTrackfulTrueZen","",binZen,minZen,maxZen);
-    hZen[4]->SetLineColor(kRed+1);
-    hZen[4]->SetLineWidth(2);
 
     // hZen[4] = new TH1D("hTrackfulMaxZen","",binZen,minZen,maxZen);
     // hZen[4]->SetLineColor(kOrange+7);
@@ -136,15 +131,12 @@ void TrackLength() {
             else if (nTracks==1) {
 
                 double TrkLen = TrackLength->at(0);
-                double TrkStDirX= R.TrkDirX->at(0)[0];
-                double TrkZen = ZenithAngle(-TrkStDirX,1.);
 
                 hTrkLen[0]->Fill(TrkLen); 
 
                 hStartP[2]->Fill(TruStP);
 
                 hZen[2]->Fill(TruZen);
-                hZen[3]->Fill(TrkZen);
 
                 gTrkLen_StP->Fill(TruStP,TrkLen);
 
@@ -172,7 +164,7 @@ void TrackLength() {
 
                 hStartP[3]->Fill(TruStP);
 
-                hZen[4]->Fill(TruZen);
+                hZen[3]->Fill(TruZen);
 
                 gTrkLen_StP->Fill(TruStP,SumLen);
             }
