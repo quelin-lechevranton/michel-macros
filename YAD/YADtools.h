@@ -45,13 +45,13 @@ public:
 
     //MCParticle
     vector<int> *PrtPdg=nullptr;
-    vector<Vec4D>   *PrtStPt=nullptr,
-                    *PrtStP=nullptr;
+    vector<Vec4D>   PrtStPt,
+                    PrtStP;
 
     //SimEnergy*Deposit
     int NDep;
     vector<int>  *DepPdg=nullptr;
-    vector<Vec4D>   *Dep=nullptr;
+    vector<Vec4D>   Dep;
     vector<double>  *DepE=nullptr;
 
     Truth(const char* filename) : file{new TFile(filename)} {
@@ -95,13 +95,13 @@ public:
 
         for(int i_prt=0; i_prt<NPrt; i_prt++) {
 
-            PrtStPt->emplace_back( 
+            PrtStPt.emplace_back( 
                 PrtStX->at(i_prt),
                 PrtStY->at(i_prt),
                 PrtStZ->at(i_prt),
                 PrtStT->at(i_prt)
             );
-            PrtStP->emplace_back(
+            PrtStP.emplace_back(
                 PrtStPx->at(i_prt),
                 PrtStPy->at(i_prt),
                 PrtStPz->at(i_prt),
@@ -110,7 +110,7 @@ public:
         }
 
         for(int i_dep=0; i_dep<NDep; i_dep++) {
-            Dep->emplace_back(
+            Dep.emplace_back(
                 DepX->at(i_dep),
                 DepY->at(i_dep),
                 DepZ->at(i_dep),
@@ -154,8 +154,8 @@ public:
     vector<int> *TrkID=nullptr,
                 *TrkNPt=nullptr;
     vector<double>  *TrkLength=nullptr;
-    vector<vector<Vec3D>>   *TrkPt=nullptr,
-                            *TrkDir=nullptr;
+    vector<vector<Vec3D>>   TrkPt,
+                            TrkDir;
 
     //Calorimetry
     vector<double>  *TrkCalRange=nullptr;
@@ -174,7 +174,7 @@ public:
 
     //SpacePoint
     vector<int> *PfpNSpt=nullptr;
-    vector<vector<Vec3D>>   *Spt=nullptr;
+    vector<vector<Vec3D>>   Spt;
 
     Reco(const char* filename) : file{new TFile(filename)} {
         reco = file->Get<TTree>("YAD/Reco");
@@ -250,8 +250,8 @@ public:
                 );
             }
 
-            TrkPt->push_back(tpTrkPt);
-            TrkDir->push_back(tpTrkDir);
+            TrkPt.push_back(tpTrkPt);
+            TrkDir.push_back(tpTrkDir);
 
         }
         
@@ -267,7 +267,7 @@ public:
                 );
             }
 
-            Spt->push_back(tpSpt);
+            Spt.push_back(tpSpt);
         }
 
     }
