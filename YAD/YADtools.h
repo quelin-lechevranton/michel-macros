@@ -21,14 +21,14 @@ private:
     TTree* truth;
 
 
-    vector<double>  *PtrStX=nullptr,
-                    *PtrStY=nullptr,
-                    *PtrStZ=nullptr,
-                    *PtrStT=nullptr,
-                    *PtrStPx=nullptr,
-                    *PtrStPy=nullptr,
-                    *PtrStPz=nullptr,
-                    *PtrStE=nullptr;
+    vector<double>  *PrtStX=nullptr,
+                    *PrtStY=nullptr,
+                    *PrtStZ=nullptr,
+                    *PrtStT=nullptr,
+                    *PrtStPx=nullptr,
+                    *PrtStPy=nullptr,
+                    *PrtStPz=nullptr,
+                    *PrtStE=nullptr;
 
     vector<double>  *DepX=nullptr,
                     *DepY=nullptr,
