@@ -89,7 +89,7 @@ void TrackPosition() {
 
             R.GetEntry(i_evt);
 
-            cout << "\tEvent#" << i_evt+1 << endl;
+            // cout << "\tEvent#" << i_evt+1 << endl;
 
             N_trk+=R.NTrk;
 
@@ -124,9 +124,9 @@ void TrackPosition() {
                 double EndY = R.TrkPtY->at(i_trk).back();
                 double EndZ = R.TrkPtZ->at(i_trk).back();
 
-                cout << "pt#" << iTrkAll << endl
-                    << "trk#" << i_trk << endl
-                    << "(" << StX <<"," << StY << "," << StZ << ")" << endl;
+                // cout << "pt#" << iTrkAll << endl
+                //     << "trk#" << i_trk << endl
+                //     << "(" << StX <<"," << StY << "," << StZ << ")" << endl;
 
                 gTrkEnds[0]->SetPoint(iTrkAll,
                     StY,
@@ -204,22 +204,21 @@ void TrackPosition() {
 
 
     TCanvas* c1 = new TCanvas("c1","Track Ends");
-    // c1->Divide(2,2);
-    // c1->cd(1);
-    c1->cd();
+    c1->Divide(2,2);
+    c1->cd(1);
     // gTrkEnds[0]->GetXaxis()->SetLimits(-500,500);
     gTrkEnds[0]->Draw("p");
-    // gTrkEnds[1]->Draw("samep");
-    // gSpt->Draw("samep");
+    gTrkEnds[1]->Draw("samep");
+    gSpt->Draw("samep");
     // gTrkPt->Draw("samep");
-    // c1->cd(2);
-    // gTrkEnds[2]->Draw("p");
-    // gTrkEnds[3]->Draw("samep");  
-    // c1->cd(3);
-    // gTrkEnds[4]->Draw("p");
-    // gTrkEnds[5]->Draw("samep");  
-    // gSpt->Draw("samep");
-    // c1->cd(4);
-    // gTrkEnds[6]->Draw("p");
-    // gTrkEnds[7]->Draw("samep");  
+    c1->cd(2);
+    gTrkEnds[2]->Draw("p");
+    gTrkEnds[3]->Draw("samep");  
+    c1->cd(3);
+    gTrkEnds[4]->Draw("p");
+    gTrkEnds[5]->Draw("samep");  
+    gSpt->Draw("samep");
+    c1->cd(4);
+    gTrkEnds[6]->Draw("p");
+    gTrkEnds[7]->Draw("samep");  
 }
