@@ -232,33 +232,33 @@ public:
 
         reco->GetEntry(i); 
 
-        for (int i_trk=0; i_trk<NTrk; i_trk++) {
-            for (int i_tpt=0; i_tpt<TrkNPt->at(i_trk); i_tpt++) {
+        // for (int i_trk=0; i_trk<NTrk; i_trk++) {
+        //     for (int i_tpt=0; i_tpt<TrkNPt->at(i_trk); i_tpt++) {
 
-                TrkPt->at(i_trk)[i_tpt].SetXYZ(
-                    TrkPtX->at(i_trk)[i_tpt],
-                    TrkPtY->at(i_trk)[i_tpt],
-                    TrkPtZ->at(i_trk)[i_tpt]
-                );
+        //         TrkPt->at(i_trk)[i_tpt].SetXYZ(
+        //             TrkPtX->at(i_trk)[i_tpt],
+        //             TrkPtY->at(i_trk)[i_tpt],
+        //             TrkPtZ->at(i_trk)[i_tpt]
+        //         );
 
-                TrkDir->at(i_trk)[i_tpt].SetXYZ(
-                    TrkDirX->at(i_trk)[i_tpt],
-                    TrkDirY->at(i_trk)[i_tpt],
-                    TrkDirZ->at(i_trk)[i_tpt]
-                );
-            }
-        }
+        //         TrkDir->at(i_trk)[i_tpt].SetXYZ(
+        //             TrkDirX->at(i_trk)[i_tpt],
+        //             TrkDirY->at(i_trk)[i_tpt],
+        //             TrkDirZ->at(i_trk)[i_tpt]
+        //         );
+        //     }
+        // }
         
-        for (int i_pfp=0; i_pfp<NPfp; i_pfp++) {
-            for (int i_spt=0; i_spt<PfpNSpt->at(i_pfp); i_spt++) {
+        // for (int i_pfp=0; i_pfp<NPfp; i_pfp++) {
+        //     for (int i_spt=0; i_spt<PfpNSpt->at(i_pfp); i_spt++) {
                 
-                Spt->at(i_pfp)[i_spt].SetXYZ(
-                    SptX->at(i_pfp)[i_spt],
-                    SptY->at(i_pfp)[i_spt],
-                    SptZ->at(i_pfp)[i_spt]
-                );
-            }
-        }
+        //         Spt->at(i_pfp)[i_spt].SetXYZ(
+        //             SptX->at(i_pfp)[i_spt],
+        //             SptY->at(i_pfp)[i_spt],
+        //             SptZ->at(i_pfp)[i_spt]
+        //         );
+        //     }
+        // }
 
     }
     
