@@ -200,6 +200,7 @@ void TrackPosition() {
     TCanvas* c1 = new TCanvas("c1","Track Ends");
     c1->Divide(2,2);
     c1->cd(1);
+    gTrkEnds[0]->GetXaxis()->SetLimits(-500,500);
     gTrkEnds[0]->Draw("p");
     gTrkEnds[1]->Draw("samep");
     gSpt->Draw("samep");
