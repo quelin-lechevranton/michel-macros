@@ -235,7 +235,7 @@ public:
         for (int i_trk=0; i_trk<NTrk; i_trk++) {
 
             vector<Vec3D> tpTrkPt, tpTrkDir;
-            for (int i_tpt=0; i_tpt<TrkNPt->at(i_trk); i_tpt++) {
+            for (size_t i_tpt=0; i_tpt<TrkNPtX->at(i_trk).size(); i_tpt++) {
 
                 tpTrkPt.emplace_back(
                     TrkPtX->at(i_trk)[i_tpt],
