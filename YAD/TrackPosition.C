@@ -191,7 +191,7 @@ void TrackPosition() {
     } //end of file loop
 
     cout << "nEvent=" << N_evt << endl;
-    cout << "nTrack=" << N_trk << "\t\t" << iTrkAll << "\t\t" << gTrkEnds[0]->GetEntries() << endl;
+    cout << "nTrack=" << N_trk << "\t\t" << iTrkAll << "\t\t" << gTrkEnds[0]->GetN() << endl;
     cout << "nInsde=" << N_trkIn << endl;
     cout << "nSpPts=" << iSpt << endl;
     cout << "nTrkPt=" << iTrkPt << endl;
