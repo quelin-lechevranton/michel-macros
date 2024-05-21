@@ -1,13 +1,12 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
 
 #include <TFile.h>
 #include <TTree.h>
-// #include <Vector3D.h>
-// #include "Math/GenVector/LorentzVector.h"
 
 // using Vec3D = ROOT::Math::XYZVector;
 // using Vec4D = ROOT::Math::LorentzVector<ROOT::Math::PxPyPzEVector>;
@@ -23,10 +22,10 @@ private:
 public:
 
     //Events
-    int Event, Run, SubRun;
+    size_t Event, Run, SubRun;
 
     //MCTruth
-    int NPrt;
+    size_t NPrt;
 
     //MCParticle
     vector<int> *PrtPdg=nullptr;
@@ -37,10 +36,11 @@ public:
                     *PrtStPx=nullptr,
                     *PrtStPy=nullptr,
                     *PrtStPz=nullptr,
+                    *PrtStP=nullptr,
                     *PrtStE=nullptr;
 
     //SimEnergy*Deposit
-    int NDep;
+    size_t NDep;
     vector<int>  *DepPdg=nullptr;
     vector<double>  *DepX=nullptr,
                     *DepY=nullptr,
@@ -68,6 +68,7 @@ public:
         truth->SetBranchAddress("fPrtStPx", &PrtStPx); 
         truth->SetBranchAddress("fPrtStPy", &PrtStPy); 
         truth->SetBranchAddress("fPrtStPz", &PrtStPz); 
+        truth->SetBranchAddress("fPrtStP",  &PrtStP); 
         truth->SetBranchAddress("fPrtStE",  &PrtStE); 
 
         //SimEnergyDeposit
@@ -82,8 +83,8 @@ public:
     }
     ~Truth() { file-> Close(); }
     
-    int GetEntries() { return truth->GetEntries(); }
-    void GetEntry(int i) { truth->GetEntry(i); }
+    size_t GetEntries() { return truth->GetEntries(); }
+    void GetEntry(size_t i) { truth->GetEntry(i); }
 };
 
 class Reco {
@@ -95,17 +96,17 @@ private:
 public:
 
     //Events
-    int Event, Run, SubRun;
+    size_t Event, Run, SubRun;
 
     //PFParticle
-    int NPfp;
-    vector<int> *PfpTrkID=nullptr,
+    size_t NPfp;
+    vector<int> *PfpID=nullptr,
+                *PfpTrkID=nullptr,
                 *PfpShwID=nullptr,
-                *PfpID=nullptr,
                 *PfpPdg=nullptr;
 
     //Track
-    int NTrk;
+    size_t NTrk;
     vector<int> *TrkID=nullptr,
                 *TrkNPt=nullptr;
     vector<double>  *TrkLength=nullptr;
@@ -120,19 +121,19 @@ public:
     vector<double>  *TrkCalRange=nullptr;
 
     //Shower
-    int NShw;
+    size_t NShw;
     vector<int> *ShwID=nullptr;
 
     //Cluster
-    vector<int> *PfpNClu=nullptr;
-    vector<vector<int>>     *CluNHit=nullptr,
-                            *CluPlane=nullptr;
-    vector<vector<double>>  *CluIntFit=nullptr,
+    vector<size_t> *PfpNClu=nullptr;
+    vector<vector<double>>  *CluNHit=nullptr,
+                            *CluPlane=nullptr,
+                            *CluIntFit=nullptr,
                             *CluSumADC=nullptr,
                             *CluWidth=nullptr;
 
     //SpacePoint
-    vector<int> *PfpNSpt=nullptr;
+    vector<size_t> *PfpNSpt=nullptr;
     vector<vector<double>>  *SptX=nullptr,
                             *SptY=nullptr,
                             *SptZ=nullptr;
@@ -147,9 +148,9 @@ public:
 
         //PFParticle
         reco->SetBranchAddress("fNPfp",         &NPfp);
+        reco->SetBranchAddress("fPfpID",        &PfpID);
         reco->SetBranchAddress("fPfpTrkID",     &PfpTrkID);
         reco->SetBranchAddress("fPfpShwID",     &PfpShwID);
-        reco->SetBranchAddress("fPfpID",        &PfpID);
         reco->SetBranchAddress("fPfpPdg",       &PfpPdg);
 
         //Track
@@ -175,9 +176,9 @@ public:
         reco->SetBranchAddress("fPfpNClu",      &PfpNClu);
         // reco->SetBranchAddress("fCluNHit",      &CluNHit);
         // reco->SetBranchAddress("fCluPlane",     &CluPlane);
-        reco->SetBranchAddress("fCluIntFit",    &CluIntFit);
-        reco->SetBranchAddress("fCluSumADC",    &CluSumADC);
-        reco->SetBranchAddress("fCluWidth",     &CluWidth);
+        // reco->SetBranchAddress("fCluIntFit",    &CluIntFit);
+        // reco->SetBranchAddress("fCluSumADC",    &CluSumADC);
+        // reco->SetBranchAddress("fCluWidth",     &CluWidth);
 
         //SpacePoint
         reco->SetBranchAddress("fPfpNSpt",      &PfpNSpt);
@@ -188,38 +189,31 @@ public:
     }
     ~Reco() { file-> Close(); }
     
-    int GetEntries() { return reco->GetEntries(); }
-    void GetEntry(int i) { reco->GetEntry(i); }
+    size_t GetEntries() { return reco->GetEntries(); }
+    void GetEntry(size_t i) { reco->GetEntry(i); }
     
 };
 
-vector<string> ReadFileList(int nfiles, string FileName)
+vector<string> ReadFileList(size_t n_file, string listname)
 {
-  vector<string> vec;
-  string file;
-  string filename = FileName;
-  ifstream File(filename.c_str());
+  vector<string> filelist;
+  string filename;
+  ifstream file(listname.c_str());
 
-  if(File){
-    cout << "    ReadFileList - " << filename << " opened"<< endl;
-    while(File.good()){
-      File >> file;
-      vec.push_back(file);
-      if(nfiles>0 && vec.size() == nfiles) break;
+  if(file){
+    while(file.good()){
+      file >> filename;
+      filelist.push_back(filename);
+      if(n_file>0 && filelist.size() == n_file) break;
     }
   }
   else{
-    cerr << "    ReadFileList - " << filename << " not found. Exit." << endl;
+    cerr << "\e[3mNo file named " << listname << "\e[0m" << endl;
     exit(1);
   }
+  file.close();
 
-  File.close();
-
-  if(nfiles == 0) vec.pop_back();
-  cout << "    ReadFileList - " << vec.size() << " files found in " << FileName << endl;
-  cout << "    finished" << endl;
-
-  return vec;
+  return filelist;
 }
 
 }

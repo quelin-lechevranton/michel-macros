@@ -1,7 +1,7 @@
-
 #include "YADtools.h"
 
-const vector<string> filelist = yad::ReadFileList(1,"jeremy.list");
+const size_t n_file=2;
+const vector<string> filelist = yad::ReadFileList(n_file,"ijclab.list");
 
 double ZenithAngle(double x, double m) {
     return TMath::RadToDeg()*TMath::ACos(x/m);
@@ -90,22 +90,22 @@ void TrackLength() {
     int nTrackless=0;
     int nTrackful=0;
 
-    for (int i_file=0; i_file < filelist.size(); i_file++) {
-        string filename = filelist[i_file];
+    size_t i_file=0;
+    for (string filename : filelist) {
 
-        cout << "\e[3mOpening file #" << i_file+1 << ": " << filename << "\e[0m" << endl;
+        cout << "\e[3mOpening file #" << ++i_file << "/" << n_file << ": " << filename << "\e[0m" << endl;
 
         yad::Reco R(filename.c_str());
         yad::Truth T(filename.c_str());
 
-        int n_ev=R.GetEntries();
-        nEvent+=n_ev;
+        int n_evt=R.GetEntries();
+        nEvent+=n_evt;
 
 
-        for (int i_ev=0; i_ev < n_ev; i_ev++) {
+        for (int i_evt=0; i_evt < n_evt; i_evt++) {
 
-            R.GetEntry(i_ev);
-            T.GetEntry(i_ev);
+            R.GetEntry(i_evt);
+            T.GetEntry(i_evt);
 
             double TruStPx= T.PrtStPx->at(0);
             double TruStPy= T.PrtStPy->at(0);
@@ -166,7 +166,7 @@ void TrackLength() {
 
                 hZen[3]->Fill(TruZen);
 
-                gTrkLen_StP->Fill(TruStP,SumLen);
+                // gTrkLen_StP->Fill(TruStP,SumLen);
             }
         
         } //end of event loop
@@ -175,8 +175,8 @@ void TrackLength() {
     } //end of file loop
 
     cout << "nEvent=" << nEvent << endl;
-    cout << "nTrackful=" << nTrackful << endl;
-    cout << "nTrackless=" << nTrackless << endl;
+    cout << "nTrackful=" << nTrackful << " (" << 100.*nTrackful/nEvent << "%)" << endl;
+    cout << "nTrackless=" << nTrackless << " (" << 100.*nTrackless/nEvent << "%)" << endl;
 
     TCanvas* c1 = new TCanvas("c1","Track Length");
     c1->Divide(2,2);
