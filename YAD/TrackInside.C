@@ -3,7 +3,7 @@
 const size_t n_file=2;
 const vector<string> filelist = yad::ReadFileList(n_file,"ijclab.list");
 
-void TrackPosition() {
+void TrackInside() {
 
     vector<TGraph2D*> gTrkEnds(8);
     gTrkEnds[0] = new TGraph2D();
@@ -200,7 +200,7 @@ void TrackPosition() {
     cout << "nSpPts=" << iSpt << endl;
     cout << "nTrkPt=" << iTrkPt << endl;
 
-    TCanvas* c1 = new TCanvas("c1","Track Ends");
+    TCanvas* c1 = new TCanvas("c1","Track Inside");
     c1->Divide(2,2);
     c1->cd(1);
     // gTrkEnds[0]->GetXaxis()->SetLimits(-500,500);

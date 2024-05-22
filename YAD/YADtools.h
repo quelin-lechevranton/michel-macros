@@ -17,7 +17,7 @@ class Truth {
 private:
 
     TFile* file;
-    TTree* truth;
+    TTree* tree;
 
 public:
 
@@ -29,15 +29,16 @@ public:
 
     //MCParticle
     vector<int> *PrtPdg=nullptr;
-    vector<double>  *PrtStX=nullptr,
-                    *PrtStY=nullptr,
-                    *PrtStZ=nullptr,
-                    *PrtStT=nullptr,
-                    *PrtStPx=nullptr,
-                    *PrtStPy=nullptr,
-                    *PrtStPz=nullptr,
-                    *PrtStP=nullptr,
-                    *PrtStE=nullptr;
+    vector<size_t> *PrtNPt=nullptr;
+    vector<vector<double>>  *PrtX=nullptr,
+                            *PrtY=nullptr,
+                            *PrtZ=nullptr,
+                            *PrtT=nullptr,
+                            *PrtPx=nullptr,
+                            *PrtPy=nullptr,
+                            *PrtPz=nullptr,
+                            *PrtP=nullptr,
+                            *PrtE=nullptr;
 
     //SimEnergy*Deposit
     size_t NDep;
@@ -49,49 +50,50 @@ public:
                     *DepE=nullptr;
 
     Truth(const char* filename) : file{new TFile(filename)} {
-        truth = file->Get<TTree>("YAD/Truth");
+        tree = file->Get<TTree>("YAD/Truth");
 
         //Events
-        truth->SetBranchAddress("fEvent",   &Event);
-        truth->SetBranchAddress("fRun",     &Run);
-        truth->SetBranchAddress("fSubrun",  &SubRun);
+        tree->SetBranchAddress("fEvent",    &Event);
+        tree->SetBranchAddress("fRun",      &Run);
+        tree->SetBranchAddress("fSubrun",   &SubRun);
 
         //MCTruth
-        truth->SetBranchAddress("fNPrt",    &NPrt);
+        tree->SetBranchAddress("fNPrt",     &NPrt);
 
         //MCParticle
-        truth->SetBranchAddress("fPrtPdg",  &PrtPdg); 
-        truth->SetBranchAddress("fPrtStX",  &PrtStX); 
-        truth->SetBranchAddress("fPrtStY",  &PrtStY); 
-        truth->SetBranchAddress("fPrtStZ",  &PrtStZ); 
-        truth->SetBranchAddress("fPrtStT",  &PrtStT); 
-        truth->SetBranchAddress("fPrtStPx", &PrtStPx); 
-        truth->SetBranchAddress("fPrtStPy", &PrtStPy); 
-        truth->SetBranchAddress("fPrtStPz", &PrtStPz); 
-        truth->SetBranchAddress("fPrtStP",  &PrtStP); 
-        truth->SetBranchAddress("fPrtStE",  &PrtStE); 
+        tree->SetBranchAddress("fPrtPdg",   &PrtPdg); 
+        // tree->SetBranchAddress("fPrtNPt",   &PrtNPt); 
+        tree->SetBranchAddress("fPrtX",     &PrtX); 
+        tree->SetBranchAddress("fPrtY",     &PrtY); 
+        tree->SetBranchAddress("fPrtZ",     &PrtZ); 
+        tree->SetBranchAddress("fPrtT",     &PrtT); 
+        tree->SetBranchAddress("fPrtPx",    &PrtPx); 
+        tree->SetBranchAddress("fPrtPy",    &PrtPy); 
+        tree->SetBranchAddress("fPrtPz",    &PrtPz); 
+        tree->SetBranchAddress("fPrtP",     &PrtP); 
+        tree->SetBranchAddress("fPrtE",     &PrtE); 
 
         //SimEnergyDeposit
-        truth->SetBranchAddress("fNDep",    &NDep);
-        truth->SetBranchAddress("fDepPdg",  &DepPdg); 
-        truth->SetBranchAddress("fDepX",    &DepX); 
-        truth->SetBranchAddress("fDepY",    &DepY); 
-        truth->SetBranchAddress("fDepZ",    &DepZ); 
-        truth->SetBranchAddress("fDepT",    &DepT); 
-        truth->SetBranchAddress("fDepE",    &DepE); 
+        tree->SetBranchAddress("fNDep",     &NDep);
+        tree->SetBranchAddress("fDepPdg",   &DepPdg); 
+        tree->SetBranchAddress("fDepX",     &DepX); 
+        tree->SetBranchAddress("fDepY",     &DepY); 
+        tree->SetBranchAddress("fDepZ",     &DepZ); 
+        tree->SetBranchAddress("fDepT",     &DepT); 
+        tree->SetBranchAddress("fDepE",     &DepE); 
 
     }
     ~Truth() { file-> Close(); }
     
-    size_t GetEntries() { return truth->GetEntries(); }
-    void GetEntry(size_t i) { truth->GetEntry(i); }
+    size_t GetEntries() { return tree->GetEntries(); }
+    void GetEntry(size_t i) { tree->GetEntry(i); }
 };
 
 class Reco {
 private:
 
     TFile* file;
-    TTree* reco;
+    TTree* tree;
 
 public:
 
@@ -118,7 +120,13 @@ public:
                             *TrkDirZ=nullptr;
 
     //Calorimetry
-    vector<double>  *TrkCalRange=nullptr;
+    vector<size_t>  *TrkCalPlane=nullptr,
+                    *TrkCalNPt=nullptr;
+    vector<float>   *TrkCalRange=nullptr,
+                    *TrkCalKineticE=nullptr;
+    vector<vector<double>>  *TrkCaldEdx=nullptr,
+                            *TrkCaldQdx=nullptr,
+                            *TrkCalResRange=nullptr;
 
     //Shower
     size_t NShw;
@@ -139,58 +147,64 @@ public:
                             *SptZ=nullptr;
 
     Reco(const char* filename) : file{new TFile(filename)} {
-        reco = file->Get<TTree>("YAD/Reco");
+        tree = file->Get<TTree>("YAD/Reco");
 
         //Events
-        reco->SetBranchAddress("fEvent",        &Event);
-        reco->SetBranchAddress("fRun",          &Run);
-        reco->SetBranchAddress("fSubrun",       &SubRun);
+        tree->SetBranchAddress("fEvent",        &Event);
+        tree->SetBranchAddress("fRun",          &Run);
+        tree->SetBranchAddress("fSubrun",       &SubRun);
 
         //PFParticle
-        reco->SetBranchAddress("fNPfp",         &NPfp);
-        reco->SetBranchAddress("fPfpID",        &PfpID);
-        reco->SetBranchAddress("fPfpTrkID",     &PfpTrkID);
-        reco->SetBranchAddress("fPfpShwID",     &PfpShwID);
-        reco->SetBranchAddress("fPfpPdg",       &PfpPdg);
+        tree->SetBranchAddress("fNPfp",         &NPfp);
+        tree->SetBranchAddress("fPfpID",        &PfpID);
+        tree->SetBranchAddress("fPfpTrkID",     &PfpTrkID);
+        tree->SetBranchAddress("fPfpShwID",     &PfpShwID);
+        tree->SetBranchAddress("fPfpPdg",       &PfpPdg);
 
         //Track
-        reco->SetBranchAddress("fNTrk",         &NTrk);
-        reco->SetBranchAddress("fTrkID",        &TrkID);
-        reco->SetBranchAddress("fTrkLength",    &TrkLength);
-        reco->SetBranchAddress("fTrkNPt",       &TrkNPt);
-        reco->SetBranchAddress("fTrkPtX",       &TrkPtX);
-        reco->SetBranchAddress("fTrkPtY",       &TrkPtY);
-        reco->SetBranchAddress("fTrkPtZ",       &TrkPtZ);
-        reco->SetBranchAddress("fTrkDirX",      &TrkDirX);
-        reco->SetBranchAddress("fTrkDirY",      &TrkDirY);
-        reco->SetBranchAddress("fTrkDirZ",      &TrkDirZ);
+        tree->SetBranchAddress("fNTrk",         &NTrk);
+        tree->SetBranchAddress("fTrkID",        &TrkID);
+        tree->SetBranchAddress("fTrkLength",    &TrkLength);
+        tree->SetBranchAddress("fTrkNPt",       &TrkNPt);
+        tree->SetBranchAddress("fTrkPtX",       &TrkPtX);
+        tree->SetBranchAddress("fTrkPtY",       &TrkPtY);
+        tree->SetBranchAddress("fTrkPtZ",       &TrkPtZ);
+        tree->SetBranchAddress("fTrkDirX",      &TrkDirX);
+        tree->SetBranchAddress("fTrkDirY",      &TrkDirY);
+        tree->SetBranchAddress("fTrkDirZ",      &TrkDirZ);
 
         //Calorimetry
-        reco->SetBranchAddress("fTrkCalRange",  &TrkCalRange);
+        tree->SetBranchAddress("fTrkCalPlane",   &TrkCalPlane);
+        tree->SetBranchAddress("fTrkCalRange",   &TrkCalRange);
+        tree->SetBranchAddress("fTrkCalKineticE",&TrkCalKineticE);
+        tree->SetBranchAddress("fTrkCalNPt",     &TrkCalNPt);
+        tree->SetBranchAddress("fTrkCaldEdx",    &TrkCaldEdx);
+        tree->SetBranchAddress("fTrkCaldQdx",    &TrkCaldQdx);
+        tree->SetBranchAddress("fTrkCalResRange",&TrkCalResRange);
 
         //Shower
-        reco->SetBranchAddress("fNShw",         &NShw);
-        reco->SetBranchAddress("fShwID",        &ShwID);
+        tree->SetBranchAddress("fNShw",         &NShw);
+        tree->SetBranchAddress("fShwID",        &ShwID);
 
         //Cluster
-        reco->SetBranchAddress("fPfpNClu",      &PfpNClu);
-        // reco->SetBranchAddress("fCluNHit",      &CluNHit);
-        // reco->SetBranchAddress("fCluPlane",     &CluPlane);
-        // reco->SetBranchAddress("fCluIntFit",    &CluIntFit);
-        // reco->SetBranchAddress("fCluSumADC",    &CluSumADC);
-        // reco->SetBranchAddress("fCluWidth",     &CluWidth);
+        tree->SetBranchAddress("fPfpNClu",      &PfpNClu);
+        tree->SetBranchAddress("fCluNHit",      &CluNHit);
+        tree->SetBranchAddress("fCluPlane",     &CluPlane);
+        tree->SetBranchAddress("fCluIntFit",    &CluIntFit);
+        tree->SetBranchAddress("fCluSumADC",    &CluSumADC);
+        tree->SetBranchAddress("fCluWidth",     &CluWidth);
 
         //SpacePoint
-        reco->SetBranchAddress("fPfpNSpt",      &PfpNSpt);
-        reco->SetBranchAddress("fSptX",         &SptX);
-        reco->SetBranchAddress("fSptY",         &SptY);
-        reco->SetBranchAddress("fSptZ",         &SptZ);
+        tree->SetBranchAddress("fPfpNSpt",      &PfpNSpt);
+        tree->SetBranchAddress("fSptX",         &SptX);
+        tree->SetBranchAddress("fSptY",         &SptY);
+        tree->SetBranchAddress("fSptZ",         &SptZ);
 
     }
     ~Reco() { file-> Close(); }
     
-    size_t GetEntries() { return reco->GetEntries(); }
-    void GetEntry(size_t i) { reco->GetEntry(i); }
+    size_t GetEntries() { return tree->GetEntries(); }
+    void GetEntry(size_t i) { tree->GetEntry(i); }
     
 };
 

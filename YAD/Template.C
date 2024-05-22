@@ -5,15 +5,17 @@ const vector<string> filelist = yad::ReadFileList(n_file,"ijclab.list");
 
 void Template() {
 
+    /* graph declarations */
+
     size_t i_file=0;
-    for (string file : filelist) {
+    for (string filename : filelist) {
         
         cout << "\e[3mOpening file #" << ++i_file << "/" << n_file << ": " << filename << "\e[0m" << endl;
 
         yad::Truth T(filename.c_str());
         yad::Reco R(filename.c_str());
 
-        size_t n_evt = R.GetEntris();
+        size_t n_evt = R.GetEntries();
         for (size_t i_evt=0; i_evt < n_evt; i_evt++) {
 
             T.GetEntry(i_evt);
@@ -21,7 +23,10 @@ void Template() {
 
             for (size_t i_prt=0; i_prt < T.NPrt; i_prt++) {
 
-            } //end mcparticle loop
+                for (size_t i_ppt=0; i_ppt < T.PrtNPt; i_ppt++) {
+
+                } //end particlepoint loop
+            } //end particle loop
 
             for (size_t i_dep=0; i_dep < T.NDep; i_dep++) {
 
@@ -43,6 +48,10 @@ void Template() {
                 for (size_t i_tpt=0; i_tpt < R.TrkNPt->at(i_trk); i_tpt++) {
 
                 } //end trackpoint loop
+
+                for (size_t i_cal=0; i_cal < R.TrkCalNPt->at(i_trk); i_cal++) {
+
+                } //end calorimetry loop
             } //end track loop
  
             for (size_t i_shw=0; i_shw < R.NSHw; i_shw++) {
@@ -50,4 +59,7 @@ void Template() {
             } //end shower loop
         } //end event loop
     } //end file loop
+
+    TCanvas* c1 = new TCanvas("c1","Template");
+    c1->cd();
 }

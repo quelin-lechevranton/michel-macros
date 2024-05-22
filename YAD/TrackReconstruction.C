@@ -7,11 +7,11 @@ double ZenithAngle(double x, double m) {
     return TMath::RadToDeg()*TMath::ACos(x/m);
 }
 
-void TrackLength() {
+void TrackReconstruction() {
 
     // Track Length ==================================================
     vector<TH1D*> hTrkLen(4);
-    int binTrkLen=30, minTrkLen=0, maxTrkLen=700;
+    int binTrkLen=50, minTrkLen=0, maxTrkLen=300;
 
     hTrkLen[0] = new TH1D("hTrackoneLength","",binTrkLen,minTrkLen,maxTrkLen);
     hTrkLen[0]->SetLineColor(kGreen+2);
@@ -21,20 +21,21 @@ void TrackLength() {
     hTrkLen[1]->SetLineColor(kRed+1);
     hTrkLen[1]->SetLineWidth(2);
 
-    hTrkLen[2] = new TH1D("hMinLength","",binTrkLen,minTrkLen,maxTrkLen);
+    hTrkLen[2] = new TH1D("hSumLength","",binTrkLen,minTrkLen,maxTrkLen);
     hTrkLen[2]->SetLineColor(kViolet-5);
     hTrkLen[2]->SetLineWidth(2);
 
-    hTrkLen[3] = new TH1D("hSumLength","",binTrkLen,minTrkLen,maxTrkLen);
-    hTrkLen[3]->SetLineColor(kViolet-5);
-    hTrkLen[3]->SetLineWidth(2);
+    hTrkLen[3] = new TH1D("hAllLength","",binTrkLen,minTrkLen,maxTrkLen);
+    hTrkLen[3]->SetLineColor(kBlack);
+    // hTrkLen[3]->SetLineWidth(2);
 
-    THStack* hsTrkLen = new THStack("hsTrkLen",";TrackLength (cm);count");
-    for (int i=0; i<hTrkLen.size(); i++) {if (i==2) {continue;} hsTrkLen->Add(hTrkLen[i]);}
+    THStack* hsTrkLen = new THStack("hsTrkLen","All Tracks - #color[209]{single-track events} - #color[99]{multi-track events (max)} - #color[51]{multi-track events (sum)};Track Length (cm);count");
+
+    for (int i=0; i<3; i++) {hsTrkLen->Add(hTrkLen[i]);}
 
     // Start Momentum ================================================
     vector<TH1D*> hStartP(4);
-    int binStP=30, minStP=0, maxStP=4;
+    int binStP=30, minStP=0, maxStP=2;
 
     hStartP[0] = new TH1D("hTrackeverTrueMomentum","",binStP,minStP,maxStP);
     hStartP[0]->SetLineColor(kBlack);
@@ -52,7 +53,7 @@ void TrackLength() {
     hStartP[3]->SetLineColor(kRed+1);
     hStartP[3]->SetLineWidth(2);
 
-    THStack* hsStartP = new THStack("hsStartP",";Momentum (GeV);count");
+    THStack* hsStartP = new THStack("hsStartP","All Tracks - #color[209]{single-track events} - #color[99]{multi-track events} - #color[57]{trackless events};Generated Momentum (GeV);count");
     for (int i=0; i<hStartP.size(); i++) {hsStartP->Add(hStartP[i]);}
  
     // Zenith Angle ==================================================
@@ -75,16 +76,17 @@ void TrackLength() {
     hZen[3]->SetLineColor(kRed+1);
     hZen[3]->SetLineWidth(2);
 
-    // hZen[4] = new TH1D("hTrackfulMaxZen","",binZen,minZen,maxZen);
-    // hZen[4]->SetLineColor(kOrange+7);
-
-    THStack* hsZen = new THStack("hsZen",";Zen (deg);count");
+    THStack* hsZen = new THStack("hsZen","All Tracks - #color[209]{single-track events} - #color[99]{multi-track events} - #color[57]{trackless events};Generated Zenith (deg);count");
     for (int i=0; i<hZen.size(); i++) {hsZen->Add(hZen[i]);}
 
     // TrkLen % StartP ===============================================
-    TH2D* gTrkLen_StP = new TH2D("hTrkLen_StP",";Momentum (GeV);Track Length (cm)",binStP,minStP,maxStP,binTrkLen,minTrkLen,maxTrkLen);
+    TH2D* gTrkLen_StP = new TH2D("hTrkLen_StP",";Generated Momentum (GeV);Track Length (cm)",binStP,minStP,maxStP,binTrkLen,minTrkLen,maxTrkLen);
 
-    // int iTrkLen_StP=0;
+    // Zenith Angle % StartP =========================================
+    vector<TH2D*> hZen_StP(3);
+    hZen_StP[0] = new TH2D("hZen_StP0","Trackless Events;Generated Momentum (GeV);Generated Zenith (deg)",binStP,minStP,maxStP,binZen,minZen,maxZen);
+    hZen_StP[1] = new TH2D("hZen_StP1","Trackone Events;Generated Momentum (GeV);Generated Zenith (deg)",binStP,minStP,maxStP,binZen,minZen,maxZen);
+    hZen_StP[2] = new TH2D("hZen_StP2","Trackful Events;Generated Momentum (GeV);Generated Zenith (deg)",binStP,minStP,maxStP,binZen,minZen,maxZen);
 
     int nEvent=0;
     int nTrackless=0;
@@ -107,19 +109,16 @@ void TrackLength() {
             R.GetEntry(i_evt);
             T.GetEntry(i_evt);
 
-            double TruStPx= T.PrtStPx->at(0);
-            double TruStPy= T.PrtStPy->at(0);
-            double TruStPz= T.PrtStPz->at(0);
+            double TruStPx= T.PrtPx->at(0)[0];
+            double TruStPy= T.PrtPy->at(0)[0];
+            double TruStPz= T.PrtPz->at(0)[0];
             double TruStP = TMath::Sqrt(TruStPx*TruStPx + TruStPy*TruStPy+ TruStPz*TruStPz);
             double TruZen = ZenithAngle(-TruStPx,TruStP);
-
-            int nTracks=R.NTrk;
-            vector<double>* TrackLength=R.TrkLength;
 
             hStartP[0]->Fill(TruStP);
             hZen[0]->Fill(TruZen);
 
-            if (nTracks==0) {
+            if (R.NTrk==0) {
                 nTrackless++;
 
                 hStartP[1]->Fill(TruStP);
@@ -127,12 +126,14 @@ void TrackLength() {
                 hZen[1]->Fill(TruZen);
 
                 // gTrkLen_StP->Fill(TruStP,0.0);
+                hZen_StP[0]->Fill(TruStP,TruZen);
             }
-            else if (nTracks==1) {
+            else if (R.NTrk==1) {
 
-                double TrkLen = TrackLength->at(0);
+                double TrkLen = R.TrkLength->at(0);
 
                 hTrkLen[0]->Fill(TrkLen); 
+                hTrkLen[3]->Fill(TrkLen); 
 
                 hStartP[2]->Fill(TruStP);
 
@@ -140,6 +141,7 @@ void TrackLength() {
 
                 gTrkLen_StP->Fill(TruStP,TrkLen);
 
+                hZen_StP[1]->Fill(TruStP,TruZen);
             }
             else {
                 nTrackful++;
@@ -148,25 +150,28 @@ void TrackLength() {
                 double MinLen=0;
                 double SumLen=0;
 
-                for(int i_trk=0; i_trk < nTracks ; i_trk++) {
+                for(int i_trk=0; i_trk < R.NTrk ; i_trk++) {
 
-                    double TrkLen = TrackLength->at(i_trk);
+                    double TrkLen = R.TrkLength->at(i_trk);
 
                     MaxLen = MaxLen > TrkLen ? MaxLen : TrkLen;
                     MinLen = MinLen > TrkLen ? TrkLen : MinLen;
                     SumLen+= TrkLen;
 
+                    hTrkLen[3]->Fill(TrkLen);
+
                 }
 
                 hTrkLen[1]->Fill(MaxLen);
-                hTrkLen[2]->Fill(MinLen);
-                hTrkLen[3]->Fill(SumLen);
+                hTrkLen[2]->Fill(SumLen);
 
                 hStartP[3]->Fill(TruStP);
 
                 hZen[3]->Fill(TruZen);
 
                 // gTrkLen_StP->Fill(TruStP,SumLen);
+                
+                hZen_StP[2]->Fill(TruStP,TruZen);
             }
         
         } //end of event loop
@@ -178,7 +183,7 @@ void TrackLength() {
     cout << "nTrackful=" << nTrackful << " (" << 100.*nTrackful/nEvent << "%)" << endl;
     cout << "nTrackless=" << nTrackless << " (" << 100.*nTrackless/nEvent << "%)" << endl;
 
-    TCanvas* c1 = new TCanvas("c1","Track Length");
+    TCanvas* c1 = new TCanvas("c1","Track Length1");
     c1->Divide(2,2);
     c1->cd(1);
     hsTrkLen->Draw("nostack");
@@ -192,5 +197,16 @@ void TrackLength() {
     c1->cd(4);
     gTrkLen_StP->Draw("colZ");
 
-    // c1->SaveAs("TrackLength.pdf");
+    TCanvas* c2 = new TCanvas("c2","Track Length2");
+    c2->Divide(2,2);
+    c2->cd(1);
+    hZen_StP[0]->Draw("colZ");
+
+    c2->cd(2);
+    hZen_StP[1]->Draw("colZ");
+
+    c2->cd(3);
+    hZen_StP[2]->Draw("colZ");
+
+    // c1->SaveAs("R.TrkLength.pdf");
 }
