@@ -1,6 +1,6 @@
 #include "YADtools.h"
 
-const size_t n_file=1;
+const size_t n_file=3;
 const vector<string> filelist = yad::ReadFileList(n_file,"jeremy.list");
 
 double ZenithAngle(double x, double m) {
@@ -35,7 +35,7 @@ void TrackReconstruction() {
 
     // Start Momentum ================================================
     vector<TH1D*> hStartP(4);
-    int binStP=30, minStP=0, maxStP=2;
+    int binStP=40, minStP=0, maxStP=3;
 
     hStartP[0] = new TH1D("hTrackeverTrueMomentum","",binStP,minStP,maxStP);
     hStartP[0]->SetLineColor(kBlack);
