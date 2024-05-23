@@ -50,7 +50,7 @@ void MichelEnergy() {
     TCanvas* c1 = new TCanvas("c1","MichelEnergy");
     c1->Divide(2,1);
     c1->cd(1);
-    hPrtNPt->Draw("hist")
+    hPrtNPt->Draw("hist");
     // hDep->Draw("hist");
     c1->cd(2);
     // hCal->Draw("hist");
