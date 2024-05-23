@@ -29,7 +29,7 @@ void MichelEnergy() {
             for (size_t i_dep=0; i_dep < T.NDep; i_dep++) {
                 // if (T.DepPdg->at(i_dep)!=11) {continue;}
 
-                cout << "\tdep#" << i_dep << endl;
+                // cout << "\tdep#" << i_dep << endl;
 
                 hDep->Fill(T.DepE->at(i_dep));
 
