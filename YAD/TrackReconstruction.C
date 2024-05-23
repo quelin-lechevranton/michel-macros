@@ -83,10 +83,11 @@ void TrackReconstruction() {
     TH2D* gTrkLen_StP = new TH2D("hTrkLen_StP",";Generated Momentum (GeV);Track Length (cm)",binStP,minStP,maxStP,binTrkLen,minTrkLen,maxTrkLen);
 
     // Zenith Angle % StartP =========================================
-    vector<TH2D*> hZen_StP(3);
-    hZen_StP[0] = new TH2D("hZen_StP0","Trackless Events;Generated Momentum (GeV);Generated Zenith (deg)",binStP,minStP,maxStP,binZen,minZen,maxZen);
-    hZen_StP[1] = new TH2D("hZen_StP1","Trackone Events;Generated Momentum (GeV);Generated Zenith (deg)",binStP,minStP,maxStP,binZen,minZen,maxZen);
-    hZen_StP[2] = new TH2D("hZen_StP2","Trackful Events;Generated Momentum (GeV);Generated Zenith (deg)",binStP,minStP,maxStP,binZen,minZen,maxZen);
+    vector<TH2D*> hZen_StP(4);
+    hZen_StP[0] = new TH2D("hZen_StP0","All Events;Generated Momentum (GeV);Generated Zenith (deg)",binStP,minStP,maxStP,binZen,minZen,maxZen);
+    hZen_StP[1] = new TH2D("hZen_StP1","Trackless Events;Generated Momentum (GeV);Generated Zenith (deg)",binStP,minStP,maxStP,binZen,minZen,maxZen);
+    hZen_StP[2] = new TH2D("hZen_StP2","Trackone Events;Generated Momentum (GeV);Generated Zenith (deg)",binStP,minStP,maxStP,binZen,minZen,maxZen);
+    hZen_StP[3] = new TH2D("hZen_StP3","Trackful Events;Generated Momentum (GeV);Generated Zenith (deg)",binStP,minStP,maxStP,binZen,minZen,maxZen);
 
     int nEvent=0;
     int nTrackless=0;
@@ -118,6 +119,8 @@ void TrackReconstruction() {
             hStartP[0]->Fill(TruStP);
             hZen[0]->Fill(TruZen);
 
+            hZen_StP[0]->Fill(TruStP,TruZen);
+
             if (R.NTrk==0) {
                 nTrackless++;
 
@@ -126,7 +129,7 @@ void TrackReconstruction() {
                 hZen[1]->Fill(TruZen);
 
                 // gTrkLen_StP->Fill(TruStP,0.0);
-                hZen_StP[0]->Fill(TruStP,TruZen);
+                hZen_StP[1]->Fill(TruStP,TruZen);
             }
             else if (R.NTrk==1) {
 
@@ -141,7 +144,7 @@ void TrackReconstruction() {
 
                 gTrkLen_StP->Fill(TruStP,TrkLen);
 
-                hZen_StP[1]->Fill(TruStP,TruZen);
+                hZen_StP[2]->Fill(TruStP,TruZen);
             }
             else {
                 nTrackful++;
@@ -171,7 +174,7 @@ void TrackReconstruction() {
 
                 // gTrkLen_StP->Fill(TruStP,SumLen);
                 
-                hZen_StP[2]->Fill(TruStP,TruZen);
+                hZen_StP[3]->Fill(TruStP,TruZen);
             }
         
         } //end of event loop
@@ -208,5 +211,7 @@ void TrackReconstruction() {
     c2->cd(3);
     hZen_StP[2]->Draw("colZ");
 
+    c2->cd(4);
+    hZen_StP[3]->Draw("colZ");
     // c1->SaveAs("R.TrkLength.pdf");
 }
