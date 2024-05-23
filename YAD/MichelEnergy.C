@@ -7,9 +7,10 @@ void MichelEnergy() {
 
     TH1D* hDep = new TH1D("hDep",";Energy (GeV?);count",10,0,0.5);
     TH1D* hCal = new TH1D("hCal",";dEdx (GeV/cm?);count",40,0,40);
-    TH1D* hPrtNPt = new TH1D("hPrtNPt",";PrtNPt;count",35,0,35);
+    TH1D* hPrtNPt = new TH1D("hPrtNPt",";PrtNPt;count",30,10,40);
 
     size_t i_file=0;
+    size_t N=0;
     for (string filename : filelist) {
         
         cout << "\e[3mOpening file #" << ++i_file << "/" << n_file << ": " << filename << "\e[0m" << endl;
@@ -26,9 +27,10 @@ void MichelEnergy() {
             for (size_t i_prt=0; i_prt < T.NPrt; i_prt++) {
 
                 if (T.PrtPdg->at(i_prt)!=11) continue;
-                if (T.PrtNPt->at(i_prt) < 5) continue;
+                if (T.PrtNPt->at(i_prt) < 10) continue;
 
                 hPrtNPt->Fill(T.PrtNPt->at(i_prt));
+                N+=T.PrtNPt->at(i_prt);
 
             }
             
@@ -48,6 +50,7 @@ void MichelEnergy() {
         } //end event loop
     } //end file loop
 
+    cout << N << endl;
     TCanvas* c1 = new TCanvas("c1","MichelEnergy");
     c1->Divide(2,1);
     c1->cd(1);
