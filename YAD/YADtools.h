@@ -62,7 +62,7 @@ public:
 
         //MCParticle
         tree->SetBranchAddress("fPrtPdg",   &PrtPdg); 
-        // tree->SetBranchAddress("fPrtNPt",   &PrtNPt); 
+        tree->SetBranchAddress("fPrtNPt",   &PrtNPt); 
         tree->SetBranchAddress("fPrtX",     &PrtX); 
         tree->SetBranchAddress("fPrtY",     &PrtY); 
         tree->SetBranchAddress("fPrtZ",     &PrtZ); 
