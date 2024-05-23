@@ -7,7 +7,7 @@ void MichelEnergy() {
 
     TH1D* hDep = new TH1D("hDep",";Energy (GeV?);count",10,0,0.5);
     TH1D* hCal = new TH1D("hCal",";dEdx (GeV/cm?);count",40,0,40);
-    TH1D* hPrtNPt = new TH1D("hPrtNPt",";PrtNPt;count",40,0,40);
+    TH1D* hPrtNPt = new TH1D("hPrtNPt",";PrtNPt;count",35,0,35);
 
     size_t i_file=0;
     for (string filename : filelist) {
@@ -26,6 +26,7 @@ void MichelEnergy() {
             for (size_t i_prt=0; i_prt < T.NPrt; i_prt++) {
 
                 if (T.PrtPdg->at(i_prt)!=11) continue;
+                if (T>PrtNPt->at(i_prt) < 5) continue;
 
                 hPrtNPt->Fill(T.PrtNPt->at(i_prt));
 
