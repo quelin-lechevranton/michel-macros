@@ -26,12 +26,12 @@ void MichelEnergy() {
             for (size_t i_dep=0; i_dep < T.NDep; i_dep++) {
                 // if (T.DepPdg->at(i_dep)!=11) {continue;}
 
-                // hDep->Fill(T.DepE->at(i_dep));
+                hDep->Fill(T.DepE->at(i_dep));
 
             } //end deposit loop
 
-            // for (size_t i_trk=0; i_trk < R.NTrk; i_trk++) {
-            size_t i_trk=0; {
+            for (size_t i_trk=0; i_trk < R.NTrk; i_trk++) {
+            // size_t i_trk=0; {
 
                 for (size_t i_cal=0; i_cal < R.TrkCalNPt->at(i_trk); i_cal++) {
                     hCal->Fill((*R.TrkCaldEdx)[i_trk][i_cal]);
@@ -44,7 +44,7 @@ void MichelEnergy() {
     TCanvas* c1 = new TCanvas("c1","MichelEnergy");
     c1->Divide(2,1);
     c1->cd(1);
-    // hDep->Draw("hist");
+    hDep->Draw("hist");
     c1->cd(2);
     hCal->Draw("hist");
 }
