@@ -38,7 +38,7 @@ void SpacePoints() {
 
     gDep[1] = new TGraph2D();
     gDep[1]->SetName("Electron deposits");
-    gDep[1]->SetMarkerColor(kAzure+10);
+    gDep[1]->SetMarkerColor(kBlue-4);
     gDep[1]->SetMarkerStyle(20);
     gDep[1]->SetMarkerSize(0.1);
 
