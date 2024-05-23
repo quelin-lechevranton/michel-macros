@@ -17,11 +17,11 @@ void MichelEnergy() {
         yad::Reco R(filename.c_str());
 
         size_t n_evt = R.GetEntries();
-        cout << T.GetEntries() << endl;
+        // cout << T.GetEntries() << endl;
         for (size_t i_evt=0; i_evt < n_evt; i_evt++) {
         // size_t i_evt=45; {
 
-            cout << "evt#" << i_evt << endl;
+            // cout << "evt#" << i_evt << endl;
 
             T.GetEntry(i_evt);
             R.GetEntry(i_evt);
