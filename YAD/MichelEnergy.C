@@ -31,7 +31,6 @@ void MichelEnergy() {
 
                 hPrtNPt->Fill(T.PrtNPt->at(i_prt));
                 N+=T.PrtNPt->at(i_prt);
-
             }
             
             // for (size_t i_dep=0; i_dep < T.NDep; i_dep++) {

@@ -54,7 +54,7 @@ void Template() {
                 } //end calorimetry loop
             } //end track loop
  
-            for (size_t i_shw=0; i_shw < R.NSHw; i_shw++) {
+            for (size_t i_shw=0; i_shw < R.NShw; i_shw++) {
 
             } //end shower loop
         } //end event loop
