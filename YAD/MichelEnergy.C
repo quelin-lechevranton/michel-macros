@@ -7,6 +7,7 @@ void MichelEnergy() {
 
     TH1D* hDep = new TH1D("hDep",";Energy (GeV?);count",10,0,0.5);
     TH1D* hCal = new TH1D("hCal",";dEdx (GeV/cm?);count",40,0,40);
+    TH1D* hPrtNPt = new TH1D("hPrtNPt",";PrtNPt;count",40,0,40);
 
     size_t i_file=0;
     for (string filename : filelist) {
@@ -17,39 +18,40 @@ void MichelEnergy() {
         yad::Reco R(filename.c_str());
 
         size_t n_evt = R.GetEntries();
-        // cout << T.GetEntries() << endl;
         for (size_t i_evt=0; i_evt < n_evt; i_evt++) {
-        // size_t i_evt=45; {
-
-            // cout << "evt#" << i_evt << endl;
 
             T.GetEntry(i_evt);
             R.GetEntry(i_evt);
+
+            for (size_t i_prt=0; i_prt < T.NPrt; i_prt++) {
+
+                if (T.PrtPdg->at(i_prt)!=11) continue;
+
+                hPrtNPt->Fill(T.PrtNPt->at(i_prt));
+
+            }
             
-            for (size_t i_dep=0; i_dep < T.NDep; i_dep++) {
-                // if (T.DepPdg->at(i_dep)!=11) {continue;}
+            // for (size_t i_dep=0; i_dep < T.NDep; i_dep++) {
+            //     if (T.DepPdg->at(i_dep)!=11) continue;
 
-                // cout << "\tdep#" << i_dep << endl;
+            //     hDep->Fill(T.DepE->at(i_dep));
+            // } //end deposit loop
 
-                hDep->Fill(T.DepE->at(i_dep));
+            // for (size_t i_trk=0; i_trk < R.NTrk; i_trk++) {
 
-            } //end deposit loop
+            //     for (size_t i_cal=0; i_cal < R.TrkCalNPt->at(i_trk); i_cal++) {
 
-            for (size_t i_trk=0; i_trk < R.NTrk; i_trk++) {
-            // size_t i_trk=0; {
-
-                for (size_t i_cal=0; i_cal < R.TrkCalNPt->at(i_trk); i_cal++) {
-                    hCal->Fill((*R.TrkCaldEdx)[i_trk][i_cal]);
-                } //end calorimetry loop
-            } //end track loop
- 
+            //         hCal->Fill((*R.TrkCaldEdx)[i_trk][i_cal]);
+            //     } //end calorimetry loop
+            // } //end track loop
         } //end event loop
     } //end file loop
 
     TCanvas* c1 = new TCanvas("c1","MichelEnergy");
     c1->Divide(2,1);
     c1->cd(1);
-    hDep->Draw("hist");
+    hPrtNPt->Draw("hist")
+    // hDep->Draw("hist");
     c1->cd(2);
-    hCal->Draw("hist");
+    // hCal->Draw("hist");
 }
