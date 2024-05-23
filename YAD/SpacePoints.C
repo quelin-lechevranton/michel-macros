@@ -68,7 +68,7 @@ void SpacePoints() {
 
         N_evt+=n_evt;
 
-        for (size_t i_evt=0; i_evt < n_evt; i_evt++) {
+        for (size_t i_evt=0; i_evt < 33; i_evt++) {
         // size_t i_evt=45; {
 
             R.GetEntry(i_evt);
@@ -185,7 +185,7 @@ void SpacePoints() {
 
     c1->cd(2);
     gDep[0]->Draw("p");
-    // gDep[1]->Draw("samep");
+    gDep[1]->Draw("samep");
     // gDep[2]->Draw("samep");
 
     // stringstream ss;
