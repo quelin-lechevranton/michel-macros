@@ -185,7 +185,7 @@ void SpacePoints() {
 
     c1->cd(2);
     gDep[0]->Draw("p");
-    gDep[1]->Draw("samep");
+    // gDep[1]->Draw("samep");
     // gDep[2]->Draw("samep");
 
     // stringstream ss;
