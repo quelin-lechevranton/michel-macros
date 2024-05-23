@@ -34,7 +34,7 @@ void MichelEnergy() {
             size_t i_trk=0; {
 
                 for (size_t i_cal=0; i_cal < R.TrkCalNPt->at(i_trk); i_cal++) {
-                    hCal->Fill((*R.TrkCaldEdx)[i_trk][i_cal]);
+                    // hCal->Fill((*R.TrkCaldEdx)[i_trk][i_cal]);
                 } //end calorimetry loop
             } //end track loop
  
@@ -46,5 +46,5 @@ void MichelEnergy() {
     c1->cd(1);
     hDep->Draw("hist");
     c1->cd(2);
-    hCal->Draw("hist");
+    // hCal->Draw("hist");
 }
