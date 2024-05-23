@@ -1,7 +1,7 @@
 #include "YADtools.h"
 
 const size_t n_file=1;
-const vector<string> filelist = yad::ReadFileList(n_file,"ijclab.list");
+const vector<string> filelist = yad::ReadFileList(n_file,"jeremy.list");
 
 void MichelEnergy() {
 
