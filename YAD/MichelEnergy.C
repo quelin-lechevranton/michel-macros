@@ -26,7 +26,7 @@ void MichelEnergy() {
             for (size_t i_prt=0; i_prt < T.NPrt; i_prt++) {
 
                 if (T.PrtPdg->at(i_prt)!=11) continue;
-                if (T>PrtNPt->at(i_prt) < 5) continue;
+                if (T.PrtNPt->at(i_prt) < 5) continue;
 
                 hPrtNPt->Fill(T.PrtNPt->at(i_prt));
 
