@@ -17,8 +17,8 @@ void MichelEnergy() {
         yad::Reco R(filename.c_str());
 
         size_t n_evt = R.GetEntries();
-        // for (size_t i_evt=0; i_evt < n_evt; i_evt++) {
-        size_t i_evt=45; {
+        for (size_t i_evt=0; i_evt < n_evt; i_evt++) {
+        // size_t i_evt=45; {
 
             T.GetEntry(i_evt);
             R.GetEntry(i_evt);
