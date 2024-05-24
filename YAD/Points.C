@@ -1,9 +1,9 @@
 #include "YADtools.h"
 
 const size_t n_file=1;
-const vector<string> filelist = yad::ReadFileList(n_file,"jeremy.list");
+const vector<string> filelist = yad::ReadFileList(n_file,"ijclab.list");
 
-void SpacePoints() {
+void Points() {
 
     vector<TGraph2D*> gTrkEnds(2);
     gTrkEnds[0] = new TGraph2D();
@@ -111,7 +111,9 @@ void SpacePoints() {
                 bool is_inside = true;
 
                 // if (R.TrkLength->at(i_trk) > 15) {continue;}
-                // if (i_trk != 0) {continue;}
+                // if (i_trk != 1) {continue;}
+
+
 
                 for (size_t i_spt=0; i_spt < R.PfpNSpt->at(i_pfp); i_spt++) {              
 
@@ -128,7 +130,7 @@ void SpacePoints() {
                     if (!is_inside) {break;}
                 } //end of spt loop 
 
-                if (!is_inside) {continue;}
+                // if (!is_inside) {continue;}
 
                 double StX =  (*R.TrkPtX)[i_trk][0];
                 double StY =  (*R.TrkPtY)[i_trk][0];
@@ -161,6 +163,9 @@ void SpacePoints() {
                     EndX
                 );                
 
+
+                cout << "(" << StX << "," << StY << "," << StZ << ") -> (" << EndX << "," << EndY << "," << EndZ << "): " << R.TrkLength->at(i_trk) << endl;
+
                 N_trkIn++;
 
                 }
@@ -175,11 +180,11 @@ void SpacePoints() {
     // cout << "nInsde=" << N_trkIn << " (" << 100.*N_trkIn/N_trk << "%)" << endl;
     // cout << "nSpPts=" << iSpt << endl;
 
-    TCanvas* c1 = new TCanvas("c1","Track Ends");
+    TCanvas* c1 = new TCanvas("c1","Points");
     c1->Divide(2,1);
     c1->cd(1);
     gSpt[0]->Draw("p");
-    // gSpt[1]->Draw("samep");
+    gSpt[1]->Draw("samep");
     gTrkEnds[0]->Draw("samep");
     gTrkEnds[1]->Draw("samep");  
 

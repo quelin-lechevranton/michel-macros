@@ -1,3 +1,8 @@
+/*
+ *  classes to store and access variables from the output ROOT file of YAD_module
+ */
+
+
 #include <vector>
 #include <string>
 #include <iostream>
@@ -19,6 +24,29 @@ private:
     TFile* file;
     TTree* tree;
 
+
+    vector<int> *PrtTrkID=nullptr,
+                *PrtMomTrkID=nullptr,
+                *DepTrkID=nullptr;
+    vector<vector<double>>  *PrtDauTrkID=nullptr;
+    
+    vector<int> PrtMomID_value,
+                DepPrtID_value;
+    vector<vector<int>> PrtDauID_value;
+
+    //return index i_prt that can be used as: PrtXxx->at(i_prt)
+    int GetIDfromTrkID(int TrkID) {
+        if (TrkID==0) {
+            return -1;
+        }
+        vector<int>::iterator it = find(PrtTrkID->begin(), PrtTrkID->end(), TrkID);
+        if (it==PrtTrkID->end()) {
+            cerr << "i_prt not found" << endl;
+            return 0;
+        }
+        return distance(PrtTrkID->begin(),it);
+    }
+
 public:
 
     //Events
@@ -28,8 +56,11 @@ public:
     size_t NPrt;
 
     //MCParticle
-    vector<int> *PrtPdg=nullptr;
-    vector<size_t> *PrtNPt=nullptr;
+    vector<int> *PrtPdg=nullptr,
+                *PrtMomID=&PrtMomID_value;
+    vector<size_t>  *PrtNPt=nullptr,
+                    *PrtNDau=nullptr;
+    vector<vector<int>> *PrtDauID=&PrtDauID_value;
     vector<vector<double>>  *PrtX=nullptr,
                             *PrtY=nullptr,
                             *PrtZ=nullptr,
@@ -42,7 +73,8 @@ public:
 
     //SimEnergy*Deposit
     size_t NDep;
-    vector<int>  *DepPdg=nullptr;
+    vector<int> *DepPdg=nullptr,
+                *DepPrtID=&DepPrtID_value;
     vector<double>  *DepX=nullptr,
                     *DepY=nullptr,
                     *DepZ=nullptr,
@@ -62,6 +94,10 @@ public:
 
         //MCParticle
         tree->SetBranchAddress("fPrtPdg",   &PrtPdg); 
+        tree->SetBranchAddress("fPrtTrkID", &PrtTrkID); 
+        tree->SetBranchAddress("fPrtMomTrkID",&PrtMomTrkID); 
+        tree->SetBranchAddress("fPrtNDau",  &PrtNDau); 
+        tree->SetBranchAddress("fPrtDauTrkID",&PrtDauTrkID); 
         tree->SetBranchAddress("fPrtNPt",   &PrtNPt); 
         tree->SetBranchAddress("fPrtX",     &PrtX); 
         tree->SetBranchAddress("fPrtY",     &PrtY); 
@@ -76,17 +112,35 @@ public:
         //SimEnergyDeposit
         tree->SetBranchAddress("fNDep",     &NDep);
         tree->SetBranchAddress("fDepPdg",   &DepPdg); 
+        tree->SetBranchAddress("fDepTrkID", &DepTrkID); 
         tree->SetBranchAddress("fDepX",     &DepX); 
         tree->SetBranchAddress("fDepY",     &DepY); 
         tree->SetBranchAddress("fDepZ",     &DepZ); 
         tree->SetBranchAddress("fDepT",     &DepT); 
         tree->SetBranchAddress("fDepE",     &DepE); 
-
     }
     ~Truth() { file-> Close(); }
     
     size_t GetEntries() { return tree->GetEntries(); }
-    void GetEntry(size_t i) { tree->GetEntry(i); }
+    void GetEntry(size_t i) { 
+        tree->GetEntry(i); 
+
+        for (size_t i_prt=0; i_prt < NPrt; i_prt++) {
+
+            PrtMomID_value.push_back(GetIDfromTrkID(PrtMomTrkID->at(i_prt)));
+
+            vector<int> tpPrtDauID_value;
+            for (size_t i_dau=0; i_dau < PrtNDau->at(i_prt); i_dau++) {
+
+                tpPrtDauID_value.push_back(GetIDfromTrkID((*PrtDauTrkID)[i_prt][i_dau]));
+            }
+            PrtDauID_value.push_back(tpPrtDauID_value);
+        }
+
+        for (size_t i_dep=0; i_dep < NDep; i_dep++) {
+            DepPrtID_value.push_back(GetIDfromTrkID(DepTrkID->at(i_dep)));
+        }
+    }
 };
 
 class Reco {

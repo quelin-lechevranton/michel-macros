@@ -18,6 +18,8 @@ void Template() {
         size_t n_evt = R.GetEntries();
         for (size_t i_evt=0; i_evt < n_evt; i_evt++) {
 
+            // cout << "Event#" << i_evt << endl;
+
             T.GetEntry(i_evt);
             R.GetEntry(i_evt);
 
