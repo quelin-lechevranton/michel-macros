@@ -23,28 +23,28 @@ void Template() {
             T.GetEntry(i_evt);
             R.GetEntry(i_evt);
 
-            // for (size_t i_prt=0; i_prt < T.NPrt; i_prt++) {
+            for (size_t i_prt=0; i_prt < T.NPrt; i_prt++) {
 
-            //     for (size_t i_ppt=0; i_ppt < T.PrtNPt->at(i_prt); i_ppt++) {
+                for (size_t i_ppt=0; i_ppt < T.PrtNPt->at(i_prt); i_ppt++) {
 
-            //     } //end particlepoint loop
+                } //end particlepoint loop
 
-            //     for (size_t i_dep=0; i_dep < T.NDep->at(i_prt); i_dep++) {
+                for (size_t i_dep=0; i_dep < T.NDep->at(i_prt); i_dep++) {
 
-            //     } //end deposit loop
-            // } //end particle loop
+                } //end deposit loop
+            } //end particle loop
 
             for (size_t i_pfp=0; i_pfp < R.NPfp; i_pfp++) {
 
                 cout << "\tpfpI=" << i_pfp << "\tpfpID" << R.PfpID->at(i_pfp) << "\tpfpTrkID" << R.PfpTrkID->at(i_pfp) << endl;
 
-                // for (size_t i_clu=0; i_clu < R.PfpNClu->at(i_pfp); i_clu++) {
+                for (size_t i_clu=0; i_clu < R.PfpNClu->at(i_pfp); i_clu++) {
 
-                // } //end cluster loop
+                } //end cluster loop
 
-                // for (size_t i_spt=0; i_spt < R.PfpNSpt->at(i_pfp); i_spt++) {
+                for (size_t i_spt=0; i_spt < R.PfpNSpt->at(i_pfp); i_spt++) {
 
-                // } //end spacepoint loop
+                } //end spacepoint loop
             } //end pfp loop
 
             // for (size_t i_trk=0; i_trk < R.NTrk; i_trk++) {
