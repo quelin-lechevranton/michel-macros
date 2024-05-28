@@ -2,7 +2,7 @@
 
 void YADtest() {
 
-    yad::Reco R("~/Code/out/pdvd_1k_mu_1GeV_YAdumped.root");
+    yad::Reco R("~/Code/out/pdvd_100_mu_1GeV_zen0_YAdumped.root");
 
     cout << "N Event=" << R.GetEntries() << endl;
 
