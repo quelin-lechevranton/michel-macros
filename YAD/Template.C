@@ -45,7 +45,7 @@ void Template() {
                 } //end spacepoint loop
             } //end pfp loop
 
-            for (size_t i_trk=0; i_trk < 0; i_trk++) {
+            for (size_t i_trk=0; i_trk < R.NTrk; i_trk++) {
 
                 cout << "\ttrkI=" << i_trk << "\ttrkID" << R.TrkID->at(i_trk) << endl;
 
