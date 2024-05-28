@@ -49,7 +49,7 @@ public:
                             *PrtE=nullptr;
 
     //SimEnergy*Deposit
-    vector<size_t>  *PrtNDep;
+    vector<size_t>  *PrtNDep=nullptr;
     vector<vector<double>>  *DepPdg=nullptr,
                             *DepX=nullptr,
                             *DepY=nullptr,
@@ -119,6 +119,7 @@ public:
 
     //Track
     size_t NTrk;
+    vector<int> *TrkID=nullptr;
     vector<double>  *TrkLength=nullptr;
     vector<size_t>  *TrkNPt=nullptr;
     vector<vector<double>>  *TrkPtX=nullptr,
@@ -172,6 +173,7 @@ public:
 
         //Track
         tree->SetBranchAddress("fNTrk",         &NTrk);
+        tree->SetBranchAddress("fTrkID",         &TrkID);
         tree->SetBranchAddress("fTrkLength",    &TrkLength);
         tree->SetBranchAddress("fTrkNPt",       &TrkNPt);
         tree->SetBranchAddress("fTrkPtX",       &TrkPtX);
