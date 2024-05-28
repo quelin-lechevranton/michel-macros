@@ -66,9 +66,9 @@ public:
         tree->SetBranchAddress("fSubrun",   &SubRun);
 
         //MCTruth
-        tree->SetBranchAddress("fNPrt",     &NPrt);
 
         //MCParticle
+        tree->SetBranchAddress("fNPrt",     &NPrt);
         tree->SetBranchAddress("fPrtPdg",   &PrtPdg); 
         tree->SetBranchAddress("fPrtMomID", &PrtMomID); 
         tree->SetBranchAddress("fPrtNDau",  &PrtNDau); 
