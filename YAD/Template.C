@@ -16,9 +16,10 @@ void Template() {
         yad::Reco R(filename.c_str());
 
         size_t n_evt = R.GetEntries();
+        cout << n_evt << endl;
         for (size_t i_evt=0; i_evt < n_evt; i_evt++) {
 
-            // cout << "Event#" << i_evt << endl;
+            cout << "Event#" << i_evt << endl;
 
             T.GetEntry(i_evt);
             R.GetEntry(i_evt);
