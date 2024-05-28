@@ -22,9 +22,9 @@ void Template() {
             cout << "Event#" << i_evt+1 << endl;
 
             T.GetEntry(i_evt);
+            cout << "\tTruth:done" << endl;
             R.GetEntry(i_evt);
-
-            cout << "\tdone" << endl;
+            cout << "\tReco:done" << endl;
 
             // for (size_t i_prt=0; i_prt < T.NPrt; i_prt++) {
 
