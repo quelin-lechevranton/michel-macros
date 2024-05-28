@@ -1,7 +1,7 @@
 #include "YAD_tools.h"
 
 const size_t n_file=1;
-const vector<string> filelist = yad::ReadFileList(n_file,"cern.list");
+const vector<string> filelist = yad::ReadFileList(n_file,"jeremy.list");
 
 void Template() {
 
@@ -12,7 +12,7 @@ void Template() {
         
         cout << "\e[3mOpening file #" << ++i_file << "/" << n_file << ": " << filename << "\e[0m" << endl;
 
-        yad::Truth T(filename.c_str());
+        // yad::Truth T(filename.c_str());
         yad::Reco R(filename.c_str());
 
         size_t n_evt = R.GetEntries();
@@ -20,19 +20,19 @@ void Template() {
 
             cout << "Event#" << i_evt+1 << endl;
 
-            T.GetEntry(i_evt);
+            // T.GetEntry(i_evt);
             R.GetEntry(i_evt);
 
-            for (size_t i_prt=0; i_prt < T.NPrt; i_prt++) {
+            // for (size_t i_prt=0; i_prt < T.NPrt; i_prt++) {
 
-                for (size_t i_ppt=0; i_ppt < T.PrtNPt->at(i_prt); i_ppt++) {
+            //     for (size_t i_ppt=0; i_ppt < T.PrtNPt->at(i_prt); i_ppt++) {
 
-                } //end particlepoint loop
+            //     } //end particlepoint loop
 
-                for (size_t i_dep=0; i_dep < T.PrtNDep->at(i_prt); i_dep++) {
+            //     for (size_t i_dep=0; i_dep < T.PrtNDep->at(i_prt); i_dep++) {
 
-                } //end deposit loop
-            } //end particle loop
+            //     } //end deposit loop
+            // } //end particle loop
 
             for (size_t i_pfp=0; i_pfp < R.NPfp; i_pfp++) {
 
