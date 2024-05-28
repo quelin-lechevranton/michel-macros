@@ -118,7 +118,7 @@ void TrueMichel() {
                     gPrt[1]->SetPoint(igPrt[1]++,Y,Z,X);
                 } //end particlepoint loop
 
-                for (size_t i_dep=0; i_dep < T.NDep->at(i_prt); i_dep++) {
+                for (size_t i_dep=0; i_dep < T.PrtNDep->at(i_prt); i_dep++) {
 
                     double X = (*T.DepX)[i_prt][i_dep];
                     double Y = (*T.DepY)[i_prt][i_dep];
@@ -129,7 +129,7 @@ void TrueMichel() {
                     gDep[0]->SetPoint(igDep[0]++,Y,Z,X);
                 } //end depopoint loop
 
-                for (size_t i_dep=0; i_dep < T.NDep->at(i_mom); i_dep++) {
+                for (size_t i_dep=0; i_dep < T.PrtNDep->at(i_mom); i_dep++) {
 
                     double X = (*T.DepX)[i_mom][i_dep];
                     double Y = (*T.DepY)[i_mom][i_dep];
