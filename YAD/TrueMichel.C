@@ -185,6 +185,8 @@ void TrueMichel() {
                     muRange-=distance;
                     if (distance > 1e-4) {
                         hMu->Fill(muRange, E/distance);
+                    } else {
+                        cout << "too short  !";
                     }
 
                     gDep[1]->SetPoint(igDep[1]++,Y,Z,X);
