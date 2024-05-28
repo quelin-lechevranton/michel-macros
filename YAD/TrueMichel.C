@@ -160,7 +160,7 @@ void TrueMichel() {
                 } //end depopoint loop
 
                 cout << "evt#" << i_evt << ":prt#" << i_prt << endl;
-                cout << "\tDepE=" << DepE_michel << "\tPrtE" << PrtE_michel << endl;
+                // cout << "\tDepE=" << DepE_michel << "\tPrtE" << PrtE_michel << endl;
 
             } //end particle loop
         } //end event loop
