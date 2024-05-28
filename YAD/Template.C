@@ -29,7 +29,7 @@ void Template() {
 
                 } //end particlepoint loop
 
-                for (size_t i_dep=0; i_dep < T.NDep->at(i_prt); i_dep++) {
+                for (size_t i_dep=0; i_dep < T.PrtNDep->at(i_prt); i_dep++) {
 
                 } //end deposit loop
             } //end particle loop
