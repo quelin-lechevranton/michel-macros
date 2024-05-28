@@ -30,6 +30,8 @@ void TrueMichel() {
     gDep[1]->SetMarkerSize(1);
 
     size_t N_michel=0;
+    double muPrtLength=0;
+    double muDepLength=0;
 
     size_t i_file=0;
     for (string filename : filelist) {
@@ -58,20 +60,17 @@ void TrueMichel() {
                 if (i_mom==-1) continue; //no orphelin electrons
                 if (T.PrtPdg->at(i_mom)!=13) continue; //electrons coming from muons only
 
-                double PrtE_michel=0;
-                double DepE_michel=0;
-                double Length=0;
+                // double PrtE_michel=0;
+                // double DepE_michel=0;
+
 
                 bool is_inside=true;
-                for (size_t i_ppt=0; i_ppt < T.PrtNPt->at(i_prt); i_ppt++) {
 
+                for (size_t i_ppt=0; i_ppt < T.PrtNPt->at(i_prt); i_ppt++) {
 
                     double X = (*T.PrtX)[i_prt][i_ppt];
                     double Y = (*T.PrtY)[i_prt][i_ppt];
                     double Z = (*T.PrtZ)[i_prt][i_ppt];
-
-                    // double Mag =TMath::Sqrt(X*X+Y*Y+Z*Z); 
-                    // Length+=Mag;
 
                     is_inside = -350 < X && X < 350 &&
                                 -350 < Y && Y < 350 &&
@@ -85,6 +84,7 @@ void TrueMichel() {
                     double X = (*T.PrtX)[i_mom][i_ppt];
                     double Y = (*T.PrtY)[i_mom][i_ppt];
                     double Z = (*T.PrtZ)[i_mom][i_ppt];
+
 
                     is_inside = -350 < X && X < 350 &&
                                 -350 < Y && Y < 350 &&
@@ -102,12 +102,16 @@ void TrueMichel() {
                     double Z = (*T.PrtZ)[i_prt][i_ppt];
                     double E = (*T.PrtE)[i_prt][i_ppt];
 
-                    double Mag =TMath::Sqrt(X*X+Y*Y+Z*Z); 
-                    Length-=Mag;
-                    PrtE_michel+=E;
+                    // double Mag =TMath::Sqrt(X*X+Y*Y+Z*Z); 
+                    // Length-=Mag;
+                    // PrtE_michel+=E;
 
                     gPrt[0]->SetPoint(igPrt[0]++,Y,Z,X);
                 } //end particlepoint loop
+
+                double X0 = (*T.PrtX)[i_mom][0];
+                double Y0 = (*T.PrtY)[i_mom][0];
+                double Z0 = (*T.PrtZ)[i_mom][0];
 
                 for (size_t i_ppt=0; i_ppt < T.PrtNPt->at(i_mom); i_ppt++) {
                     double X = (*T.PrtX)[i_mom][i_ppt];
@@ -115,8 +119,14 @@ void TrueMichel() {
                     double Z = (*T.PrtZ)[i_mom][i_ppt];
                     double E = (*T.PrtE)[i_mom][i_ppt];
 
+                    double distance =TMath::Sqrt(TMath::Power(X-X0,2)+TMath::Power(Y-Y0,2)+TMath::Power(Z-Z0,2)); 
+                    muPrtLength+=distance;
+
+                    X0=X,Y0=Y,Z0=Z;
+
                     gPrt[1]->SetPoint(igPrt[1]++,Y,Z,X);
                 } //end particlepoint loop
+
 
                 for (size_t i_dep=0; i_dep < T.PrtNDep->at(i_prt); i_dep++) {
 
@@ -124,10 +134,15 @@ void TrueMichel() {
                     double Y = (*T.DepY)[i_prt][i_dep];
                     double Z = (*T.DepZ)[i_prt][i_dep];
                     double E = (*T.DepE)[i_prt][i_dep];
-                    DepE_michel+=E;
+                    // DepE_michel+=E;
 
                     gDep[0]->SetPoint(igDep[0]++,Y,Z,X);
                 } //end depopoint loop
+
+
+                X0 = (*T.DepX)[i_mom][0];
+                Y0 = (*T.DepY)[i_mom][0];
+                Z0 = (*T.DepZ)[i_mom][0];
 
                 for (size_t i_dep=0; i_dep < T.PrtNDep->at(i_mom); i_dep++) {
 
@@ -135,6 +150,11 @@ void TrueMichel() {
                     double Y = (*T.DepY)[i_mom][i_dep];
                     double Z = (*T.DepZ)[i_mom][i_dep];
                     double E = (*T.DepE)[i_mom][i_dep];
+
+                    double distance =TMath::Sqrt(TMath::Power(X-X0,2)+TMath::Power(Y-Y0,2)+TMath::Power(Z-Z0,2)); 
+                    muDepLength+=distance;
+
+                    X0=X,Y0=Y,Z0=Z;
 
                     gDep[1]->SetPoint(igDep[1]++,Y,Z,X);
                 } //end depopoint loop
@@ -147,6 +167,8 @@ void TrueMichel() {
     } //end file loop
 
     // cout << "#michel=" << N_michel << ":#ppt=" << igPrt[0] << ":#depo=" << igDep[0] << endl;
+
+    cout << "muPrtLength: " << muPrtLength << " cm vs. muDepLength: " << muDepLength << " cm" << endl;
 
     TCanvas* c1 = new TCanvas("c1","True Michel");
     c1->cd();
