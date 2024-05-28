@@ -29,7 +29,7 @@ void TrueMichel() {
     gDep[1]->SetMarkerStyle(4);
     gDep[1]->SetMarkerSize(1);
 
-    TH2D* hMu = new TH2D("hMu",";Residual Range (cm);dEdx (MeV/cm)",100,0,500,50,0,10);
+    TH2D* hMu = new TH2D("hMu",";Residual Range (cm);dEdx (MeV/cm)",100,0,200,50,0,5);
 
     size_t N_michel=0;
 
@@ -47,8 +47,8 @@ void TrueMichel() {
         yad::Reco R(filename.c_str());
 
         size_t n_evt = R.GetEntries();
-        for (size_t i_evt=0; i_evt < n_evt; i_evt++) {
-        // size_t i_evt=45; {
+        // for (size_t i_evt=0; i_evt < n_evt; i_evt++) {
+        size_t i_evt=45; {
 
             T.GetEntry(i_evt);
             R.GetEntry(i_evt);
