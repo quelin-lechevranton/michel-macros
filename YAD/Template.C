@@ -16,54 +16,51 @@ void Template() {
         yad::Reco R(filename.c_str());
 
         size_t n_evt = R.GetEntries();
-        cout << n_evt << endl;
         for (size_t i_evt=0; i_evt < n_evt; i_evt++) {
 
-            cout << "Event#" << i_evt+1 << endl;
+            // cout << "Event#" << i_evt+1 << endl;
 
             T.GetEntry(i_evt);
-            cout << "\tTruth:done" << endl;
             R.GetEntry(i_evt);
-            cout << "\tReco:done" << endl;
 
-            // for (size_t i_prt=0; i_prt < T.NPrt; i_prt++) {
+            for (size_t i_prt=0; i_prt < T.NPrt; i_prt++) {
 
-            //     for (size_t i_ppt=0; i_ppt < T.PrtNPt->at(i_prt); i_ppt++) {
+                for (size_t i_ppt=0; i_ppt < T.PrtNPt->at(i_prt); i_ppt++) {
 
-            //     } //end particlepoint loop
+                } //end particlepoint loop
 
-            //     for (size_t i_dep=0; i_dep < T.NDep->at(i_prt); i_dep++) {
+                for (size_t i_dep=0; i_dep < T.NDep->at(i_prt); i_dep++) {
 
-            //     } //end deposit loop
-            // } //end particle loop
+                } //end deposit loop
+            } //end particle loop
 
-            // for (size_t i_pfp=0; i_pfp < R.NPfp; i_pfp++) {
+            for (size_t i_pfp=0; i_pfp < R.NPfp; i_pfp++) {
 
-            //     for (size_t i_clu=0; i_clu < R.PfpNClu->at(i_pfp); i_clu++) {
+                for (size_t i_clu=0; i_clu < R.PfpNClu->at(i_pfp); i_clu++) {
 
-            //     } //end cluster loop
+                } //end cluster loop
 
-            //     for (size_t i_spt=0; i_spt < R.PfpNSpt->at(i_pfp); i_spt++) {
+                for (size_t i_spt=0; i_spt < R.PfpNSpt->at(i_pfp); i_spt++) {
 
-            //     } //end spacepoint loop
-            // } //end pfp loop
+                } //end spacepoint loop
+            } //end pfp loop
 
             for (size_t i_trk=0; i_trk < 0; i_trk++) {
 
                 cout << "\ttrkI=" << i_trk << "\ttrkID" << R.TrkID->at(i_trk) << endl;
 
-                // for (size_t i_tpt=0; i_tpt < R.TrkNPt->at(i_trk); i_tpt++) {
+                for (size_t i_tpt=0; i_tpt < R.TrkNPt->at(i_trk); i_tpt++) {
 
-                // } //end trackpoint loop
+                } //end trackpoint loop
 
-                // for (size_t i_cal=0; i_cal < R.TrkCalNPt->at(i_trk); i_cal++) {
+                for (size_t i_cal=0; i_cal < R.TrkCalNPt->at(i_trk); i_cal++) {
 
-                // } //end calorimetry loop
+                } //end calorimetry loop
             } //end track loop
  
-            // for (size_t i_shw=0; i_shw < R.NShw; i_shw++) {
+            for (size_t i_shw=0; i_shw < R.NShw; i_shw++) {
 
-            // } //end shower loop
+            } //end shower loop
         } //end event loop
     } //end file loop
 

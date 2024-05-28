@@ -49,7 +49,7 @@ public:
                             *PrtE=nullptr;
 
     //SimEnergy*Deposit
-    vector<size_t>  *NDep;
+    vector<size_t>  *PrtNDep;
     vector<vector<double>>  *DepPdg=nullptr,
                             *DepX=nullptr,
                             *DepY=nullptr,
@@ -86,7 +86,7 @@ public:
         tree->SetBranchAddress("fPrtE",     &PrtE); 
 
         //SimEnergyDeposit
-        tree->SetBranchAddress("fNDep",     &NDep);
+        tree->SetBranchAddress("fPrtNDep",  &PrtNDep);
         tree->SetBranchAddress("fDepPdg",   &DepPdg); 
         tree->SetBranchAddress("fDepX",     &DepX); 
         tree->SetBranchAddress("fDepY",     &DepY); 
