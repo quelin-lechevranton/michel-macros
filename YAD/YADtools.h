@@ -96,7 +96,7 @@ public:
     ~Truth() { file-> Close(); }
     
     size_t GetEntries() { return tree->GetEntries(); }
-    void GetEntry(size_t i) { tree->GetEntry(i); }
+    void GetEntry(size_t i) { tree->GetEntry(i+1); }
 };
 
 class Reco {
@@ -212,7 +212,7 @@ public:
     ~Reco() { file-> Close(); }
     
     size_t GetEntries() { return tree->GetEntries(); }
-    void GetEntry(size_t i) { tree->GetEntry(i); }
+    void GetEntry(size_t i) { tree->GetEntry(i+1); }
     
 };
 
