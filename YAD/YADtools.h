@@ -24,30 +24,6 @@ private:
     TFile* file;
     TTree* tree;
 
-
-    // vector<int> *PrtTrkID=nullptr,
-    //             *PrtMomTrkID=nullptr,
-    //             *DepTrkID=nullptr;
-    // vector<vector<double>>  *PrtDauTrkID=nullptr;
-    
-    // vector<int> PrtMomID_value,
-    //             DepPrtID_value,
-    //             DepPrtOrgID_value;
-    // vector<vector<int>> PrtDauID_value;
-
-    //return index i_prt that can be used as: PrtXxx->at(i_prt)
-    // int GetIDfromTrkID(int TrkID) {
-    //     if (TrkID==0) {
-    //         return -1;
-    //     }
-    //     vector<int>::iterator it = find(PrtTrkID->begin(), PrtTrkID->end(), TrkID);
-    //     if (it==PrtTrkID->end()) {
-    //         cerr << "i_prt not found" << endl;
-    //         return 0;
-    //     }
-    //     return distance(PrtTrkID->begin(),it);
-    // }
-
 public:
 
     //Events
@@ -136,16 +112,15 @@ public:
 
     //PFParticle
     size_t NPfp;
-    vector<int> *PfpID=nullptr,
-                *PfpTrkID=nullptr,
+    vector<int> *PfpTrkID=nullptr,
                 *PfpShwID=nullptr,
                 *PfpPdg=nullptr;
 
     //Track
     size_t NTrk;
-    vector<int> *TrkID=nullptr,
-                *TrkNPt=nullptr;
+    vector<int> *TrkID=nullptr;
     vector<double>  *TrkLength=nullptr;
+    vector<size_t>  *TrkNPt=nullptr;
     vector<vector<double>>  *TrkPtX=nullptr,
                             *TrkPtY=nullptr,
                             *TrkPtZ=nullptr,
@@ -190,7 +165,6 @@ public:
 
         //PFParticle
         tree->SetBranchAddress("fNPfp",         &NPfp);
-        tree->SetBranchAddress("fPfpID",        &PfpID);
         tree->SetBranchAddress("fPfpTrkID",     &PfpTrkID);
         tree->SetBranchAddress("fPfpShwID",     &PfpShwID);
         tree->SetBranchAddress("fPfpPdg",       &PfpPdg);
