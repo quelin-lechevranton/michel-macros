@@ -38,9 +38,9 @@ void Template() {
 
                 cout << "\tpfpI=" << i_pfp << "\tpfpID" << R.PfpID->at(i_pfp) << "\tpfpTrkID" << R.PfpTrkID->at(i_pfp) << endl;
 
-                // for (size_t i_clu=0; i_clu < R.PfpNClu->at(i_pfp); i_clu++) {
+                for (size_t i_clu=0; i_clu < R.PfpNClu->at(i_pfp); i_clu++) {
 
-                // } //end cluster loop
+                } //end cluster loop
 
                 // for (size_t i_spt=0; i_spt < R.PfpNSpt->at(i_pfp); i_spt++) {
 
