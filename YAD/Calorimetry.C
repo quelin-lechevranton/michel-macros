@@ -40,6 +40,7 @@ void Calorimetry() {
 
                     if (!is_inside) {break;}
                 } //end of spt loop 
+		if(!is_inside) continue;
 
                 for (size_t i_cal=0; i_cal < R.TrkCalNPt->at(i_trk); i_cal++) {
                     hMuon->Fill((*R.TrkCalResRange)[i_trk][i_cal],(*R.TrkCaldEdx)[i_trk][i_cal]);
