@@ -12,7 +12,7 @@ void Template() {
         
         cout << "\e[3mOpening file #" << ++i_file << "/" << n_file << ": " << filename << "\e[0m" << endl;
 
-        // yad::Truth T(filename.c_str());
+        yad::Truth T(filename.c_str());
         yad::Reco R(filename.c_str());
 
         size_t n_evt = R.GetEntries();
@@ -20,7 +20,7 @@ void Template() {
 
             cout << "Event#" << i_evt+1 << endl;
 
-            // T.GetEntry(i_evt);
+            T.GetEntry(i_evt);
             R.GetEntry(i_evt);
 
             // for (size_t i_prt=0; i_prt < T.NPrt; i_prt++) {
