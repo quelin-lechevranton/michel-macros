@@ -19,10 +19,12 @@ void Template() {
         cout << n_evt << endl;
         for (size_t i_evt=0; i_evt < n_evt; i_evt++) {
 
-            cout << "Event#" << i_evt << endl;
+            cout << "Event#" << i_evt+1 << endl;
 
             T.GetEntry(i_evt);
             R.GetEntry(i_evt);
+
+            cout << "\tdone" << endl;
 
             // for (size_t i_prt=0; i_prt < T.NPrt; i_prt++) {
 
