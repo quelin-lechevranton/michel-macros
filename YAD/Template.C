@@ -36,8 +36,6 @@ void Template() {
 
             for (size_t i_pfp=0; i_pfp < R.NPfp; i_pfp++) {
 
-                cout << "\tpfpI=" << i_pfp << "\tpfpID" << R.PfpID->at(i_pfp) << "\tpfpTrkID" << R.PfpTrkID->at(i_pfp) << endl;
-
                 for (size_t i_clu=0; i_clu < R.PfpNClu->at(i_pfp); i_clu++) {
 
                 } //end cluster loop
@@ -48,6 +46,8 @@ void Template() {
             } //end pfp loop
 
             for (size_t i_trk=0; i_trk < R.NTrk; i_trk++) {
+
+                cout << "\ttrkI=" << i_trk << "\ttrkID" << R.TrkId->at(i_trk) << endl;
 
                 for (size_t i_tpt=0; i_tpt < R.TrkNPt->at(i_trk); i_tpt++) {
 
