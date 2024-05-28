@@ -30,6 +30,9 @@ void TrueMichel() {
     gDep[1]->SetMarkerSize(1);
 
     size_t N_michel=0;
+
+    double elPrtLength=0;
+    double elDepLength=0;
     double muPrtLength=0;
     double muDepLength=0;
 
@@ -96,22 +99,28 @@ void TrueMichel() {
 
                 N_michel++;
 
+                double X0 = (*T.PrtX)[i_prt][0];
+                double Y0 = (*T.PrtY)[i_prt][0];
+                double Z0 = (*T.PrtZ)[i_prt][0];
+
                 for (size_t i_ppt=0; i_ppt < T.PrtNPt->at(i_prt); i_ppt++) {
                     double X = (*T.PrtX)[i_prt][i_ppt];
                     double Y = (*T.PrtY)[i_prt][i_ppt];
                     double Z = (*T.PrtZ)[i_prt][i_ppt];
                     double E = (*T.PrtE)[i_prt][i_ppt];
 
-                    // double Mag =TMath::Sqrt(X*X+Y*Y+Z*Z); 
-                    // Length-=Mag;
+                    double distance =TMath::Sqrt(TMath::Power(X-X0,2)+TMath::Power(Y-Y0,2)+TMath::Power(Z-Z0,2)); 
+                    elPrtLength+=distance;
+
+                    X0=X,Y0=Y,Z0=Z;
                     // PrtE_michel+=E;
 
                     gPrt[0]->SetPoint(igPrt[0]++,Y,Z,X);
                 } //end particlepoint loop
 
-                double X0 = (*T.PrtX)[i_mom][0];
-                double Y0 = (*T.PrtY)[i_mom][0];
-                double Z0 = (*T.PrtZ)[i_mom][0];
+                X0 = (*T.PrtX)[i_mom][0];
+                Y0 = (*T.PrtY)[i_mom][0];
+                Z0 = (*T.PrtZ)[i_mom][0];
 
                 for (size_t i_ppt=0; i_ppt < T.PrtNPt->at(i_mom); i_ppt++) {
                     double X = (*T.PrtX)[i_mom][i_ppt];
@@ -127,6 +136,9 @@ void TrueMichel() {
                     gPrt[1]->SetPoint(igPrt[1]++,Y,Z,X);
                 } //end particlepoint loop
 
+                X0 = (*T.DepX)[i_prt][0];
+                Y0 = (*T.DepY)[i_prt][0];
+                Z0 = (*T.DepZ)[i_prt][0];
 
                 for (size_t i_dep=0; i_dep < T.PrtNDep->at(i_prt); i_dep++) {
 
@@ -135,6 +147,11 @@ void TrueMichel() {
                     double Z = (*T.DepZ)[i_prt][i_dep];
                     double E = (*T.DepE)[i_prt][i_dep];
                     // DepE_michel+=E;
+
+                    double distance =TMath::Sqrt(TMath::Power(X-X0,2)+TMath::Power(Y-Y0,2)+TMath::Power(Z-Z0,2)); 
+                    elDepLength+=distance;
+
+                    X0=X,Y0=Y,Z0=Z;
 
                     gDep[0]->SetPoint(igDep[0]++,Y,Z,X);
                 } //end depopoint loop
@@ -169,6 +186,7 @@ void TrueMichel() {
     // cout << "#michel=" << N_michel << ":#ppt=" << igPrt[0] << ":#depo=" << igDep[0] << endl;
 
     cout << "muPrtLength: " << muPrtLength << " cm vs. muDepLength: " << muDepLength << " cm" << endl;
+    cout << "elPrtLength: " << elPrtLength << " cm vs. elDepLength: " << elDepLength << " cm" << endl;
 
     TCanvas* c1 = new TCanvas("c1","True Michel");
     c1->cd();
