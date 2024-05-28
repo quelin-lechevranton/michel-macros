@@ -182,7 +182,7 @@ void TrueMichel() {
 
                     X0=X,Y0=Y,Z0=Z;
 
-                    muRange-=distance
+                    muRange-=distance;
                     if (distance > 1e-4) {
                         hMu->Fill(muRange, E/distance);
                     }
