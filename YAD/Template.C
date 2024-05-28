@@ -49,13 +49,13 @@ void Template() {
 
                 // cout << "\ttrkI=" << i_trk << "\ttrkID" << R.TrkID->at(i_trk) << endl;
 
-                for (size_t i_tpt=0; i_tpt < R.TrkNPt->at(i_trk); i_tpt++) {
+                // for (size_t i_tpt=0; i_tpt < R.TrkNPt->at(i_trk); i_tpt++) {
 
-                } //end trackpoint loop
+                // } //end trackpoint loop
 
-                for (size_t i_cal=0; i_cal < R.TrkCalNPt->at(i_trk); i_cal++) {
+                // for (size_t i_cal=0; i_cal < R.TrkCalNPt->at(i_trk); i_cal++) {
 
-                } //end calorimetry loop
+                // } //end calorimetry loop
             } //end track loop
  
             for (size_t i_shw=0; i_shw < R.NShw; i_shw++) {
