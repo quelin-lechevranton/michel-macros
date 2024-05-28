@@ -57,7 +57,8 @@ public:
                             *DepT=nullptr,
                             *DepE=nullptr;
 
-    Truth(const char* filename) : file{new TFile(filename)} {
+    Truth(const char* filename) {
+        file = new TFile(filename);
         tree = file->Get<TTree>("YAD/Truth");
 
         //Events
@@ -96,7 +97,7 @@ public:
     ~Truth() { file-> Close(); }
     
     size_t GetEntries() { return tree->GetEntries(); }
-    void GetEntry(size_t i) { tree->GetEntry(i+1); }
+    void GetEntry(size_t i) { tree->GetEntry(i); }
 };
 
 class Reco {
@@ -155,7 +156,8 @@ public:
                             *SptY=nullptr,
                             *SptZ=nullptr;
 
-    Reco(const char* filename) : file{new TFile(filename)} {
+    Reco(const char* filename) {
+        file = new TFile(filename);
         tree = file->Get<TTree>("YAD/Reco");
 
         //Events
@@ -212,7 +214,7 @@ public:
     ~Reco() { file-> Close(); }
     
     size_t GetEntries() { return tree->GetEntries(); }
-    void GetEntry(size_t i) { tree->GetEntry(i+1); }
+    void GetEntry(size_t i) { tree->GetEntry(i); }
     
 };
 
