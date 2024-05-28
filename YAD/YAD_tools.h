@@ -99,7 +99,7 @@ public:
     
     size_t GetEntries() { return tree->GetEntries(); }
     void GetEntry(size_t i) { tree->GetEntry(i); }
-};
+}; //end of YAD::Truth
 
 class Reco {
 private:
@@ -214,11 +214,9 @@ public:
     
     size_t GetEntries() { return tree->GetEntries(); }
     void GetEntry(size_t i) { tree->GetEntry(i); }
-    
-};
+}; //end of YAD::Reco
 
-vector<string> ReadFileList(size_t n_file, string listname)
-{
+vector<string> ReadFileList(size_t n_file, string listname) {
   vector<string> filelist;
   string filename;
   ifstream file(listname.c_str());
@@ -237,6 +235,6 @@ vector<string> ReadFileList(size_t n_file, string listname)
   file.close();
 
   return filelist;
-}
+} //end of YAD::ReadFileList
 
-}
+} //end of namespace YAD

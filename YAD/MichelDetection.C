@@ -30,11 +30,11 @@ void MichelDetection() {
     // gMux->SetMarkerStyle(20);
     // gMux->SetMarkerSize(0.3);
     
-    TGraph2D *gPrt = new TGraph2D();
-    size_t igPrt = 0;
-    gPrt->SetMarkerColor(kOrange+7);
-    gPrt->SetMarkerStyle(20);
-    gPrt->SetMarkerSize(0.3);
+    // TGraph2D *gPrt = new TGraph2D();
+    // size_t igPrt = 0;
+    // gPrt->SetMarkerColor(kPink+7);
+    // gPrt->SetMarkerStyle(20);
+    // gPrt->SetMarkerSize(0.3);
 
     TGraph2D *gEl = new TGraph2D();
     size_t igEl = 0;
@@ -78,14 +78,11 @@ void MichelDetection() {
                 if (i_mom==-1) continue; //no orphelin electrons
                 if (T.PrtPdg->at(i_mom)!=13) continue; //electrons coming from muons only
 
-
                 double detectionRadius=1.; //cm
 
                 size_t nElDep = T.PrtNDep->at(i_prt);
                 size_t nMuDep = T.PrtNDep->at(i_mom);
 
-
-                // vector<size_t> nMuInElDep(nElDep);
                 vector<size_t> nElInMuDep(nMuDep);
 
                 //computing the number of electron deposit near every deposit of the muon mother
@@ -109,7 +106,6 @@ void MichelDetection() {
 
                 //taking the index of the muon deposit with the maximum of electron deposits near itself, considering the deposit as the last muon deposit before the electron emission 
                 int i_max = distance(nElInMuDep.begin(), max_element(nElInMuDep.begin(), nElInMuDep.end()));
-
 
                 //compute total range and distances between points of muon track until electron emission
                 double muRange=0;
@@ -145,7 +141,7 @@ void MichelDetection() {
                 // } else {
                 //     cout << "\t" << avgLastdEdx << endl;
                 // }
-                if (avgLastdEdx<4) continue; //dying muon only
+                if (avgLastdEdx<4) continue; 
 
                 //plot dEdx vs. ResidualRange until electron emission
                 double muResRange = muRange;
@@ -174,14 +170,13 @@ void MichelDetection() {
                 }
 
                 //plot all prt points
-                for (size_t i_ppt=0; i_ppt < T.PrtNPt->at(i_mom); i_ppt++) {
-                    double X = (*T.PrtX)[i_mom][i_ppt];
-                    double Y = (*T.PrtY)[i_mom][i_ppt];
-                    double Z = (*T.PrtZ)[i_mom][i_ppt];
+                // for (size_t i_ppt=0; i_ppt < T.PrtNPt->at(i_mom); i_ppt++) {
+                //     double X = (*T.PrtX)[i_mom][i_ppt];
+                //     double Y = (*T.PrtY)[i_mom][i_ppt];
+                //     double Z = (*T.PrtZ)[i_mom][i_ppt];
 
-                    gPrt->SetPoint(igPrt++,Y,Z,X);
-                } //end particlepoint loop
-
+                //     gPrt->SetPoint(igPrt++,Y,Z,X);
+                // } //end particlepoint loop
 
                 //plot all electron deposits + total deposited energy
                 double totalE=0;
@@ -199,7 +194,6 @@ void MichelDetection() {
                 hElE->Fill(totalE);
 
                 cout << "Michel found with " << totalE << " Mev Deposited over " << nElDep << " points" << endl;
-
             } //end particle loop
         } //end event loop
     } //end file loop
@@ -208,6 +202,7 @@ void MichelDetection() {
     c1->cd();
     gMu->Draw("p");
     gEl->Draw("samep");
+    // gPrt->Draw("samep");
     // gMux->Draw("samep");
 
     TCanvas* c2 = new TCanvas("c2","MichelDetection");
