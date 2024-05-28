@@ -47,7 +47,7 @@ void Template() {
 
             for (size_t i_trk=0; i_trk < R.NTrk; i_trk++) {
 
-                cout << "\ttrkI=" << i_trk << "\ttrkID" << R.TrkId->at(i_trk) << endl;
+                cout << "\ttrkI=" << i_trk << "\ttrkID" << R.TrkID->at(i_trk) << endl;
 
                 for (size_t i_tpt=0; i_tpt < R.TrkNPt->at(i_trk); i_tpt++) {
 
