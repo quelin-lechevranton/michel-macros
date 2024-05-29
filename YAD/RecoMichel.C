@@ -24,17 +24,6 @@ void Template() {
             T.GetEntry(i_evt);
             R.GetEntry(i_evt);
 
-            for (size_t i_prt=0; i_prt < T.NPrt; i_prt++) {
-
-                for (size_t i_ppt=0; i_ppt < T.PrtNPt->at(i_prt); i_ppt++) {
-
-                } //end particlepoint loop
-
-                for (size_t i_dep=0; i_dep < T.PrtNDep->at(i_prt); i_dep++) {
-
-                } //end deposit loop
-            } //end particle loop
-
             for (size_t i_pfp=0; i_pfp < R.NPfp; i_pfp++) {
 
                 for (size_t i_clu=0; i_clu < R.PfpNClu->at(i_pfp); i_clu++) {

@@ -99,7 +99,7 @@ public:
     
     size_t GetEntries() { return tree->GetEntries(); }
     void GetEntry(size_t i) { tree->GetEntry(i); }
-}; //end of YAD::Truth
+}; //end of yad::Truth
 
 class Reco {
 private:
@@ -214,9 +214,9 @@ public:
     
     size_t GetEntries() { return tree->GetEntries(); }
     void GetEntry(size_t i) { tree->GetEntry(i); }
-}; //end of YAD::Reco
+}; //end of yad::Reco
 
-vector<string> ReadFileList(size_t n_file, string listname) {
+vector<string> readFileList(size_t n_file, string listname) {
   vector<string> filelist;
   string filename;
   ifstream file(listname.c_str());
@@ -235,6 +235,26 @@ vector<string> ReadFileList(size_t n_file, string listname) {
   file.close();
 
   return filelist;
-} //end of YAD::ReadFileList
+} //end of yad::readFileList
 
-} //end of namespace YAD
+bool isInside (vector<double> Xs,vector<double> Ys,vector<double> Zs, double Xmin=-350, double Xmax=350, double Ymin=-350, double Ymax=350, double Zmin=0, double Zmax=300) {
+    bool is_in=true;
+    vector<size_t> indexes = {0,Xs.size()-1};
+    for (size_t i : indexes) {
+        is_in = Xmin < Xs[i] && Xs[i] < Xmax &&
+                Ymin < Ys[i] && Ys[i] < Ymax &&
+                Zmin < Zs[i] && Zs[i] < Zmax;
+        if (!is_in) break;
+    }
+    return is_in;
+} //end of yad::isInside
+
+double distance(double X1, double Y1, double Z1, double X2, double Y2, double Z2) {
+    return TMath::Sqrt(
+        TMath::Power(X1-X2,2)
+        +TMath::Power(Y1-Y2,2)
+        +TMath::Power(Z1-Z2,2)
+    );
+} //end of yad::distance
+
+} //end of namespace yad

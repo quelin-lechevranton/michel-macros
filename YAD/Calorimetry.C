@@ -1,11 +1,15 @@
 #include "YAD_tools.h"
 
 const size_t n_file=3;
-const vector<string> filelist = yad::ReadFileList(n_file,"ijclab.list");
+const vector<string> filelist = yad::readFileList(n_file,"list/ijclab.list");
 
 void Calorimetry() {
+    clock_t start_time=clock();
 
     TH2D* hMuon = new TH2D("hMuon",";Residual Range (cm);dE/dx (MeV/cm)",150,0,300,50,0,6);
+
+    size_t N_trk=0;
+    double avg_tpt=0;
 
     size_t i_file=0;
     for (string filename : filelist) {
@@ -18,29 +22,24 @@ void Calorimetry() {
         size_t n_evt = R.GetEntries();
         for (size_t i_evt=0; i_evt < n_evt; i_evt++) {
 
-            // cout << "Event#" << i_evt << endl;
+            cout << "Event#" << i_evt+1 << "/" << n_evt << "\r" << flush;
 
             T.GetEntry(i_evt);
             R.GetEntry(i_evt);
 
             for (size_t i_trk=0; i_trk < R.NTrk; i_trk++) {
 
-                bool is_inside = true;
-                for (size_t i_tpt=0; i_tpt < R.TrkNPt->at(i_trk); i_tpt++) {              
+                if(!yad::isInside(
+                    R.TrkPtX->at(i_trk),
+                    R.TrkPtY->at(i_trk),
+                    R.TrkPtZ->at(i_trk),
+                    -320, 350,
+                    -317, 317,
+                    20, 280
+                )) continue;
 
-                    double X = (*R.TrkPtX)[i_trk][i_tpt];     
-                    double Y = (*R.TrkPtY)[i_trk][i_tpt];     
-                    double Z = (*R.TrkPtZ)[i_trk][i_tpt];     
-                
-                    bool x_inside = -320 <= X && X <= 350;
-                    bool y_inside = -317 <= Y && Y <= 317;
-                    bool z_inside = 20 <= Z && Z <= 280;
-
-                    is_inside = is_inside && x_inside && y_inside && z_inside;
-
-                    if (!is_inside) {break;}
-                } //end of spt loop 
-		if(!is_inside) continue;
+                N_trk++;
+                avg_tpt+=R.TrkNPt->at(i_trk);
 
                 for (size_t i_cal=0; i_cal < R.TrkCalNPt->at(i_trk); i_cal++) {
                     hMuon->Fill((*R.TrkCalResRange)[i_trk][i_cal],(*R.TrkCaldEdx)[i_trk][i_cal]);
@@ -55,4 +54,8 @@ void Calorimetry() {
     c1->cd();
     c1->cd();
     hMuon->Draw("colZ");
+    
+    avg_tpt /= N_trk;
+    cout << N_trk << " tracks with a average of " << avg_tpt << " points per track " << endl;
+    cout << "total time of execution: " << static_cast<double>(clock()-start_time)/CLOCKS_PER_SEC << " seconds" << endl;
 }

@@ -1,7 +1,7 @@
 #include "YAD_tools.h"
 
 const size_t n_file=1;
-const vector<string> filelist = yad::ReadFileList(n_file,"jeremy.list");
+const vector<string> filelist = yad::readFileList(n_file,"list/ijclab.list");
 
 void TrackInside() {
 

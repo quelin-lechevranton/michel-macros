@@ -1,10 +1,20 @@
 #include "YAD_tools.h"
 
-const size_t n_file=1;
+// analysis parameter
+double coincidence_radius_gros=1.; //cm
+size_t n_step_gros=10; //distance per step : 0.03 cm
+double coincidence_radius_fin=1.; //cm
+size_t n_scan_fin=4*n_step_gros;
+size_t n_last_deposits=50;
+double threshold_dEdx=4.;
+
+
+const size_t n_file=3;
 const vector<string> filelist = yad::readFileList(n_file,"list/ijclab.list");
 
 
-void TrueMichel() {
+
+void TrueMichel_v2() {
 
     clock_t start_time=clock();
 
@@ -48,7 +58,6 @@ void TrueMichel() {
         size_t n_evt = R.GetEntries();
         N_evt+=n_evt;
         for (size_t i_evt=0; i_evt < n_evt; i_evt++) {
-        // size_t i_evt=45; {
 
             cout << "Event#" << i_evt+1 << "/" << n_evt << "\r" << flush;
 
@@ -62,47 +71,78 @@ void TrueMichel() {
                 if (T.PrtNDep->at(i_prt) < 20) continue; //enough electron deposits
                 // if (T.PrtNDep->at(i_prt) > 300) continue;
 
-                if (!yad::isInside(T.PrtX->at(i_prt),T.PrtY->at(i_prt),T.PrtZ->at(i_prt))) continue;
+                if (!yad::isInside(T.DepX->at(i_prt),T.DepY->at(i_prt),T.DepZ->at(i_prt))) continue;
 
                 int i_mom = T.PrtMomID->at(i_prt);
                 if (i_mom==-1) continue; //no orphelin electrons
                 if (T.PrtPdg->at(i_mom)!=13) continue; //electrons coming from muons only
 
-                double detectionRadius=1.; //cm
+                size_t n_el_dep = T.PrtNDep->at(i_prt);
+                size_t n_mu_dep = T.PrtNDep->at(i_mom);
 
-                size_t nElDep = T.PrtNDep->at(i_prt);
-                size_t nMuDep = T.PrtNDep->at(i_mom);
-
-                vector<size_t> nElInMuDep(nMuDep);
+                //now we want to find the closest muon deposit to the electron track
+                //first step is rough-and-ready second is more precise our the result of first step
+                
+                size_t n_max_gros=0, i_max_gros=0;
 
                 //computing the number of electron deposit near every deposit of the muon mother
-                for (size_t i_dep=0; i_dep < nMuDep; i_dep++) {
+                for (size_t i_mu_dep=0; i_mu_dep < n_mu_dep; i_mu_dep+=n_step_gros) {
 
-                    double xMu = (*T.DepX)[i_mom][i_dep];
-                    double yMu = (*T.DepY)[i_mom][i_dep];
-                    double zMu = (*T.DepZ)[i_mom][i_dep];
+                    double x_mu = (*T.DepX)[i_mom][i_mu_dep];
+                    double y_mu = (*T.DepY)[i_mom][i_mu_dep];
+                    double z_mu = (*T.DepZ)[i_mom][i_mu_dep];
 
-                    for (size_t j_dep=0; j_dep < nElDep; j_dep++) {
+                    size_t n_coincidence=0;
+                    for (size_t i_el_dep=0; i_el_dep < n_el_dep; i_el_dep+=n_step_gros) {
                         
-                        double xEl = (*T.DepX)[i_prt][j_dep];
-                        double yEl = (*T.DepY)[i_prt][j_dep];
-                        double zEl = (*T.DepZ)[i_prt][j_dep];
+                        double x_el = (*T.DepX)[i_prt][i_el_dep];
+                        double y_el = (*T.DepY)[i_prt][i_el_dep];
+                        double z_el = (*T.DepZ)[i_prt][i_el_dep];
 
-                        double distance= TMath::Sqrt(TMath::Power(xEl-xMu,2)+TMath::Power(yEl-yMu,2)+TMath::Power(zEl-zMu,2));
-
-                        if (distance < detectionRadius) {
-                            nElInMuDep[i_dep]++;
+                        double dist= yad::distance(x_el,y_el,z_el,x_mu,y_mu,z_mu);
+                        if (dist < coincidence_radius_gros) {
+                            n_coincidence++;
                         }
+                    }
 
+                    if ( n_coincidence > n_max_gros ) {
+                        n_max_gros = n_coincidence;
+                        i_max_gros = i_mu_dep;
                     }
                 } //end deposit loop
 
-                //taking the index of the muon deposit with the maximum of electron deposits near itself, considering the deposit as the last muon deposit before the electron emission 
-                int i_max = distance(nElInMuDep.begin(), max_element(nElInMuDep.begin(), nElInMuDep.end()));
+                // more precise count
+                size_t n_max=0, i_max=0;
+                for (
+                    size_t i_mu_dep = i_max_gros-n_scan_fin > 0 ? i_max_gros-n_scan_fin : 0;
+                    i_mu_dep < (i_max_gros+n_scan_fin > n_mu_dep ? n_mu_dep : i_max_gros+n_scan_fin) ; i_mu_dep++) {
+                    
+
+                    double x_mu = (*T.DepX)[i_mom][i_mu_dep];
+                    double y_mu = (*T.DepY)[i_mom][i_mu_dep];
+                    double z_mu = (*T.DepZ)[i_mom][i_mu_dep];
+
+                    size_t n_coincidence=0;
+                    for (size_t i_el_dep=0; i_el_dep < n_el_dep; i_el_dep++) {
+                        
+                        double x_el = (*T.DepX)[i_prt][i_el_dep];
+                        double y_el = (*T.DepY)[i_prt][i_el_dep];
+                        double z_el = (*T.DepZ)[i_prt][i_el_dep];
+
+                        double dist= yad::distance(x_el,y_el,z_el,x_mu,y_mu,z_mu);
+                        if (dist < coincidence_radius_fin) {
+                            n_coincidence++;
+                        }
+                    }
+                    if ( n_coincidence > n_max ) {
+                        n_max = n_coincidence;
+                        i_max = i_mu_dep;
+                    }
+                } //end deposit loop
                 // cout << "evt#" << i_evt << ":prt#" << i_prt << ":i_max=" << i_max << endl;
 
                 //compute total range and distances between points of muon track until electron emission
-                double muRange=0;
+                double mu_range=0;
                 vector<double> distances;
                 double X0 = (*T.DepX)[i_mom][0];
                 double Y0 = (*T.DepY)[i_mom][0];
@@ -115,37 +155,36 @@ void TrueMichel() {
 
                     // gMu->SetPoint(igMu++,Y,Z,X);
 
-                    double distance = TMath::Sqrt(TMath::Power(X-X0,2)+TMath::Power(Y-Y0,2)+TMath::Power(Z-Z0,2));
-                    distances.push_back(distance);
-                    muRange+=distance;
+                    double dist = yad::distance(X,Y,Z,X0,Y0,Z0);
+                    distances.push_back(dist);
+                    mu_range+=dist;
                     X0=X,Y0=Y,Z0=Z;
                 }
 
                 //check if muon is dying before emission
-                size_t nLast=50;
-                double avgLastdEdx=0;
-                for (size_t i_dep=i_max-nLast; i_dep <= i_max ; i_dep++) {
+                double avg_last_dEdx=0;
+                for (size_t i_dep=i_max-n_last_deposits; i_dep <= i_max ; i_dep++) {
                     double E = (*T.DepE)[i_mom][i_dep];
-                    double distance=distances[i_dep];
+                    double dist=distances[i_dep];
 
-                    avgLastdEdx += E/distance/nLast;
+                    avg_last_dEdx += E/dist/n_last_deposits;
                 }
-                // if (nElDep < 300) {
-                //     cout << avgLastdEdx << endl;
+                // if (n_el_dep < 300) {
+                //     cout << avg_last_dEdx << endl;
                 // } else {
-                //     cout << "\t" << avgLastdEdx << endl;
+                //     cout << "\t" << avg_last_dEdx << endl;
                 // }
-                if (avgLastdEdx<4) continue; 
+                if (avg_last_dEdx<threshold_dEdx) continue; 
 
                 //plot dEdx vs. ResidualRange until electron emission
-                double muResRange = muRange;
+                double mu_res_range = mu_range;
                 for (size_t i_dep=1; i_dep <= i_max ; i_dep++) {
 
                     double E = (*T.DepE)[i_mom][i_dep];
 
-                    double distance=distances[i_dep];
-                    muResRange-=distance;
-                    hdEdx->Fill(muResRange, E/distance);
+                    double dist=distances[i_dep];
+                    mu_res_range-=dist;
+                    hdEdx->Fill(mu_res_range, E/dist);
                 }
 
                 //plot all muon deposits before electron emission
@@ -156,7 +195,7 @@ void TrueMichel() {
                     double Z = (*T.DepZ)[i_mom][i_dep];
 
                     gMu->SetPoint(igMu++,Y,Z,X);
-                    // if (i_dep <= i_max-nLast) {
+                    // if (i_dep <= i_max-n_last_deposits) {
                     //     gMu->SetPoint(igMu++,Y,Z,X);
                     // } else {
                     //     gMux->SetPoint(igMux++,Y,Z,X);
@@ -174,8 +213,7 @@ void TrueMichel() {
 
                 //plot all electron deposits + total deposited energy
                 double totalE=0;
-                hNDep->Fill(nElDep);
-                for (size_t i_dep=0; i_dep <= nElDep ; i_dep++) {
+                for (size_t i_dep=0; i_dep <= n_el_dep ; i_dep++) {
 
                     double X = (*T.DepX)[i_prt][i_dep];
                     double Y = (*T.DepY)[i_prt][i_dep];
@@ -183,23 +221,23 @@ void TrueMichel() {
                     double E = (*T.DepE)[i_prt][i_dep];
 
                     gEl->SetPoint(igEl++,Y,Z,X);
+                    if (E < 0) cerr << "\e[91mnegative energy deposit\e[0m of " << E << " MeV at evt#" << i_evt << ":prt#" << i_prt << ":dep#" << i_dep << endl;
                     totalE+=E;
                 }
                 hElE->Fill(totalE);
-
-                cout << "Michel found with " << totalE << " Mev Deposited over " << nElDep << " points" << endl;
+                hNDep->Fill(n_el_dep);
             } //end particle loop
         } //end event loop
     } //end file loop
 
-    TCanvas* c1 = new TCanvas("c1","TrueMichel");
+    TCanvas* c1 = new TCanvas("c1","TrueMichel_v2");
     c1->cd();
     gMu->Draw("p");
     gEl->Draw("samep");
     // gPrt->Draw("samep");
     // gMux->Draw("samep");
 
-    TCanvas* c2 = new TCanvas("c2","TrueMichel");
+    TCanvas* c2 = new TCanvas("c2","TrueMichel_v2");
     c2->Divide(2,2);
     c2->cd(1);
     hNDep->Draw("hist");
@@ -208,8 +246,8 @@ void TrueMichel() {
     c2->cd(3);
     hElE->Draw("hist");
 
-    c1->SaveAs("out/TrueMichelGraph2D.root");
-    c2->SaveAs("out/TrueMichelHist.root");
+    // c1->SaveAs("out/TrueMichel_v2Graph2D.root");
+    // c2->SaveAs("out/TrueMichel_v2Hist.root");
 
     cout << N_evt << " events treated in " << static_cast<double>(clock()-start_time)/CLOCKS_PER_SEC << " seconds" << endl;
 }
