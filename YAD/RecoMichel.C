@@ -51,6 +51,7 @@ void Template() {
             } //end shower loop
         } //end event loop
     } //end file loop
+    cout << endl;
 
     TCanvas* c1 = new TCanvas("c1","Template");
     c1->cd();

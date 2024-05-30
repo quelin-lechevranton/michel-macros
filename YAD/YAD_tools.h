@@ -34,12 +34,12 @@ public:
     size_t NPrt;
 
     //MCParticle
-    vector<int> *PrtPdg=nullptr,
+    vector<int> *PrtPdg=nullptr, //[# particle]
                 *PrtMomID=nullptr;
     vector<size_t>  *PrtNPt=nullptr,
                     *PrtNDau=nullptr;
-    vector<vector<double>>  *PrtDauID=nullptr,
-                            *PrtX=nullptr,
+    vector<vector<double>>  *PrtDauID=nullptr, //[# particle][# daughter]
+                            *PrtX=nullptr, //[# particle][# point]
                             *PrtY=nullptr,
                             *PrtZ=nullptr,
                             *PrtT=nullptr,
@@ -50,8 +50,8 @@ public:
                             *PrtE=nullptr;
 
     //SimEnergy*Deposit
-    vector<size_t>  *PrtNDep=nullptr;
-    vector<vector<double>>  *DepPdg=nullptr,
+    vector<size_t>  *PrtNDep=nullptr; //[# particle]
+    vector<vector<double>>  *DepPdg=nullptr, //[# particle][# deposit]
                             *DepX=nullptr,
                             *DepY=nullptr,
                             *DepZ=nullptr,
@@ -114,15 +114,15 @@ public:
 
     //PFParticle
     size_t NPfp;
-    vector<int> *PfpTrkID=nullptr,
+    vector<int> *PfpTrkID=nullptr, //[# pfparticle]
                 *PfpShwID=nullptr,
                 *PfpPdg=nullptr;
 
     //Track
     size_t NTrk;
-    vector<double>  *TrkLength=nullptr;
-    vector<size_t>  *TrkNPt=nullptr;
-    vector<vector<double>>  *TrkPtX=nullptr,
+    vector<double>  *TrkLength=nullptr; //[# track]
+    vector<size_t>  *TrkNPt=nullptr; //[# track]
+    vector<vector<double>>  *TrkPtX=nullptr, //[# track][# point]
                             *TrkPtY=nullptr,
                             *TrkPtZ=nullptr,
                             *TrkDirX=nullptr,
@@ -130,29 +130,29 @@ public:
                             *TrkDirZ=nullptr;
 
     //Calorimetry
-    vector<size_t>  *TrkCalPlane=nullptr,
+    vector<size_t>  *TrkCalPlane=nullptr, //[# track]
                     *TrkCalNPt=nullptr;
     vector<float>   *TrkCalRange=nullptr,
                     *TrkCalKineticE=nullptr;
-    vector<vector<double>>  *TrkCaldEdx=nullptr,
+    vector<vector<double>>  *TrkCaldEdx=nullptr, //[# track][# calo point]
                             *TrkCaldQdx=nullptr,
                             *TrkCalResRange=nullptr;
 
     //Shower
     size_t NShw;
-    vector<int> *ShwID=nullptr;
+    vector<int> *ShwID=nullptr; //[# shower]
 
     //Cluster
-    vector<size_t> *PfpNClu=nullptr;
-    vector<vector<double>>  *CluNHit=nullptr,
+    vector<size_t> *PfpNClu=nullptr; //[# pfparticle]
+    vector<vector<double>>  *CluNHit=nullptr, //[# pfparticle][# cluster]
                             *CluPlane=nullptr,
                             *CluIntFit=nullptr,
                             *CluSumADC=nullptr,
                             *CluWidth=nullptr;
 
     //SpacePoint
-    vector<size_t> *PfpNSpt=nullptr;
-    vector<vector<double>>  *SptX=nullptr,
+    vector<size_t> *PfpNSpt=nullptr; //[# pfparticle]
+    vector<vector<double>>  *SptX=nullptr, //[# pfparticle][# spacepoint]
                             *SptY=nullptr,
                             *SptZ=nullptr;
 

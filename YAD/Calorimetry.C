@@ -1,15 +1,27 @@
 #include "YAD_tools.h"
 
+//analysis paramenters
+vector<vector<double>> Detlim={{-320, 350}, {-317,317}, {20,280}}; //cm
+double thres_trk_len=0.; //cm
+size_t n_last_deposits=20;
+double thres_dEdx=2.5; //Mev/cm
+
 const size_t n_file=3;
 const vector<string> filelist = yad::readFileList(n_file,"list/ijclab.list");
 
 void Calorimetry() {
     clock_t start_time=clock();
 
-    TH2D* hMuon = new TH2D("hMuon",";Residual Range (cm);dE/dx (MeV/cm)",150,0,300,50,0,6);
+    TH2D* hdEdx = new TH2D("hdEdx",";Residual Range (cm);dE/dx (MeV/cm)",150,0,300,50,0,6);
+
+    TH1D* hTrkLen = new TH1D("hTrkLen",";Track Length (cm);count",200,0,800);
+    TH1D* hLastdEdx = new TH1D("hLastdEdx",";dE/dx (Mev/cm);count",50,0,6);
 
     size_t N_trk=0;
+    size_t N_trk_sel=0;
     double avg_tpt=0;
+    double avg_cal=0;
+    double avg_len=0;
 
     size_t i_file=0;
     for (string filename : filelist) {
@@ -27,35 +39,64 @@ void Calorimetry() {
             T.GetEntry(i_evt);
             R.GetEntry(i_evt);
 
+            N_trk+=R.NTrk;
+
             for (size_t i_trk=0; i_trk < R.NTrk; i_trk++) {
 
                 if(!yad::isInside(
                     R.TrkPtX->at(i_trk),
                     R.TrkPtY->at(i_trk),
                     R.TrkPtZ->at(i_trk),
-                    -320, 350,
-                    -317, 317,
-                    20, 280
+                    Detlim[0][0], Detlim[0][1],
+                    Detlim[1][0], Detlim[1][1],
+                    Detlim[2][0], Detlim[2][1]
                 )) continue;
 
-                N_trk++;
+                hTrkLen->Fill(R.TrkLength->at(i_trk));
+                if(R.TrkLength->at(i_trk) < thres_trk_len) continue;
+
+                double avg_dEdx=0;
+                for (size_t i_cal=0; i_cal < R.TrkCalNPt->at(i_trk); i_cal++) {
+                    if (i_cal >= R.TrkCalNPt->at(i_trk) - n_last_deposits) {
+                        avg_dEdx+=(*R.TrkCaldEdx)[i_trk][i_cal]/n_last_deposits;
+                    }
+                }
+                hLastdEdx->Fill(avg_dEdx);
+                if (avg_dEdx < thres_dEdx) continue;
+
+                N_trk_sel++;
                 avg_tpt+=R.TrkNPt->at(i_trk);
+                avg_cal+=R.TrkCalNPt->at(i_trk);
+                avg_len+=R.TrkLength->at(i_trk);
 
                 for (size_t i_cal=0; i_cal < R.TrkCalNPt->at(i_trk); i_cal++) {
-                    hMuon->Fill((*R.TrkCalResRange)[i_trk][i_cal],(*R.TrkCaldEdx)[i_trk][i_cal]);
+                    hdEdx->Fill((*R.TrkCalResRange)[i_trk][i_cal],(*R.TrkCaldEdx)[i_trk][i_cal]);
                 }
+
             }
 
          
         } //end event loop
     } //end file loop
+    cout << endl;
 
     TCanvas* c1 = new TCanvas("c1","dEdx");
-    c1->cd();
-    c1->cd();
-    hMuon->Draw("colZ");
+    // c1->cd();
+    c1->Divide(2,2);
+    c1->cd(1);
+    hdEdx->Draw("colZ");
+    c1->cd(2);
+    hTrkLen->Draw("hist");
+    c1->cd(3);
+    hLastdEdx->Draw("hist");
     
-    avg_tpt /= N_trk;
-    cout << N_trk << " tracks with a average of " << avg_tpt << " points per track " << endl;
+    avg_tpt /= N_trk_sel;
+    avg_cal /= N_trk_sel;
+    avg_len /= N_trk_sel;
+    cout << N_trk <<  " tracks" << endl;
+    cout << N_trk_sel << " tracks selected" << endl;
+    cout << avg_tpt << " points per track on average" << endl;
+    cout << avg_cal << " calorimetry point per track on average" << endl;
+    cout << avg_len << " cm track length on average" << endl;
     cout << "total time of execution: " << static_cast<double>(clock()-start_time)/CLOCKS_PER_SEC << " seconds" << endl;
 }
