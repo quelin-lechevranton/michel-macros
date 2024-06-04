@@ -11,7 +11,7 @@ double threshold_dEdx=3.5;
 
 
 const size_t n_file=5;
-const vector<string> filelist = yad::readFileList(n_file,"list/muplusdecay.list");
+const vector<string> filelist = yad::readFileList(n_file,"list/jeremy.list");
 
 
 
@@ -50,8 +50,8 @@ void TrueMichel_v2() {
     TH1D* hNDep = new TH1D("hNDep","Electron Deposit Number;nDep;#",100,0,1000);
 
     vector<TH2D*> hdEdx(2);
-    hdEdx[0] = new TH2D("hdEdx","Muon Energy Loss (before selection);Residual Range (cm);dEdx (MeV/cm)",100,0,200,50,0,5);
-    hdEdx[1] = new TH2D("hdEdx","Muon Energy Loss;Residual Range (cm);dEdx (MeV/cm)",100,0,200,50,0,5);
+    hdEdx[0] = new TH2D("hdEdx0","Muon Energy Loss (before selection);Residual Range (cm);dEdx (MeV/cm)",100,0,200,50,0,5);
+    hdEdx[1] = new TH2D("hdEdx1","Muon Energy Loss;Residual Range (cm);dEdx (MeV/cm)",100,0,200,50,0,5);
 
     TH1D* hElE = new TH1D("hElE","Electron Spectrum;Total Deposited Energy (MeV);#",35,0,70);
     hElE->SetLineWidth(2);
@@ -91,7 +91,7 @@ void TrueMichel_v2() {
 
             N_prt+=T.NPrt;
 
-            for (size_t i_prt=0; i_prt < T.NPrt; i_prt) {
+            for (size_t i_prt=0; i_prt < T.NPrt; i_prt++) {
                 if (T.PrtMomID->at(i_prt)!=-1) continue;
                 if (T.PrtPdg->at(i_prt)!=13 && T.PrtPdg->at(i_prt)!=-13) continue;
                 if (yad::isInside(T.DepX->at(i_prt),T.DepY->at(i_prt),T.DepZ->at(i_prt))) {
@@ -328,6 +328,7 @@ void TrueMichel_v2() {
     cout << "\tN_no_bragg: " << N_no_bragg << " - " << 100.*N_no_bragg/rem_prt << "%" << endl;
     rem_prt-=N_no_bragg;
     cout << "remaining particles: " << rem_prt << endl;
+    cout << "N_mu_inside: " << N_mu_inside << " - " << 100.*N_mu_inside/N_evt << "% of events" << endl;
     cout << "N_mich: " << N_mich << " - " << 100.*N_mich/N_prt << "% of MCParticles or " << 100.*N_mich/N_evt << "% of events or " << 100.*N_mich/N_mu_inside << "% of inside muons" << endl;
 
     // c1->SaveAs("out/TrueMichel_v2Graph2D.root");
