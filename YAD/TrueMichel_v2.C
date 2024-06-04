@@ -5,12 +5,13 @@ double coincidence_radius_gros=1.; //cm
 size_t n_step_gros=10; //distance per step : 0.03 cm
 double coincidence_radius_fin=1.; //cm
 size_t n_scan_fin=4*n_step_gros;
-size_t n_last_deposits=50;
-double threshold_dEdx=4.;
+size_t n_least_deposits=20;
+size_t n_last_deposits=20;
+double threshold_dEdx=3.5;
 
 
-const size_t n_file=3;
-const vector<string> filelist = yad::readFileList(n_file,"list/ijclab.list");
+const size_t n_file=5;
+const vector<string> filelist = yad::readFileList(n_file,"list/muplusdecay.list");
 
 
 
@@ -18,11 +19,14 @@ void TrueMichel_v2() {
 
     clock_t start_time=clock();
 
-    TGraph2D *gMu = new TGraph2D();
-    size_t igMu = 0;
-    gMu->SetMarkerColor(kOrange+7);
-    gMu->SetMarkerStyle(20);
-    gMu->SetMarkerSize(0.3);
+    TColor color;
+
+    // TGraph2D *gMu = new TGraph2D();
+    // size_t igMu = 0;
+    // // gMu->SetMarkerColor(kOrange+7);
+    // gMu->SetMarkerColor(color.GetColor("#f35c22"));
+    // gMu->SetMarkerStyle(20);
+    // gMu->SetMarkerSize(0.3);
 
     // TGraph2D *gMux = new TGraph2D();
     // size_t igMux = 0;
@@ -36,49 +40,84 @@ void TrueMichel_v2() {
     // gPrt->SetMarkerStyle(20);
     // gPrt->SetMarkerSize(0.3);
 
-    TGraph2D *gEl = new TGraph2D();
-    size_t igEl = 0;
-    gEl->SetMarkerColor(kAzure+2);
-    gEl->SetMarkerStyle(20);
-    gEl->SetMarkerSize(0.3);
+    // TGraph2D *gEl = new TGraph2D();
+    // size_t igEl = 0;
+    // // gEl->SetMarkerColor(kAzure+2);
+    // gEl->SetMarkerColor(color.GetColor("#436188"));
+    // gEl->SetMarkerStyle(20);
+    // gEl->SetMarkerSize(0.3);
 
-    TH1D* hNDep = new TH1D("hNDep","Electron Deposit Number;nDep;count",100,0,1000);
-    TH2D* hdEdx = new TH2D("hdEdx","Muon Energy Loss;Residual Range (cm);dEdx (MeV/cm)",100,0,200,50,0,5);
-    TH1D* hElE = new TH1D("hElE","Electron Spectrum;Total Deposited Energy (MeV);count",100,0,100);
+    TH1D* hNDep = new TH1D("hNDep","Electron Deposit Number;nDep;#",100,0,1000);
+
+    vector<TH2D*> hdEdx(2);
+    hdEdx[0] = new TH2D("hdEdx","Muon Energy Loss (before selection);Residual Range (cm);dEdx (MeV/cm)",100,0,200,50,0,5);
+    hdEdx[1] = new TH2D("hdEdx","Muon Energy Loss;Residual Range (cm);dEdx (MeV/cm)",100,0,200,50,0,5);
+
+    TH1D* hElE = new TH1D("hElE","Electron Spectrum;Total Deposited Energy (MeV);#",35,0,70);
+    hElE->SetLineWidth(2);
+    hElE->SetLineColor(color.GetColor("#436188"));
+    
 
     size_t N_evt=0;
+    size_t N_mu_inside=0;
+    size_t  N_prt=0,
+            N_not_el=0,
+            N_orph=0,
+            N_low_el_NDep=0,
+            N_low_mu_NDep=0,
+            N_outside=0,
+            // N_not_from_mu=0,
+            N_no_bragg=0,
+            N_mich=0;
+    
+
     size_t i_file=0;
     for (string filename : filelist) {
         
         cout << "\e[3mOpening file #" << ++i_file << "/" << n_file << ": " << filename << "\e[0m" << endl;
 
         yad::Truth T(filename.c_str());
-        yad::Reco R(filename.c_str());
+        // yad::Reco R(filename.c_str());
 
-        size_t n_evt = R.GetEntries();
+
+        size_t n_evt = T.GetEntries();
         N_evt+=n_evt;
         for (size_t i_evt=0; i_evt < n_evt; i_evt++) {
 
             cout << "Event#" << i_evt+1 << "/" << n_evt << "\r" << flush;
 
             T.GetEntry(i_evt);
-            R.GetEntry(i_evt);
+            // R.GetEntry(i_evt);
+
+            N_prt+=T.NPrt;
+
+            for (size_t i_prt=0; i_prt < T.NPrt; i_prt) {
+                if (T.PrtMomID->at(i_prt)!=-1) continue;
+                if (T.PrtPdg->at(i_prt)!=13 && T.PrtPdg->at(i_prt)!=-13) continue;
+                if (yad::isInside(T.DepX->at(i_prt),T.DepY->at(i_prt),T.DepZ->at(i_prt))) {
+                    N_mu_inside++;
+                }
+            }
 
             for (size_t i_prt=0; i_prt < T.NPrt; i_prt++) {
 
 
-                if (T.PrtPdg->at(i_prt)!=11) continue; //electrons only
-                if (T.PrtNDep->at(i_prt) < 20) continue; //enough electron deposits
-                // if (T.PrtNDep->at(i_prt) > 300) continue;
-
-                if (!yad::isInside(T.DepX->at(i_prt),T.DepY->at(i_prt),T.DepZ->at(i_prt))) continue;
+                if (T.PrtPdg->at(i_prt)!=11 && T.PrtPdg->at(i_prt)!=-11) {N_not_el++; continue;} //electrons only
 
                 int i_mom = T.PrtMomID->at(i_prt);
-                if (i_mom==-1) continue; //no orphelin electrons
-                if (T.PrtPdg->at(i_mom)!=13) continue; //electrons coming from muons only
+                if (i_mom==-1) {N_orph++; continue;} //no orphelin electrons
+                // if (T.PrtPdg->at(i_mom)!=13) {N_not_from_mu++; continue;} //electrons coming from muons only
 
                 size_t n_el_dep = T.PrtNDep->at(i_prt);
                 size_t n_mu_dep = T.PrtNDep->at(i_mom);
+
+                if (n_el_dep < n_least_deposits) {N_low_el_NDep++; continue;} //enough electron deposits
+                // if (T.PrtNDep->at(i_prt) > 300) continue;
+                if (n_mu_dep < n_last_deposits) {N_low_mu_NDep++; continue;} //enough deposits to check Bragg peak
+
+
+                if (!yad::isInside(T.DepX->at(i_prt),T.DepY->at(i_prt),T.DepZ->at(i_prt))) {N_outside++; continue;}
+
 
                 //now we want to find the closest muon deposit to the electron track
                 //first step is rough-and-ready second is more precise our the result of first step
@@ -112,12 +151,11 @@ void TrueMichel_v2() {
                 } //end deposit loop
 
                 // more precise count
+                size_t i_mu_dep_ini = i_max_gros-n_scan_fin > 0 ? i_max_gros-n_scan_fin : 0;
+                size_t i_mu_dep_fin = i_max_gros+n_scan_fin > n_mu_dep ? n_mu_dep : i_max_gros+n_scan_fin;
                 size_t n_max=0, i_max=0;
-                for (
-                    size_t i_mu_dep = i_max_gros-n_scan_fin > 0 ? i_max_gros-n_scan_fin : 0;
-                    i_mu_dep < (i_max_gros+n_scan_fin > n_mu_dep ? n_mu_dep : i_max_gros+n_scan_fin) ; i_mu_dep++) {
+                for (size_t i_mu_dep = i_mu_dep_ini; i_mu_dep < i_mu_dep_fin; i_mu_dep++) {
                     
-
                     double x_mu = (*T.DepX)[i_mom][i_mu_dep];
                     double y_mu = (*T.DepY)[i_mom][i_mu_dep];
                     double z_mu = (*T.DepZ)[i_mom][i_mu_dep];
@@ -174,9 +212,7 @@ void TrueMichel_v2() {
                 // } else {
                 //     cout << "\t" << avg_last_dEdx << endl;
                 // }
-                if (avg_last_dEdx<threshold_dEdx) continue; 
 
-                //plot dEdx vs. ResidualRange until electron emission
                 double mu_res_range = mu_range;
                 for (size_t i_dep=1; i_dep <= i_max ; i_dep++) {
 
@@ -184,23 +220,38 @@ void TrueMichel_v2() {
 
                     double dist=distances[i_dep];
                     mu_res_range-=dist;
-                    hdEdx->Fill(mu_res_range, E/dist);
+                    hdEdx[0]->Fill(mu_res_range, E/dist);
                 }
 
-                //plot all muon deposits before electron emission
-                for (size_t i_dep=0; i_dep <= i_max ; i_dep++) {
+                if (avg_last_dEdx<threshold_dEdx) {N_no_bragg++; continue;}
 
-                    double X = (*T.DepX)[i_mom][i_dep];
-                    double Y = (*T.DepY)[i_mom][i_dep];
-                    double Z = (*T.DepZ)[i_mom][i_dep];
+                N_mich++;
 
-                    gMu->SetPoint(igMu++,Y,Z,X);
-                    // if (i_dep <= i_max-n_last_deposits) {
-                    //     gMu->SetPoint(igMu++,Y,Z,X);
-                    // } else {
-                    //     gMux->SetPoint(igMux++,Y,Z,X);
-                    // }
+                //plot dEdx vs. ResidualRange until electron emission
+                mu_res_range = mu_range;
+                for (size_t i_dep=1; i_dep <= i_max ; i_dep++) {
+
+                    double E = (*T.DepE)[i_mom][i_dep];
+
+                    double dist=distances[i_dep];
+                    mu_res_range-=dist;
+                    hdEdx[1]->Fill(mu_res_range, E/dist);
                 }
+
+                // //plot all muon deposits before electron emission
+                // for (size_t i_dep=0; i_dep <= i_max ; i_dep+=1) {
+
+                //     double X = (*T.DepX)[i_mom][i_dep];
+                //     double Y = (*T.DepY)[i_mom][i_dep];
+                //     double Z = (*T.DepZ)[i_mom][i_dep];
+
+                //     gMu->SetPoint(igMu++,Y,Z,X);
+                //     // if (i_dep <= i_max-n_last_deposits) {
+                //     //     gMu->SetPoint(igMu++,Y,Z,X);
+                //     // } else {
+                //     //     gMux->SetPoint(igMux++,Y,Z,X);
+                //     // }
+                // }
 
                 //plot all prt points
                 // for (size_t i_ppt=0; i_ppt < T.PrtNPt->at(i_mom); i_ppt++) {
@@ -213,14 +264,14 @@ void TrueMichel_v2() {
 
                 //plot all electron deposits + total deposited energy
                 double totalE=0;
-                for (size_t i_dep=0; i_dep <= n_el_dep ; i_dep++) {
+                for (size_t i_dep=0; i_dep < n_el_dep ; i_dep+=1) {
 
                     double X = (*T.DepX)[i_prt][i_dep];
                     double Y = (*T.DepY)[i_prt][i_dep];
                     double Z = (*T.DepZ)[i_prt][i_dep];
                     double E = (*T.DepE)[i_prt][i_dep];
 
-                    gEl->SetPoint(igEl++,Y,Z,X);
+                    // gEl->SetPoint(igEl++,Y,Z,X);
                     if (E < 0) cerr << "\e[91mnegative energy deposit\e[0m of " << E << " MeV at evt#" << i_evt << ":prt#" << i_prt << ":dep#" << i_dep << endl;
                     totalE+=E;
                 }
@@ -230,21 +281,54 @@ void TrueMichel_v2() {
         } //end event loop
     } //end file loop
 
+   
+
     TCanvas* c1 = new TCanvas("c1","TrueMichel_v2");
     c1->cd();
-    gMu->Draw("p");
-    gEl->Draw("samep");
-    // gPrt->Draw("samep");
-    // gMux->Draw("samep");
+    // gMu->Draw("p");
+    // gEl->Draw("samep");
+    // // gPrt->Draw("samep");
+    // // gMux->Draw("samep");
 
     TCanvas* c2 = new TCanvas("c2","TrueMichel_v2");
-    c2->Divide(2,2);
-    c2->cd(1);
-    hNDep->Draw("hist");
-    c2->cd(2);
-    hdEdx->Draw("colZ");
-    c2->cd(3);
+    // c2->Divide(2,2);
+    // c2->cd(1);
+    // hNDep->Draw("hist");
+    // c2->cd(2);
+    // hdEdx->Draw("colZ");
+    // c2->cd(3);
+    c2->cd();
     hElE->Draw("hist");
+
+    TCanvas* c3 = new TCanvas("c3","TrueMichel_v2");
+    c3->Divide(2,1);
+    c3->cd(1);
+    hdEdx[0]->Draw("colZ");
+    c3->cd(2);
+    hdEdx[1]->Draw("colZ");
+    
+    
+    size_t rem_prt=N_prt;
+    cout << "N_prt: " << N_prt << endl;
+    cout << "\tN_not_el: " << N_not_el << " - " << 100.*N_not_el/rem_prt << "%" << endl;
+    rem_prt-=N_not_el;
+    cout << "\t\tremaining particles: " << rem_prt << endl;
+    cout << "\tN_orph: " << N_orph << " - " << 100.*N_orph/rem_prt << "%" << endl;
+    rem_prt-=N_orph;
+    cout << "\t\tremaining particles: " << rem_prt << endl;
+    cout << "\tN_low_el_NDep: " << N_low_el_NDep << " - " << 100.*N_low_el_NDep/rem_prt << "%" << endl;
+    rem_prt-=N_low_el_NDep;
+    cout << "\t\tremaining particles: " << rem_prt << endl;
+    cout << "\tN_low_mu_NDep: " << N_low_mu_NDep << " - " << 100.*N_low_mu_NDep/rem_prt << "%" << endl;
+    rem_prt-=N_low_mu_NDep;
+    cout << "\t\tremaining particles: " << rem_prt << endl;
+    cout << "\tN_outside: " << N_outside << " - " << 100.*N_outside/rem_prt << "%" << endl;
+    rem_prt-=N_outside;
+    cout << "\t\tremaining particles: " << rem_prt << endl;
+    cout << "\tN_no_bragg: " << N_no_bragg << " - " << 100.*N_no_bragg/rem_prt << "%" << endl;
+    rem_prt-=N_no_bragg;
+    cout << "remaining particles: " << rem_prt << endl;
+    cout << "N_mich: " << N_mich << " - " << 100.*N_mich/N_prt << "% of MCParticles or " << 100.*N_mich/N_evt << "% of events or " << 100.*N_mich/N_mu_inside << "% of inside muons" << endl;
 
     // c1->SaveAs("out/TrueMichel_v2Graph2D.root");
     // c2->SaveAs("out/TrueMichel_v2Hist.root");
