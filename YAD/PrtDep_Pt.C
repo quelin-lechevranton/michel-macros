@@ -27,6 +27,9 @@ void PrtDep_Pt() {
 
             for (size_t i_prt=0; i_prt < T.NPrt; i_prt++) {
 
+                int pdg = T.PrtPdg->at(i_prt);
+                if (pdg!=13 && pdg!=-13) continue;
+
                 double X0 = (*T.PrtX)[i_prt][0];
                 double Y0 = (*T.PrtY)[i_prt][0];
                 double Z0 = (*T.PrtZ)[i_prt][0];
