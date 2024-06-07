@@ -28,6 +28,7 @@ void Bragg() {
 
                 int pdg = T.PrtPdg->at(i_prt);
                 if (pdg!=13 && pdg!=-13) continue;
+                if (!yad::isInside(T.DepX->at(i_prt),T.DepY->at(i_prt),T.DepZ->at(i_prt))) continue;
 
                 size_t n_ppt = T.PrtNPt->at(i_prt);
                 size_t n_dep = T.PrtNDep->at(i_prt);
@@ -37,6 +38,7 @@ void Bragg() {
                 // } //end particlepoint loop
 
                 for (size_t i_dep=0; i_dep < n_dep; i_dep++) {
+                    // gdEdx->AddPoint(n_dep-i_dep,(*T.DepE)[i_prt][i_dep]/0.03);
                     gdEdx->AddPoint(i_dep,(*T.DepE)[i_prt][i_dep]);
                 } //end deposit loop
             } //end particle loop
