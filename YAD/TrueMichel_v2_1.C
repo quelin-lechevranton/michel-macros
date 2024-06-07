@@ -12,7 +12,7 @@ size_t n_scan_fin=4*n_step_gros;
 size_t n_least_deposits=20;
 size_t n_last_deposits=15;
 size_t n_tail_deposits=2;
-double threshold_dEdx=6;
+double threshold_dEdx=5;
 
 
 const size_t n_file=30;
@@ -21,7 +21,7 @@ const vector<string> filelist = yad::readFileList(n_file,"list/jeremy.list");
 
 void fillElectronSpectrum(size_t,size_t);
 
-void TrueMichel_v2() {
+void TrueMichel_v2_1() {
 
     clock_t start_time=clock();
 
@@ -325,14 +325,14 @@ void TrueMichel_v2() {
 
    
 
-    TCanvas* c1 = new TCanvas("c1","TrueMichel_v2");
+    TCanvas* c1 = new TCanvas("c1","TrueMichel_v2_1");
     c1->cd();
     // gMu->Draw("p");
     // gEl->Draw("samep");
     // // gPrt->Draw("samep");
     // // gMux->Draw("samep");
 
-    TCanvas* c2 = new TCanvas("c2","TrueMichel_v2");
+    TCanvas* c2 = new TCanvas("c2","TrueMichel_v2_1");
     // c2->Divide(2,2);
     // c2->cd(1);
     // hNDep->Draw("hist");
@@ -348,14 +348,14 @@ void TrueMichel_v2() {
     // c2->cd();
     // hsElE->Draw();
 
-    TCanvas* c3 = new TCanvas("c3","TrueMichel_v2");
+    TCanvas* c3 = new TCanvas("c3","TrueMichel_v2_1");
     c3->Divide(2,1);
     c3->cd(1);
     hdEdx[0]->Draw("colZ");
     c3->cd(2);
     hdEdx[1]->Draw("colZ");
 
-    TCanvas* c4 = new TCanvas("c4","TrueMichel_v2");
+    TCanvas* c4 = new TCanvas("c4","TrueMichel_v2_1");
     c4->Divide(2,1);
     c4->cd(1);
     hAvgdEdx[0]->Draw("hist");
