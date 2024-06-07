@@ -4,7 +4,7 @@
 #define FILLSPECTRUM(i) totalE=0;for (size_t i_dep=0; i_dep < n_el_dep ; i_dep+=1) {totalE+=(*T.DepE)[i_prt][i_dep];}hElE[i]->Fill(totalE);
 
 // analysis parameter
-vector<vector<double>> detlim={{-320, 350}, {-317,317}, {20,280}}; //cm
+vector<vector<double>> detlim={{-350, 350}, {-350,350}, {0,200}}; //cm
 double coincidence_radius_gros=1.; //cm
 size_t n_step_gros=10; //distance per step : 0.03 cm
 double coincidence_radius_fin=1.; //cm
@@ -57,6 +57,10 @@ void TrueMichel_v2() {
     vector<TH2D*> hdEdx(2);
     hdEdx[0] = new TH2D("hdEdx0","Muon Energy Loss (before selection);Residual Range (cm);dEdx (MeV/cm)",100,0,200,50,0,5);
     hdEdx[1] = new TH2D("hdEdx1","Muon Energy Loss;Residual Range (cm);dEdx (MeV/cm)",100,0,200,50,0,5);
+
+    vector<TH1D*> hAvgdEdx(2);
+    hAvgdEdx[0] = new TH1D("hAvgdEdx0","Muon Energy Loss (before selection);dEdx (MeV/cm);#",30,0,30);
+    hAvgdEdx[1] = new TH1D("hAvgdEdx1","Muon Energy Loss;dEdx (MeV/cm);#",30,0,30);
 
     size_t nElE=6;
     vector<TH1D*> hElE(nElE);
@@ -146,7 +150,14 @@ void TrueMichel_v2() {
                 FILLSPECTRUM(4)
 
 
-                if (!yad::isInside(T.DepX->at(i_prt),T.DepY->at(i_prt),T.DepZ->at(i_prt))) {N_outside++; continue;}
+                if (!yad::isInside(
+                    T.DepX->at(i_prt),
+                    T.DepY->at(i_prt),
+                    T.DepZ->at(i_prt),
+                    detlim[0][0], detlim[0][1],
+                    detlim[1][0], detlim[1][1],
+                    detlim[2][0], detlim[2][1]
+                )) {N_outside++; continue;}
                 FILLSPECTRUM(5)
 
 
@@ -254,7 +265,9 @@ void TrueMichel_v2() {
                     hdEdx[0]->Fill(mu_res_range, E/dist);
                 }
 
+                hAvgdEdx[0]->Fill(avg_last_dEdx);
                 if (avg_last_dEdx<threshold_dEdx) {N_no_bragg++; continue;}
+                hAvgdEdx[1]->Fill(avg_last_dEdx);
 
                 N_mich++;
 
@@ -339,6 +352,14 @@ void TrueMichel_v2() {
     hdEdx[0]->Draw("colZ");
     c3->cd(2);
     hdEdx[1]->Draw("colZ");
+
+    TCanvas* c4 = new TCanvas("c4","TrueMichel_v2");
+    c4->Divide(2,1);
+    c4->cd(1);
+    hAvgdEdx[0]->Draw("hist");
+    c4->cd(2);
+    hAvgdEdx[1]->Draw("hist");
+
     
     
     size_t rem_prt=N_prt;
