@@ -312,8 +312,11 @@ void TrueMichel_v2() {
     // c2->cd(2);
     // hdEdx->Draw("colZ");
     // c2->cd(3);
-    c2->cd();
-    hElE[0]->Draw("hist");
+    c2->Divide(3,2);
+    for (size_t i=0; i<6; i++) {
+        c2->cd(i+1);
+        hElE[i]->Draw("hist");
+    }
 
     TCanvas* c3 = new TCanvas("c3","TrueMichel_v2");
     c3->Divide(2,1);
