@@ -13,7 +13,7 @@ size_t n_last_deposits=20;
 double threshold_dEdx=3.5;
 
 
-const size_t n_file=5;
+const size_t n_file=30;
 const vector<string> filelist = yad::readFileList(n_file,"list/jeremy.list");
 
 
