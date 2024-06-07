@@ -1,7 +1,7 @@
 #include "YAD_tools.h"
 
 
-#define FILLSPECTRUM(i) double totalE=0;for (size_t i_dep=0; i_dep < n_el_dep ; i_dep+=1) {totalE+=(*T.DepE)[i_prt][i_dep];}hElE[i]->Fill(totalE);
+#define FILLSPECTRUM(i) totalE=0;for (size_t i_dep=0; i_dep < n_el_dep ; i_dep+=1) {totalE+=(*T.DepE)[i_prt][i_dep];}hElE[i]->Fill(totalE);
 
 // analysis parameter
 double coincidence_radius_gros=1.; //cm
@@ -116,6 +116,7 @@ void TrueMichel_v2() {
 
 
                 size_t n_el_dep = T.PrtNDep->at(i_prt);
+                double totalE;
                 if (T.PrtPdg->at(i_prt)!=11 && T.PrtPdg->at(i_prt)!=-11) {N_not_el++; continue;} //electrons only
                 FILLSPECTRUM(1)
 
