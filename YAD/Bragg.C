@@ -1,7 +1,7 @@
 #include "YAD_tools.h"
 
 const size_t n_file=1;
-const vector<string> filelist = yad::readFileList(n_file,"list/ijclab.list");
+const vector<string> filelist = yad::readFileList(n_file,"list/jeremy.list");
 
 void Bragg() {
     clock_t start_time=clock();
