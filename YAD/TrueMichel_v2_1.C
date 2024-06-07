@@ -10,8 +10,9 @@ size_t n_step_gros=10; //distance per step : 0.03 cm
 double coincidence_radius_fin=1.; //cm
 size_t n_scan_fin=4*n_step_gros;
 size_t n_least_deposits=20;
-size_t n_last_deposits=20;
-double threshold_dEdx=3.5;
+size_t n_last_deposits=15;
+size_t n_tail_deposits=2;
+double threshold_dEdx=6;
 
 
 const size_t n_file=30;
@@ -146,7 +147,7 @@ void TrueMichel_v2() {
                 FILLSPECTRUM(3)
 
                 size_t n_mu_dep = T.PrtNDep->at(i_mom);
-                if (n_mu_dep < n_last_deposits) {N_few_mu_NDep++; continue;} //enough deposits to check Bragg peak
+                if (n_mu_dep < n_last_deposits+n_tail_deposits) {N_few_mu_NDep++; continue;} //enough deposits to check Bragg peak
                 FILLSPECTRUM(4)
 
 
@@ -243,7 +244,7 @@ void TrueMichel_v2() {
 
                 //check if muon is dying before emission
                 double avg_last_dEdx=0;
-                for (size_t i_dep=i_max-n_last_deposits; i_dep <= i_max ; i_dep++) {
+                for (size_t i_dep=i_max-n_last_deposits-n_tail_deposits; i_dep <= i_max-n_tail_deposits ; i_dep++) {
                     double E = (*T.DepE)[i_mom][i_dep];
                     double dist=distances[i_dep];
 
