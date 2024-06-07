@@ -1,5 +1,7 @@
 #include "YAD_tools.h"
 
+vector<vector<double>> detlim={{-320, 350}, {-317,317}, {20,280}}; //cm
+
 const size_t n_file=30;
 const vector<string> filelist = yad::readFileList(n_file,"list/jeremy.list");
 
@@ -9,7 +11,8 @@ void TrueMichel_v3() {
 
     TColor color;
 
-    size_t N_evt=0;
+    size_t  N_evt=0,
+            N_prt=0;
     size_t i_file=0;
     for (string filename : filelist) {
         
@@ -24,14 +27,20 @@ void TrueMichel_v3() {
             cout << "Event#" << i_evt+1 << "/" << n_evt << "\r" << flush;
 
             T.GetEntry(i_evt);
-            // R.GetEntry(i_evt);
 
-            N_prt+=T.NPrt;
+            // N_prt+=T.NPrt;
 
             for (size_t i_prt=0; i_prt < T.NPrt; i_prt++) {
                 if (T.PrtMomID->at(i_prt)!=-1) continue;
                 if (T.PrtPdg->at(i_prt)!=13 && T.PrtPdg->at(i_prt)!=-13) continue;
-                if (yad::isInside(T.DepX->at(i_prt),T.DepY->at(i_prt),T.DepZ->at(i_prt))) {
+                if (yad::isInside(
+                    T.DepX->at(i_prt),
+                    T.DepY->at(i_prt),
+                    T.DepZ->at(i_prt),
+                    detlim[0], detlim[1],
+                    detlim[2], detlim[3],
+                    detlim[4], detlim[5]
+                )) {
                     N_mu_inside++;
                 }
             }
