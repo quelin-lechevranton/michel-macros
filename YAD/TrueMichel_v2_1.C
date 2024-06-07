@@ -143,7 +143,7 @@ void TrueMichel_v2_1() {
 
                 int i_mom = T.PrtMomID->at(i_prt);
                 // if (i_mom==-1) {N_orph++; continue;} //no orphelin electrons
-                if (T.PrtPdg->at(i_mom)!=13) {N_not_from_mu++; continue;} //electrons coming from muons only
+                if (T.PrtPdg->at(i_mom)!=13 && T.PrtPdg->at(i_mom)!=-13) {N_not_from_mu++; continue;} //electrons coming from muons only
                 FILLSPECTRUM(3)
 
                 size_t n_mu_dep = T.PrtNDep->at(i_mom);
