@@ -1,5 +1,8 @@
 #include "YAD_tools.h"
 
+
+#define FILLSPECTRUM(i) double totalE=0;for (size_t i_dep=0; i_dep < n_el_dep ; i_dep+=1) {totalE+=(*T.DepE)[i_prt][i_dep];}hElE[i]->Fill(totalE);
+
 // analysis parameter
 double coincidence_radius_gros=1.; //cm
 size_t n_step_gros=10; //distance per step : 0.03 cm
@@ -55,7 +58,7 @@ void TrueMichel_v2() {
     hdEdx[1] = new TH2D("hdEdx1","Muon Energy Loss;Residual Range (cm);dEdx (MeV/cm)",100,0,200,50,0,5);
 
     size_t nElE=6;
-    vector<TH1D*> hElE(nElE)
+    vector<TH1D*> hElE(nElE);
     hElE[0] = new TH1D("hElE0","Michel Spectrum;Total Deposited Energy (MeV);#",35,0,70);
     hElE[1] = new TH1D("hElE1","Electron Spectrum;Total Deposited Energy (MeV);#",35,0,70);
     hElE[2] = new TH1D("hElE2","NoLowDep Electron Spectrum;Total Deposited Energy (MeV);#",35,0,70);
@@ -112,25 +115,25 @@ void TrueMichel_v2() {
             for (size_t i_prt=0; i_prt < T.NPrt; i_prt++) {
 
 
-                if (T.PrtPdg->at(i_prt)!=11 && T.PrtPdg->at(i_prt)!=-11) {N_not_el++; continue;} //electrons only
-                fillElectronSpectrum(i_prt,1);
-
                 size_t n_el_dep = T.PrtNDep->at(i_prt);
+                if (T.PrtPdg->at(i_prt)!=11 && T.PrtPdg->at(i_prt)!=-11) {N_not_el++; continue;} //electrons only
+                FILLSPECTRUM(1)
+
                 if (n_el_dep < n_least_deposits) {N_low_el_NDep++; continue;} //enough electron deposits
-                fillElectronSpectrum(i_prt,2);
+                FILLSPECTRUM(2)
 
                 int i_mom = T.PrtMomID->at(i_prt);
                 // if (i_mom==-1) {N_orph++; continue;} //no orphelin electrons
                 if (T.PrtPdg->at(i_mom)!=13) {N_not_from_mu++; continue;} //electrons coming from muons only
-                fillElectronSpectrum(i_prt,3);
+                FILLSPECTRUM(3)
 
                 size_t n_mu_dep = T.PrtNDep->at(i_mom);
                 if (n_mu_dep < n_last_deposits) {N_low_mu_NDep++; continue;} //enough deposits to check Bragg peak
-                fillElectronSpectrum(i_prt,4);
+                FILLSPECTRUM(4)
 
 
                 if (!yad::isInside(T.DepX->at(i_prt),T.DepY->at(i_prt),T.DepZ->at(i_prt))) {N_outside++; continue;}
-                fillElectronSpectrum(i_prt,5);
+                FILLSPECTRUM(5)
 
 
                 //now we want to find the closest muon deposit to the electron track
@@ -286,7 +289,7 @@ void TrueMichel_v2() {
                 //     // gEl->SetPoint(igEl++,Y,Z,X);
                 // }
 
-                fillElectronSpectrum(i_prt,0);
+                FILLSPECTRUM(0);
                 hNDep->Fill(n_el_dep);
             } //end particle loop
         } //end event loop
@@ -357,13 +360,4 @@ void TrueMichel_v2() {
     // c2->SaveAs("out/TrueMichel_v2Hist.root");
 
     cout << N_evt << " events treated in " << static_cast<double>(clock()-start_time)/CLOCKS_PER_SEC << " seconds" << endl;
-}
-
-
-void fillElectronSpectrum(size_t i_prt, size_t i) {
-    double totalE=0;
-    for (size_t i_dep=0; i_dep < n_el_dep ; i_dep+=1) {
-        totalE+=(*T.DepE)[i_prt][i_dep];
-    }
-    hElE[i]->Fill(totalE);
 }
