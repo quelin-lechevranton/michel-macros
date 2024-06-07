@@ -43,7 +43,7 @@ void Bragg(size_t i=0) {
 
                 // } //end particlepoint loop
 
-                double avg_dEdx;
+                double avg_dEdx=0;
                 for (size_t i_dep=n_dep-n_bragg_integration-n_bragg_tail; i_dep < n_dep-n_bragg_tail; i_dep++) {
                     // gdEdx->AddPoint(n_dep-i_dep,(*T.DepE)[i_prt][i_dep]/0.03);
                     double E = (*T.DepE)[i_prt][i_dep];
