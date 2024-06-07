@@ -54,9 +54,9 @@ void PrtDep_Pt() {
                 if (n_ppt>1) avg_prt_distance/=(n_ppt-1);
 
 
-                double X0 = (*T.DepX)[i_dep][0];
-                double Y0 = (*T.DepY)[i_dep][0];
-                double Z0 = (*T.DepZ)[i_dep][0];
+                X0 = (*T.DepX)[i_dep][0];
+                Y0 = (*T.DepY)[i_dep][0];
+                Z0 = (*T.DepZ)[i_dep][0];
                 for (size_t i_dep=0; i_dep < n_dep; i_dep++) {
                     double X = (*T.DepX)[i_prt][i_dep];
                     double Y = (*T.DepY)[i_prt][i_dep];
