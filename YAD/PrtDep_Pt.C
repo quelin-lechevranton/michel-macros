@@ -10,6 +10,7 @@ void PrtDep_Pt() {
     
     TH1D* hPrtDist = new TH1D("hPrtDist","Distance between two PrtPt;distance (cm);#",100,0,1);
     double avg_prt_distance=0;
+    TH1D* hNDepPt = new TH1D("hNDepPt","ratio NDep/NPt;ratio;#",100,0,100);
 
     size_t i_file=0;
     for (string filename : filelist) {
@@ -30,10 +31,15 @@ void PrtDep_Pt() {
                 int pdg = T.PrtPdg->at(i_prt);
                 if (pdg!=13 && pdg!=-13) continue;
 
+                size_t nppt = T.PrtNPt->at(i_prt);
+                size_t ndep = T.PrtNDep->at(i_prt);
+
+                hNDepPt->Fill((double) ndep/nppt);
+
                 double X0 = (*T.PrtX)[i_prt][0];
                 double Y0 = (*T.PrtY)[i_prt][0];
                 double Z0 = (*T.PrtZ)[i_prt][0];
-                for (size_t i_ppt=1; i_ppt < T.PrtNPt->at(i_prt); i_ppt++) {
+                for (size_t i_ppt=1; i_ppt < nppt; i_ppt++) {
                     double X = (*T.PrtX)[i_prt][i_ppt];
                     double Y = (*T.PrtY)[i_prt][i_ppt];
                     double Z = (*T.PrtZ)[i_prt][i_ppt];
@@ -43,7 +49,8 @@ void PrtDep_Pt() {
 
                     X0=X; Y0=Y; Z0=Z;
                 } //end particlepoint loop
-                if (T.PrtNPt->at(i_prt)>1) avg_prt_distance/=(T.PrtNPt->at(i_prt)-1);
+                if (nppt>1) avg_prt_distance/=(nppt-1);
+
 
                 // for (size_t i_dep=0; i_dep < T.PrtNDep->at(i_prt); i_dep++) {
 
@@ -56,8 +63,11 @@ void PrtDep_Pt() {
 
     cout << avg_prt_distance << endl;
     TCanvas* c1 = new TCanvas("c1","PrtDep_Pt");
-    c1->cd();
+    c1->Divide(2,1);
+    c1->cd(1);
     hPrtDist->Draw("hist");
+    c1->cd(2);
+    hNDepPt->Draw("hist");
 
     cout << "total time of execution: " << static_cast<double>(clock()-start_time)/CLOCKS_PER_SEC << " seconds" << endl;
 }
