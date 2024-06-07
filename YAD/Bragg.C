@@ -9,6 +9,8 @@ const vector<string> filelist = yad::readFileList(n_file,"list/jeremy.list");
 void Bragg(size_t i=0) {
     clock_t start_time=clock();
 
+    TH1D* hAvgdEdx = new TH1D ("hAvgdEdx","Average dEdx on last deposits;MeV/cm;#",30,0,30);
+
     size_t i_file=0;
     for (string filename : filelist) {
         
@@ -42,14 +44,16 @@ void Bragg(size_t i=0) {
                     double E = (*T.DepE)[i_prt][i_dep];
                     avg_dEdx += E/0.03/n_bragg_integration;
                 } //end deposit loop
-                cout << "\t\t\tavg_dEdx=" << avg_dEdx << endl;
+                hAvgdEdx->Fill(avg_dEdx);
+                // cout << "\t\t\tavg_dEdx=" << avg_dEdx << endl;
             } //end particle loop
         } //end event loop
     } //end file loop
     cout << endl;
 
-    // TCanvas* c1 = new TCanvas("c1","Bragg");
-    // c1->cd();
+    TCanvas* c1 = new TCanvas("c1","Bragg");
+    c1->cd();
+    hAvgdEdx->Draw("hist");
 
     cout << "total time of execution: " << static_cast<double>(clock()-start_time)/CLOCKS_PER_SEC << " seconds" << endl;
 }
