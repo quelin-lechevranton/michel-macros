@@ -40,7 +40,7 @@ void PrtDep_Pt() {
 
                     X0=X; Y0=Y; Z0=Z;
                 } //end particlepoint loop
-                avg_prt_distance/=(T.PrtNPt->at(i_prt)-1);
+                if (T.PrtNPt->at(i_prt)>1) avg_prt_distance/=(T.PrtNPt->at(i_prt)-1);
 
                 // for (size_t i_dep=0; i_dep < T.PrtNDep->at(i_prt); i_dep++) {
 
