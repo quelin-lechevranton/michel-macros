@@ -4,6 +4,7 @@
 #define FILLSPECTRUM(i) totalE=0;for (size_t i_dep=0; i_dep < n_el_dep ; i_dep+=1) {totalE+=(*T.DepE)[i_prt][i_dep];}hElE[i]->Fill(totalE);
 
 // analysis parameter
+vector<vector<double>> detlim={{-320, 350}, {-317,317}, {20,280}}; //cm
 double coincidence_radius_gros=1.; //cm
 size_t n_step_gros=10; //distance per step : 0.03 cm
 double coincidence_radius_fin=1.; //cm
@@ -112,7 +113,14 @@ void TrueMichel_v2() {
             for (size_t i_prt=0; i_prt < T.NPrt; i_prt++) {
                 if (T.PrtMomID->at(i_prt)!=-1) continue;
                 if (T.PrtPdg->at(i_prt)!=13 && T.PrtPdg->at(i_prt)!=-13) continue;
-                if (yad::isInside(T.DepX->at(i_prt),T.DepY->at(i_prt),T.DepZ->at(i_prt))) {
+                if (yad::isInside(
+                    T.DepX->at(i_prt),
+                    T.DepY->at(i_prt),
+                    T.DepZ->at(i_prt),
+                    detlim[0][0], detlim[0][1],
+                    detlim[1][0], detlim[1][1],
+                    detlim[2][0], detlim[2][1]
+                )) {
                     N_mu_inside++;
                 }
             }
