@@ -18,7 +18,7 @@ void PrtDep_Pt() {
 
         yad::Truth T(filename.c_str());
 
-        size_t n_evt = R.GetEntries();
+        size_t n_evt = T.GetEntries();
         for (size_t i_evt=0; i_evt < n_evt; i_evt++) {
 
             cout << "Event#" << i_evt+1 << "/" << n_evt << "\r" << flush;
