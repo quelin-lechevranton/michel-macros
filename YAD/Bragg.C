@@ -53,7 +53,7 @@ void Bragg(size_t i=0) {
 
     TCanvas* c1 = new TCanvas("c1","Bragg");
     c1->cd();
-    // gdEdx->Draw();
+    gdEdx->Draw();
 
     cout << "total time of execution: " << static_cast<double>(clock()-start_time)/CLOCKS_PER_SEC << " seconds" << endl;
 }
