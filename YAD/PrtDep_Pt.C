@@ -34,7 +34,7 @@ void PrtDep_Pt() {
                 if (pdg!=13 && pdg!=-13) continue;
 
                 size_t n_ppt = T.PrtNPt->at(i_prt);
-                size_t n_dep = T.Prtn_dep->at(i_prt);
+                size_t n_dep = T.PrtNDep->at(i_prt);
 
                 hn_depPt->Fill((double) n_dep/n_ppt);
 
