@@ -6,8 +6,8 @@
 
 vector<vector<double>> detlim={{-320, 350}, {-317,317}, {20,280}}; //cm
 
-const size_t n_bragg_integration=15;
-const size_t n_bragg_tail=2;
+const size_t n_bragg_integration=30;
+const size_t n_bragg_tail=0;
 
 const size_t n_file=30;
 const vector<string> filelist = yad::readFileList(n_file,"list/jeremy.list");
