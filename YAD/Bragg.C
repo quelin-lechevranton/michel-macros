@@ -42,7 +42,7 @@ void Bragg(size_t i=0) {
                     double E = (*T.DepE)[i_prt][i_dep];
                     avg_dEdx += E/0.03/n_bragg_integration;
                 } //end deposit loop
-                cout << endl << "avg_dEdx=" << avg_dEdx << endl;
+                cout << "\t\t\t\tavg_dEdx=" << avg_dEdx << endl;
             } //end particle loop
         } //end event loop
     } //end file loop
