@@ -92,5 +92,3 @@ void PlotBragg(size_t i_evt) {
 
     cout << "total time of execution: " << static_cast<double>(clock()-start_time)/CLOCKS_PER_SEC << " seconds" << endl;
 }
-
-}
