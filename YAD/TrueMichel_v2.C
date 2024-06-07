@@ -65,7 +65,7 @@ void TrueMichel_v2() {
     hElE[3] = new TH1D("hElE3","FromMu Electron Spectrum;Total Deposited Energy (MeV);#",35,0,70);
     hElE[4] = new TH1D("hElE4","NoFewDepMu Electron Spectrum;Total Deposited Energy (MeV);#",35,0,70);
     hElE[5] = new TH1D("hElE5","Inside Electron Spectrum;Total Deposited Energy (MeV);#",35,0,70);
-    THStack* hsElE("hsElE",";Total Deposited Energy (MeV);#");
+    THStack* hsElE= new THStack("hsElE",";Total Deposited Energy (MeV);#");
     for (size_t iElE=0; iElE < nElE; iElE++) {
         hElE[iElE]->SetLineWidth(2);
         // hElE[iElE]->SetLineColor(color.GetColor("#436188"));
