@@ -5,7 +5,7 @@ const size_t n_last_dep=30;
 const size_t n_file=1;
 const vector<string> filelist = yad::readFileList(n_file,"list/jeremy.list");
 
-void Bragg() {
+void Bragg(size_t i=0) {
     clock_t start_time=clock();
 
     TGraph* gdEdx = new TGraph();
@@ -19,7 +19,8 @@ void Bragg() {
         yad::Truth T(filename.c_str());
 
         size_t n_evt = T.GetEntries();
-        for (size_t i_evt=0; i_evt < n_evt; i_evt++) {
+        // for (size_t i_evt=0; i_evt < n_evt; i_evt++) {
+        size_t i_evt=i; {
 
             cout << "Event#" << i_evt+1 << "/" << n_evt << "\r" << flush;
 
@@ -35,16 +36,16 @@ void Bragg() {
                 if (!yad::isInside(T.DepX->at(i_prt),T.DepY->at(i_prt),T.DepZ->at(i_prt))) continue;
                 if (n_dep<n_last_dep) continue;
 
-                cout << i_evt << endl;
+                // cout << i_evt << endl;
 
                 // for (size_t i_ppt=0; i_ppt < T.PrtNPt->at(i_prt); i_ppt++) {
 
                 // } //end particlepoint loop
 
-                // for (size_t i_dep=n_dep-n_last_dep; i_dep < n_dep; i_dep++) {
-                //     // gdEdx->AddPoint(n_dep-i_dep,(*T.DepE)[i_prt][i_dep]/0.03);
-                //     gdEdx->AddPoint(i_dep,(*T.DepE)[i_prt][i_dep]);
-                // } //end deposit loop
+                for (size_t i_dep=n_dep-n_last_dep; i_dep < n_dep; i_dep++) {
+                    // gdEdx->AddPoint(n_dep-i_dep,(*T.DepE)[i_prt][i_dep]/0.03);
+                    gdEdx->AddPoint(i_dep,(*T.DepE)[i_prt][i_dep]);
+                } //end deposit loop
             } //end particle loop
         } //end event loop
     } //end file loop
