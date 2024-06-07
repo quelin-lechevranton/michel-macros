@@ -61,24 +61,29 @@ void TrueMichel_v2() {
     vector<TH1D*> hElE(nElE);
     hElE[0] = new TH1D("hElE0","Michel Spectrum;Total Deposited Energy (MeV);#",35,0,70);
     hElE[1] = new TH1D("hElE1","Electron Spectrum;Total Deposited Energy (MeV);#",35,0,70);
-    hElE[2] = new TH1D("hElE2","NoLowDep Electron Spectrum;Total Deposited Energy (MeV);#",35,0,70);
+    hElE[2] = new TH1D("hElE2","NoFewDep Electron Spectrum;Total Deposited Energy (MeV);#",35,0,70);
     hElE[3] = new TH1D("hElE3","FromMu Electron Spectrum;Total Deposited Energy (MeV);#",35,0,70);
-    hElE[4] = new TH1D("hElE4","NoLowDepMu Electron Spectrum;Total Deposited Energy (MeV);#",35,0,70);
+    hElE[4] = new TH1D("hElE4","NoFewDepMu Electron Spectrum;Total Deposited Energy (MeV);#",35,0,70);
     hElE[5] = new TH1D("hElE5","Inside Electron Spectrum;Total Deposited Energy (MeV);#",35,0,70);
+    THStack* hsElE("hsElE",";Total Deposited Energy (MeV);#");
     for (size_t iElE=0; iElE < nElE; iElE++) {
         hElE[iElE]->SetLineWidth(2);
-        hElE[iElE]->SetLineColor(color.GetColor("#436188"));
+        // hElE[iElE]->SetLineColor(color.GetColor("#436188"));
+        hElE[iElE]->SetLineColor(color.GetColor(iElE+2));
+        hsElE->Add(hElE[iElE]);
     }
+
+
     
 
     size_t N_evt=0;
     size_t N_mu_inside=0;
     size_t  N_prt=0,
             N_not_el=0,
-            N_low_el_NDep=0,
+            N_few_el_NDep=0,
             // N_orph=0,
             N_not_from_mu=0,
-            N_low_mu_NDep=0,
+            N_few_mu_NDep=0,
             N_outside=0,
             N_no_bragg=0,
             N_mich=0;
@@ -120,7 +125,7 @@ void TrueMichel_v2() {
                 if (T.PrtPdg->at(i_prt)!=11 && T.PrtPdg->at(i_prt)!=-11) {N_not_el++; continue;} //electrons only
                 FILLSPECTRUM(1)
 
-                if (n_el_dep < n_least_deposits) {N_low_el_NDep++; continue;} //enough electron deposits
+                if (n_el_dep < n_least_deposits) {N_few_el_NDep++; continue;} //enough electron deposits
                 FILLSPECTRUM(2)
 
                 int i_mom = T.PrtMomID->at(i_prt);
@@ -129,7 +134,7 @@ void TrueMichel_v2() {
                 FILLSPECTRUM(3)
 
                 size_t n_mu_dep = T.PrtNDep->at(i_mom);
-                if (n_mu_dep < n_last_deposits) {N_low_mu_NDep++; continue;} //enough deposits to check Bragg peak
+                if (n_mu_dep < n_last_deposits) {N_few_mu_NDep++; continue;} //enough deposits to check Bragg peak
                 FILLSPECTRUM(4)
 
 
@@ -312,11 +317,13 @@ void TrueMichel_v2() {
     // c2->cd(2);
     // hdEdx->Draw("colZ");
     // c2->cd(3);
-    c2->Divide(3,2);
-    for (size_t i=0; i<6; i++) {
-        c2->cd(i+1);
-        hElE[i]->Draw("hist");
-    }
+    // c2->Divide(3,2);
+    // for (size_t i=0; i<6; i++) {
+    //     c2->cd(i+1);
+    //     hElE[i]->Draw("hist");
+    // }
+    c2->cd();
+    hsElE->Draw();
 
     TCanvas* c3 = new TCanvas("c3","TrueMichel_v2");
     c3->Divide(2,1);
@@ -341,12 +348,12 @@ void TrueMichel_v2() {
     rem_prt-=N_not_from_mu;
     cout << "\t\tremaining particles: " << rem_prt << endl;
 
-    cout << "\tN_low_el_NDep: " << N_low_el_NDep << " - " << 100.*N_low_el_NDep/rem_prt << "%" << endl;
-    rem_prt-=N_low_el_NDep;
+    cout << "\tN_few_el_NDep: " << N_few_el_NDep << " - " << 100.*N_few_el_NDep/rem_prt << "%" << endl;
+    rem_prt-=N_few_el_NDep;
     cout << "\t\tremaining particles: " << rem_prt << endl;
 
-    cout << "\tN_low_mu_NDep: " << N_low_mu_NDep << " - " << 100.*N_low_mu_NDep/rem_prt << "%" << endl;
-    rem_prt-=N_low_mu_NDep;
+    cout << "\tN_few_mu_NDep: " << N_few_mu_NDep << " - " << 100.*N_few_mu_NDep/rem_prt << "%" << endl;
+    rem_prt-=N_few_mu_NDep;
     cout << "\t\tremaining particles: " << rem_prt << endl;
 
     cout << "\tN_outside: " << N_outside << " - " << 100.*N_outside/rem_prt << "%" << endl;
