@@ -3,7 +3,7 @@
 const size_t n_bragg_integration=15;
 const size_t n_bragg_tail=2;
 
-const size_t n_file=1;
+const size_t n_file=30;
 const vector<string> filelist = yad::readFileList(n_file,"list/jeremy.list");
 
 void Bragg(size_t i=0) {
