@@ -37,9 +37,9 @@ void TrueMichel_v3() {
                     T.DepX->at(i_prt),
                     T.DepY->at(i_prt),
                     T.DepZ->at(i_prt),
-                    detlim[0], detlim[1],
-                    detlim[2], detlim[3],
-                    detlim[4], detlim[5]
+                    detlim[0][0], detlim[0][1],
+                    detlim[1][0], detlim[1][1],
+                    detlim[2][0], detlim[2][1]
                 )) {
                     N_mu_inside++;
                 }
