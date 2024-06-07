@@ -3,7 +3,7 @@
 const size_t n_file=1;
 const vector<string> filelist = yad::readFileList(n_file,"list/jeremy.list");
 
-void Bragg() {
+void Bragg(size_t i) {
     clock_t start_time=clock();
 
     TGraph* gdEdx = new TGraph();
@@ -18,7 +18,7 @@ void Bragg() {
 
         size_t n_evt = T.GetEntries();
         // for (size_t i_evt=0; i_evt < n_evt; i_evt++) {
-        size_t i_evt=0; {
+        size_t i_evt=i; {
 
             cout << "Event#" << i_evt+1 << "/" << n_evt << "\r" << flush;
 
