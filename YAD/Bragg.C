@@ -1,6 +1,7 @@
 #include "YAD_tools.h"
 
-const size_t n_last_dep=30;
+const size_t n_bragg_integration=30;
+const size_t n_bragg_tail=2;
 
 const size_t n_file=1;
 const vector<string> filelist = yad::readFileList(n_file,"list/jeremy.list");
@@ -34,7 +35,7 @@ void Bragg(size_t i=0) {
 
                 if (pdg!=13 && pdg!=-13) continue;
                 if (!yad::isInside(T.DepX->at(i_prt),T.DepY->at(i_prt),T.DepZ->at(i_prt))) continue;
-                if (n_dep<n_last_dep) continue;
+                if (n_dep<n_bragg_integration+n_bragg_tail) continue;
 
                 // cout << i_evt << endl;
 
@@ -42,7 +43,7 @@ void Bragg(size_t i=0) {
 
                 // } //end particlepoint loop
 
-                for (size_t i_dep=n_dep-n_last_dep; i_dep < n_dep; i_dep++) {
+                for (size_t i_dep=n_dep-n_bragg_integration-n_bragg_tail; i_dep < n_dep-n_bragg_tail; i_dep++) {
                     // gdEdx->AddPoint(n_dep-i_dep,(*T.DepE)[i_prt][i_dep]/0.03);
                     gdEdx->AddPoint(i_dep,(*T.DepE)[i_prt][i_dep]);
                 } //end deposit loop
