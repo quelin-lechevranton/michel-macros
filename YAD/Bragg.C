@@ -1,6 +1,6 @@
 #include "YAD_tools.h"
 
-const size_t n_bragg_integration=30;
+const size_t n_bragg_integration=15;
 const size_t n_bragg_tail=2;
 
 const size_t n_file=1;
@@ -20,8 +20,8 @@ void Bragg(size_t i=0) {
         yad::Truth T(filename.c_str());
 
         size_t n_evt = T.GetEntries();
-        // for (size_t i_evt=0; i_evt < n_evt; i_evt++) {
-        size_t i_evt=i; {
+        for (size_t i_evt=0; i_evt < n_evt; i_evt++) {
+        // size_t i_evt=i; {
 
             cout << "Event#" << i_evt+1 << "/" << n_evt << "\r" << flush;
 
@@ -43,18 +43,22 @@ void Bragg(size_t i=0) {
 
                 // } //end particlepoint loop
 
+                double avg_dEdx;
                 for (size_t i_dep=n_dep-n_bragg_integration-n_bragg_tail; i_dep < n_dep-n_bragg_tail; i_dep++) {
                     // gdEdx->AddPoint(n_dep-i_dep,(*T.DepE)[i_prt][i_dep]/0.03);
-                    gdEdx->AddPoint(i_dep,(*T.DepE)[i_prt][i_dep]);
+                    double E = (*T.DepE)[i_prt][i_dep];
+                    avg_dEdx += E/0.03/n_bragg_integration;
+                    gdEdx->AddPoint(i_dep,E);
                 } //end deposit loop
+                cout << "avg_dEdx=" << avg_dEdx << endl;
             } //end particle loop
         } //end event loop
     } //end file loop
     cout << endl;
 
-    TCanvas* c1 = new TCanvas("c1","Bragg");
-    c1->cd();
-    gdEdx->Draw();
+    // TCanvas* c1 = new TCanvas("c1","Bragg");
+    // c1->cd();
+    // gdEdx->Draw();
 
     cout << "total time of execution: " << static_cast<double>(clock()-start_time)/CLOCKS_PER_SEC << " seconds" << endl;
 }
