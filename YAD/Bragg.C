@@ -36,7 +36,7 @@ void Bragg(size_t i=0) {
                 size_t n_dep = T.PrtNDep->at(i_prt);
 
                 if (pdg!=13 && pdg!=-13) continue;
-                if (!yad::isInside(T.DepX->at(i_prt),T.DepY->at(i_prt),T.DepZ->at(i_prt),-330,330,-330,330,20,180)) continue;
+                if (!yad::isInside(T.DepX->at(i_prt),T.DepY->at(i_prt),T.DepZ->at(i_prt),-330,350,330,20,180)) continue;
                 if (n_dep<n_bragg_integration+n_bragg_tail) continue;
 
                 // for (size_t i_ppt=0; i_ppt < T.PrtNPt->at(i_prt); i_ppt++) {
