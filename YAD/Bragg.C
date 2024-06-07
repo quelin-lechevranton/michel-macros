@@ -37,7 +37,7 @@ void Bragg() {
                 // } //end particlepoint loop
 
                 for (size_t i_dep=0; i_dep < n_dep; i_dep++) {
-                    gdEdx->AddPoint(n_dep-i_dep,(*T.DepE)[i_prt][i_dep]/0.03);
+                    gdEdx->AddPoint(i_dep,(*T.DepE)[i_prt][i_dep]);
                 } //end deposit loop
             } //end particle loop
         } //end event loop
