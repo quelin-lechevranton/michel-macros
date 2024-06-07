@@ -50,7 +50,7 @@ void Bragg(size_t i=0) {
                     avg_dEdx += E/0.03/n_bragg_integration;
                     gdEdx->AddPoint(i_dep,E);
                 } //end deposit loop
-                cout << "avg_dEdx=" << avg_dEdx << endl;
+                cout << endl << "avg_dEdx=" << avg_dEdx << endl;
             } //end particle loop
         } //end event loop
     } //end file loop
