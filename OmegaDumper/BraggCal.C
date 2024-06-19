@@ -61,6 +61,7 @@ void BraggCal(size_t i=0) {
         bBragg.n, bBragg.min, bBragg.max
     );
 
+    size_t c=0;
 
     size_t n_bragg_candidate=0;
     size_t n_bragg=0;
@@ -198,6 +199,7 @@ void BraggCal(size_t i=0) {
                     if (v) cout << "\t\t\e[92mdouble bragg\e[0m" << endl;
                 } else if (is_bragg1 == upside_down) {
                     if (v) cout << "\t\t\e[92mreverse bragg\e[0m" << endl;
+                    c++;
                 }
 
                 for (size_t i_cal=0; i_cal < R.Cal.NPt; i_cal++) {
@@ -217,6 +219,8 @@ void BraggCal(size_t i=0) {
         } //end event loop
     } //end file loop
     cout << endl;
+
+    cout << "nb reverse bragg" << c << endl;
 
     TCanvas* c1 = new TCanvas("c1","BraggCalo");
     c1->Divide(2,2);
