@@ -44,10 +44,10 @@ public:
                             *PrtX=nullptr, //[# particle][# point]
                             *PrtY=nullptr,
                             *PrtZ=nullptr,
-                            *PrtT=nullptr,
-                            *PrtPx=nullptr,
-                            *PrtPy=nullptr,
-                            *PrtPz=nullptr,
+                            // *PrtT=nullptr,
+                            // *PrtPx=nullptr,
+                            // *PrtPy=nullptr,
+                            // *PrtPz=nullptr,
                             *PrtP=nullptr,
                             *PrtE=nullptr;
 
@@ -57,7 +57,7 @@ public:
                             *DepX=nullptr,
                             *DepY=nullptr,
                             *DepZ=nullptr,
-                            *DepT=nullptr,
+                            // *DepT=nullptr,
                             *DepE=nullptr;
 
     Truth(const char* filename) {
@@ -82,10 +82,10 @@ public:
         tree->SetBranchAddress("fPrtX",     &PrtX); 
         tree->SetBranchAddress("fPrtY",     &PrtY); 
         tree->SetBranchAddress("fPrtZ",     &PrtZ); 
-        tree->SetBranchAddress("fPrtT",     &PrtT); 
-        tree->SetBranchAddress("fPrtPx",    &PrtPx); 
-        tree->SetBranchAddress("fPrtPy",    &PrtPy); 
-        tree->SetBranchAddress("fPrtPz",    &PrtPz); 
+        // tree->SetBranchAddress("fPrtT",     &PrtT); 
+        // tree->SetBranchAddress("fPrtPx",    &PrtPx); 
+        // tree->SetBranchAddress("fPrtPy",    &PrtPy); 
+        // tree->SetBranchAddress("fPrtPz",    &PrtPz); 
         tree->SetBranchAddress("fPrtP",     &PrtP); 
         tree->SetBranchAddress("fPrtE",     &PrtE); 
 
@@ -95,7 +95,7 @@ public:
         tree->SetBranchAddress("fDepX",     &DepX); 
         tree->SetBranchAddress("fDepY",     &DepY); 
         tree->SetBranchAddress("fDepZ",     &DepZ); 
-        tree->SetBranchAddress("fDepT",     &DepT); 
+        // tree->SetBranchAddress("fDepT",     &DepT); 
         tree->SetBranchAddress("fDepE",     &DepE);
     }
     ~Truth() { file-> Close(); }
