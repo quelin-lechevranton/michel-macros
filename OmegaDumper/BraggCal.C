@@ -190,7 +190,7 @@ void BraggCal(size_t i=0) {
                 if (v) cout << "\tBragg?: " << bragg_int << " (" << n_bragg_int << "/" << n_cal_bragg << " rr:" << rrmin << "-" << rrmax << ")";
 
                 bragg_min = bragg_min_ratio_per_int*avg_dEdx*n_bragg_int;
-                bool is_bragg2 = n_bragg > 0 && bragg_int >= bragg_min;
+                bool is_bragg2 = n_bragg_int > 0 && bragg_int >= bragg_min;
                 if (!is_bragg2) {if (v) cout << " \e[91mno\e[0m" << endl;}
                 else {if (v) cout << " \e[94myes\e[0m" << endl;}
 
