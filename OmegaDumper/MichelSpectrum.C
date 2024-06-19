@@ -1,7 +1,8 @@
-#include "OmegaDumper_tools.h"
+//#include "OmegaDumper_tools.h"
+#include "OmegaLight_tools.h"
 
 const size_t n_file=3;
-const vector<string> filelist = omega::ReadFileList(n_file,"list/ijclab.list");
+const vector<string> filelist = omega::ReadFileList(n_file,"list/light.list");
 
 const bool v = true;
 const struct {
@@ -55,7 +56,7 @@ void MichelSpectrum(size_t i=0) {
 
     TH1D* hE = new TH1D("hE",";SumADC;#",bE.n,bE.min,bE.max);
 
-    size_t nc=5;
+    size_t nc=4;
     vector<size_t> c;
     while (nc--) c.push_back(0);
 
@@ -171,6 +172,7 @@ void MichelSpectrum(size_t i=0) {
                     }
                 } //end michel spectrum pfparticle loop
                 if (E>1) hE->Fill(E);
+		else c[3]++;
             } //end muon selection pfparticle loop
 
         } //end event loop
