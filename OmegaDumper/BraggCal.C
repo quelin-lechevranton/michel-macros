@@ -167,7 +167,7 @@ void BraggCal(size_t i=0) {
                 double rrmax = *R.Cal.ResRange[n_cal_bragg-1];
                 if (v) cout << "\tBragg?: " << bragg_int << " (" << n_bragg_int << "/" << n_cal_bragg << " rr:" << rrmin << "-" << rrmax << ")";
 
-                double bragg_min = bragg_min_per_int*n_bragg_int
+                double bragg_min = bragg_min_per_int*n_bragg_int;
                 bool is_bragg1 = bragg_int >= bragg_min;
                 if (!is_bragg1) {if (v) cout << " \e[91mno\e[0m" << endl;}
                 else {if (v) cout << " \e[94myes\e[0m" << endl;}
@@ -189,7 +189,7 @@ void BraggCal(size_t i=0) {
                 rrmax = *R.Cal.ResRange[R.Cal.NPt-1];
                 if (v) cout << "\tBragg?: " << bragg_int << " (" << n_bragg_int << "/" << n_cal_bragg << " rr:" << rrmin << "-" << rrmax << ")";
 
-                bragg_min = bragg_min_per_int*n_bragg_int
+                bragg_min = bragg_min_per_int*n_bragg_int;
                 bool is_bragg2 = bragg_int >= bragg_min;
                 if (!is_bragg2) {if (v) cout << " \e[91mno\e[0m" << endl;}
                 else {if (v) cout << " \e[94myes\e[0m" << endl;}
