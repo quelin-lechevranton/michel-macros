@@ -329,7 +329,7 @@ ana::OmegaDumper::OmegaDumper(fhicl::ParameterSet const & fcl) :
         fReco->Branch("fSptHitKey",     &fSptHitKey);
 
         //Hit
-        fReco->Branch("fNHit",          &fHitKey);
+        fReco->Branch("fNHit",          &fNHit);
         fReco->Branch("fHitKey",        &fHitKey);
         fReco->Branch("fHitNTrk",       &fHitNTrk);
         fReco->Branch("fHitNSpt",       &fHitNSpt);

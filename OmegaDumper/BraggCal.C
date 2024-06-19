@@ -31,7 +31,7 @@ const double bragg_length = 15; //cm
 const double bragg_min = 20; //MeV/cm
 
 const size_t n_file=3;
-const vector<string> filelist = omega::ReadFileList(n_file,"list/ijclab.list");
+const vector<string> filelist = omega::ReadFileList(n_file,"list/jeremy.list");
 
 void BraggCal(size_t i=0) {
     clock_t start_time=clock();
