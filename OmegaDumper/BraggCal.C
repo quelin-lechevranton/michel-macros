@@ -177,7 +177,7 @@ void BraggCal(size_t i=0) {
                     bragg_head_int += dEdx;
                     n_bragg_head_int++;
                 }
-                if (v) cout << "\tBraggHead: " << bragg_head_int << " (" << n_bragg_head_int << "/" << n_cal_head;
+                if (v) cout << "\tBraggHead: " << bragg_head_int << " (" << n_bragg_head_int << "/" << n_cal_head << ")" << endl;
 
                 double normalized_bragg_head = bragg_head_int/avg_body_dEdx;
                 if (upright) hBragg->Fill(normalized_bragg_head);
@@ -201,7 +201,7 @@ void BraggCal(size_t i=0) {
                     bragg_tail_int += dEdx;
                     n_bragg_tail_int++;
                 }
-                if (v) cout << "\tBraggTail: " << bragg_tail_int << " (" << n_bragg_tail_int << "/" << n_cal_tail;
+                if (v) cout << "\tBraggTail: " << bragg_tail_int << " (" << n_bragg_tail_int << "/" << n_cal_tail << ")" << endl;
 
                 double normalized_bragg_tail = bragg_tail_int/avg_body_dEdx;
                 if (!upright) hBragg->Fill(normalized_bragg_tail);
