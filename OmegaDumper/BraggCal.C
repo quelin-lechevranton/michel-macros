@@ -24,7 +24,7 @@ const double length_min = 20; //cm
 const double n_cal_min = 1; //????
 
 const double dEdx_MIP = 2; //MeV/cm
-const double dEdx_min_ratio = 1.5;
+const double dEdx_min_ratio = 1;
 // const double dEdx_min = dEdx_MIP*dEdx_min_ratio;
 
 const double bragg_length = 15; //cm
