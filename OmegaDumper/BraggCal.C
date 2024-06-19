@@ -117,35 +117,34 @@ void BraggCal(size_t i=0) {
                 }
 
                 bool upright = *R.Trk.X[0] > *R.Trk.X.back();
-                if (upright) {if (v) ccout << "\tuprigth" << endl;}
+                if (upright) {if (v) cout << "\tuprigth" << endl;}
                 else {if (v) cout << "\tupside down" << endl;}
 
                 size_t n_cal_head, n_cal_tail;
 
                 size_t n_cal_bragg=0;
-                // while (
-                //     *R.Cal.ResRange[n_cal_bragg++] < bragg_length
-                //     && n_cal_bragg < R.Cal.NPt
-                // );
-                // if (upright) n_cal_tail = n_cal_bragg;
-                // else n_cal_head = n_cal_bragg;
+                while (
+                    *R.Cal.ResRange[n_cal_bragg++] < bragg_length
+                    && n_cal_bragg < R.Cal.NPt
+                );
+                if (upright) n_cal_tail = n_cal_bragg;
+                else n_cal_head = n_cal_bragg;
 
-                // n_cal_bragg=0;
-                // while (
-                //     *R.Cal.ResRange[R.Cal.NPt-1-n_cal_bragg++] > R.Cal.Range - bragg_length 
-                //     && n_cal_bragg < R.Cal.NPt
-                // );
-                // if (upright) n_cal_head = n_cal_bragg;
-                // else n_cal_tail = n_cal_bragg;
+                n_cal_bragg=0;
+                while (
+                    *R.Cal.ResRange[R.Cal.NPt-1-n_cal_bragg++] > R.Cal.Range - bragg_length 
+                    && n_cal_bragg < R.Cal.NPt
+                );
+                if (upright) n_cal_head = n_cal_bragg;
+                else n_cal_tail = n_cal_bragg;
 
-                // size_t n_cal_body = n_cal - n_cal_head - n_cal_tail;
-                // if (v) cout << "\tn cal: " << R.Cal.NPt;
-                // if (n_cal_body < n_cal_body_min) {
-                //     if (v) cout << " \e[91mnot enough cal pt\e[0m " << endl;
-                //     continue;
-                // }
-                // if (v) cout << " \u21b4" << endl;
-                if ( R.Cal.NPt < 1 ) continue;
+                size_t n_cal_body = n_cal - n_cal_head - n_cal_tail;
+                if (v) cout << "\tn cal: " << R.Cal.NPt;
+                if (n_cal_body < n_cal_body_min) {
+                    if (v) cout << " \e[91mnot enough cal pt\e[0m " << endl;
+                    continue;
+                }
+                if (v) cout << " \u21b4" << endl;
 
                 n_bragg_candidate++;
 
@@ -171,6 +170,7 @@ void BraggCal(size_t i=0) {
 
                 double bragg_int=0;
                 size_t n_bragg_int=0;
+                n_cal_bragg=0;
                 while (
                     *R.Cal.ResRange[R.Cal.NPt-1-n_cal_bragg++] > R.Cal.Range - bragg_length 
                     && n_cal_bragg < R.Cal.NPt
