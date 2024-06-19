@@ -33,7 +33,7 @@ const double bragg_length = 15; //cm
 const double bragg_min = 20; //MeV/cm
 
 const double length_el_max = 20; //cm
-const double end_radius = 10; //cm
+const double end_radius = 30; //cm
 
 void MichelSpectrum(size_t i=0) {
     clock_t start_time=clock();
