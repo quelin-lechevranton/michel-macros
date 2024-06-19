@@ -146,31 +146,32 @@ void MichelSpectrum(size_t i=0) {
                 }
                 gEnd->AddPoint(*End.Y,*End.Z,*End.X);
                 
-                double E=0;
-                for (size_t j_pfp=0; j_pfp < R.Pfp.N; j_pfp++) {
+                R.GetEvtHit(i_evt);
 
-                    if (R.Pfp.isTrk[j_pfp]) {
-                        R.GetPfpTrk(j_pfp);
+                double E=0;
+                for (size_t i_hit=0; i_hit < R.Hit.N; i_hit++) {
+
+                    if (*R.Hit.Plane[i_hit] != 2) continue;
+                    
+                    if (R.Hit.NTrk[i_hit] !=0) {
+                        R.GetHitTrk(i_hit);
                         if (R.Trk.Length > length_el_max) continue;
                     }
-                    R.GetPfpSpt(j_pfp);
 
-                    for (size_t j_spt=0; j_spt < R.Spt.N; j_spt++) {
-                        if (omega::Distance(
-                            End.X,End.Y,End.Z,
-                            R.Spt.X[j_spt],R.Spt.Y[j_spt],R.Spt.Z[j_spt]
-                        ) > end_radius) continue;
+                    R.GetHitSpt(i_hit);
+                    if (R.Spt.N !=1 ) continue;
+                    
+                    if (omega::Distance(
+                        End.X,End.Y,End.Z,
+                        R.Spt.X[0],R.Spt.Y[0],R.Spt.Z[0]
+                    ) > end_radius) continue;
 
-                        gEl->AddPoint(*R.Spt.Y[j_spt],*R.Spt.Z[j_spt],*R.Spt.X[j_spt]);
-                        R.GetSptHit(j_spt);
+                    gEl->AddPoint(*R.Spt.Y[0],*R.Spt.Z[0],*R.Spt.X[0]);
 
-                        for (size_t j_hit=0; j_hit < R.Hit.N; j_hit++) {
-                            if (*R.Hit.Plane[j_hit] != 2) continue;
-                            E += *R.Hit.SumADC[j_hit];
-                        }
+                    E += *R.Hit.SumADC[i_hit];
                     }
-                } //end michel spectrum pfparticle loop
-                hE->Fill(E);
+                } //end michel spectrum loop
+                if (E>1) hE->Fill(E);
             } //end muon selection pfparticle loop
 
         } //end event loop
