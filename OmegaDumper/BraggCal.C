@@ -27,11 +27,11 @@ const double length_mu_min = 20; //cm
 const double n_cal_min = 1; //????
 
 const double dEdx_MIP = 2; //MeV/cm
-const double dEdx_min_ratio = 1;
+const double dEdx_min_ratio = 1.5;
 // const double dEdx_min = dEdx_MIP*dEdx_min_ratio;
 
 const double bragg_length = 15; //cm
-const double bragg_min_ratio_per_int = 1.5; //MeV/cm
+const double bragg_min_ratio_per_int = 3; //MeV/cm
 
 
 void BraggCal(size_t i=0) {
