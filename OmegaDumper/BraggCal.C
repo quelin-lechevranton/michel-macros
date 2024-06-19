@@ -179,9 +179,9 @@ void BraggCal(size_t i=0) {
                 }
                 if (v) cout << "\tBraggHead: " << bragg_head_int << " (" << n_bragg_head_int << "/" << n_cal_head;
 
-                double normalized_bragg_head = bragg_head_int/avg_body_dEdx
+                double normalized_bragg_head = bragg_head_int/avg_body_dEdx;
                 if (upright) hBragg->Fill(normalized_bragg_head);
-                else hReverseBragg->Fill(normalized_bragg_head)
+                else hReverseBragg->Fill(normalized_bragg_head);
 
                 // double bragg_min = bragg_min_ratio_per_int*avg_body_dEdx*n_bragg_int;
                 // bool is_bragg1 = n_bragg_int > 0 && bragg_int >= bragg_min;
@@ -203,9 +203,9 @@ void BraggCal(size_t i=0) {
                 }
                 if (v) cout << "\tBraggTail: " << bragg_tail_int << " (" << n_bragg_tail_int << "/" << n_cal_tail;
 
-                double normalized_bragg_tail = bragg_tail_int/avg_body_dEdx
+                double normalized_bragg_tail = bragg_tail_int/avg_body_dEdx;
                 if (!upright) hBragg->Fill(normalized_bragg_tail);
-                else hReverseBragg->Fill(normalized_bragg_tail)
+                else hReverseBragg->Fill(normalized_bragg_tail);
 
                 // bragg_min = bragg_min_ratio_per_int*avg_body_dEdx*n_bragg_int;
                 // bool is_bragg2 = n_bragg_int > 0 && bragg_int >= bragg_min;
