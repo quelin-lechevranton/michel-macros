@@ -196,7 +196,7 @@ void BraggCal(size_t i=0) {
                 if (!is_bragg1 && !is_bragg2) continue;
                 if (is_bragg1 && is_bragg2) {
                     if (v) cout << "\t\t\e[92mdouble bragg\e[0m" << endl;
-                } else (is_bragg1 == upside_down) {
+                } else if (is_bragg1 == upside_down) {
                     if (v) cout << "\t\t\e[92mreverse bragg\e[0m" << endl;
                 }
 
