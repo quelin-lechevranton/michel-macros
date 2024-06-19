@@ -166,7 +166,7 @@ void BraggCal(size_t i=0) {
                 avg_body_dEdx /= n_cal_body;
                 const double dEdx_min = avg_body_dEdx*dEdx_min_ratio;
 
-                if (v) cout << "\tavg dEdx: " << avg_body_dEdx << endl;
+                if (v) cout << "\tavg body dEdx: " << avg_body_dEdx << " (" << n_cal_body << ")" << endl;
 
                 double bragg_head_int=0;
                 size_t n_bragg_head_int=0;
