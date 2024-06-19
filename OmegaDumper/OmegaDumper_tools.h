@@ -138,10 +138,10 @@ private:
         double Length;
         vector<double*> X,
                         Y,
-                        Z,
-                        DirX,
-                        DirY,
-                        DirZ;
+                        Z;
+                        // DirX,
+                        // DirY,
+                        // DirZ;
 
         void reset() {
             N=0;
@@ -151,17 +151,17 @@ private:
             X.clear();
             Y.clear();
             Z.clear();
-            DirX.clear();
-            DirY.clear();
-            DirZ.clear();
+            // DirX.clear();
+            // DirY.clear();
+            // DirZ.clear();
         }
     };
     class Calorimetry {
     public:
         size_t Plane,
                NPt;
-        float Range,
-              KineticE;
+        float Range;
+            //   KineticE;
         vector<double*> dEdx,
                         dQdx,
                         ResRange;
@@ -170,7 +170,7 @@ private:
             Plane=0;
             NPt=0;
             Range=0;
-            KineticE=0;
+            // KineticE=0;
             dEdx.clear();
             dQdx.clear();
             ResRange.clear();
@@ -261,16 +261,16 @@ private:
     vector<vector<double>>  *TrkPtX=nullptr, //[# track][# point]
                             *TrkPtY=nullptr,
                             *TrkPtZ=nullptr,
-                            *TrkDirX=nullptr,
-                            *TrkDirY=nullptr,
-                            *TrkDirZ=nullptr,
+                            // *TrkDirX=nullptr,
+                            // *TrkDirY=nullptr,
+                            // *TrkDirZ=nullptr,
                             *TrkHitKey=nullptr;
 
     //Calorimetry
     vector<size_t>  *TrkCalPlane=nullptr, //[# track]
                     *TrkCalNPt=nullptr;
-    vector<float>   *TrkCalRange=nullptr,
-                    *TrkCalKineticE=nullptr;
+    vector<float>   *TrkCalRange=nullptr;
+                    // *TrkCalKineticE=nullptr;
     vector<vector<double>>  *TrkCaldEdx=nullptr, //[# track][# calo point]
                             *TrkCaldQdx=nullptr,
                             *TrkCalResRange=nullptr;
@@ -348,15 +348,15 @@ public:
         tree->SetBranchAddress("fTrkPtX",       &TrkPtX);
         tree->SetBranchAddress("fTrkPtY",       &TrkPtY);
         tree->SetBranchAddress("fTrkPtZ",       &TrkPtZ);
-        tree->SetBranchAddress("fTrkDirX",      &TrkDirX);
-        tree->SetBranchAddress("fTrkDirY",      &TrkDirY);
-        tree->SetBranchAddress("fTrkDirZ",      &TrkDirZ);
+        // tree->SetBranchAddress("fTrkDirX",      &TrkDirX);
+        // tree->SetBranchAddress("fTrkDirY",      &TrkDirY);
+        // tree->SetBranchAddress("fTrkDirZ",      &TrkDirZ);
         tree->SetBranchAddress("fTrkHitKey",    &TrkHitKey);
 
         //Calorimetry
         tree->SetBranchAddress("fTrkCalPlane",   &TrkCalPlane);
         tree->SetBranchAddress("fTrkCalRange",   &TrkCalRange);
-        tree->SetBranchAddress("fTrkCalKineticE",&TrkCalKineticE);
+        // tree->SetBranchAddress("fTrkCalKineticE",&TrkCalKineticE);
         tree->SetBranchAddress("fTrkCalNPt",     &TrkCalNPt);
         tree->SetBranchAddress("fTrkCaldEdx",    &TrkCaldEdx);
         tree->SetBranchAddress("fTrkCaldQdx",    &TrkCaldQdx);
@@ -438,15 +438,15 @@ public:
             Trk.X.push_back(&(*TrkPtX)[i_trk][i_tpt]);
             Trk.Y.push_back(&(*TrkPtY)[i_trk][i_tpt]);
             Trk.Z.push_back(&(*TrkPtZ)[i_trk][i_tpt]);
-            Trk.DirX.push_back(&(*TrkDirX)[i_trk][i_tpt]);
-            Trk.DirY.push_back(&(*TrkDirY)[i_trk][i_tpt]);
-            Trk.DirZ.push_back(&(*TrkDirZ)[i_trk][i_tpt]);
+            // Trk.DirX.push_back(&(*TrkDirX)[i_trk][i_tpt]);
+            // Trk.DirY.push_back(&(*TrkDirY)[i_trk][i_tpt]);
+            // Trk.DirZ.push_back(&(*TrkDirZ)[i_trk][i_tpt]);
         }
         Cal.reset();
         Cal.Plane = TrkCalPlane->at(i_trk);
         Cal.NPt = TrkCalNPt->at(i_trk);
         Cal.Range = TrkCalRange->at(i_trk);
-        Cal.KineticE = TrkCalKineticE->at(i_trk);
+        // Cal.KineticE = TrkCalKineticE->at(i_trk);
         for (size_t i_cal=0; i_cal < TrkCalNPt->at(i_trk); i_cal++) {
             Cal.dEdx.push_back(&(*TrkCaldEdx)[i_trk][i_cal]);
             Cal.dQdx.push_back(&(*TrkCaldQdx)[i_trk][i_cal]);
@@ -539,15 +539,15 @@ public:
             Trk.X.push_back(&(*TrkPtX)[i_trk][i_tpt]);
             Trk.Y.push_back(&(*TrkPtY)[i_trk][i_tpt]);
             Trk.Z.push_back(&(*TrkPtZ)[i_trk][i_tpt]);
-            Trk.DirX.push_back(&(*TrkDirX)[i_trk][i_tpt]);
-            Trk.DirY.push_back(&(*TrkDirY)[i_trk][i_tpt]);
-            Trk.DirZ.push_back(&(*TrkDirZ)[i_trk][i_tpt]);
+            // Trk.DirX.push_back(&(*TrkDirX)[i_trk][i_tpt]);
+            // Trk.DirY.push_back(&(*TrkDirY)[i_trk][i_tpt]);
+            // Trk.DirZ.push_back(&(*TrkDirZ)[i_trk][i_tpt]);
         }
         Cal.reset();
         Cal.Plane = TrkCalPlane->at(i_trk);
         Cal.NPt = TrkCalNPt->at(i_trk);
         Cal.Range = TrkCalRange->at(i_trk);
-        Cal.KineticE = TrkCalKineticE->at(i_trk);
+        // Cal.KineticE = TrkCalKineticE->at(i_trk);
         for (size_t i_cal=0; i_cal < TrkCalNPt->at(i_trk); i_cal++) {
             Cal.dEdx.push_back(&(*TrkCaldEdx)[i_trk][i_cal]);
             Cal.dQdx.push_back(&(*TrkCaldQdx)[i_trk][i_cal]);
