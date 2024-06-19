@@ -133,7 +133,7 @@ void BraggCal(size_t i=0) {
                 n_cal_bragg=0;
                 while (
                     *R.Cal.ResRange[R.Cal.NPt-1-n_cal_bragg++] > R.Cal.Range - bragg_length 
-                    && n_cal_bragg < R.Cal.NPt
+                    && n_cal_bragg < R.Cal.NPt-1
                 );
                 if (upright) n_cal_head = n_cal_bragg;
                 else n_cal_tail = n_cal_bragg;
@@ -172,9 +172,10 @@ void BraggCal(size_t i=0) {
                 size_t n_bragg_int=0;
                 n_cal_bragg=0;
                 while (
-                    *R.Cal.ResRange[R.Cal.NPt-1-n_cal_bragg++] > R.Cal.Range - bragg_length 
+                    *R.Cal.ResRange[n_cal_bragg++] < bragg_length
                     && n_cal_bragg < R.Cal.NPt
                 );
+                
                 for (size_t i_cal=0; i_cal < n_cal_bragg; i_cal++) {
                     double dEdx = *R.Cal.dEdx[i_cal]; 
                     
@@ -200,7 +201,7 @@ void BraggCal(size_t i=0) {
                 n_cal_bragg=0;
                 while (
                     *R.Cal.ResRange[R.Cal.NPt-1-n_cal_bragg++] > R.Cal.Range - bragg_length 
-                    && n_cal_bragg < R.Cal.NPt
+                    && n_cal_bragg < R.Cal.NPt-1
                 );
 
                 for (size_t i_cal=R.Cal.NPt-n_cal_bragg; i_cal < R.Cal.NPt; i_cal++) {
