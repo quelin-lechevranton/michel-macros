@@ -66,7 +66,7 @@ void BraggCal(size_t i=0) {
         "hBraggIntRatio",
         ";;#",
         bBraggIntRatio.n,bBraggIntRatio.min,bBraggIntRatio.max
-    )
+    );
 
     size_t n_bragg_candidate=0;
     size_t n_bragg=0;
@@ -201,7 +201,7 @@ void BraggCal(size_t i=0) {
 
                 // bragg_min = bragg_min_ratio_per_int*avg_dEdx*n_bragg_int;
                 // bool is_bragg2 = n_bragg_int > 0 && bragg_int >= bragg_min;
-                double bragg_int_ratio = (double) n_bragg_int/n_bragg;
+                bragg_int_ratio = (double) n_bragg_int/n_bragg;
                 hBraggIntRatio->Fill(bragg_int_ratio);
                 bool is_bragg2 = bragg_int_ratio > bragg_int_ratio_min;
                 if (!is_bragg2) {if (v) cout << " \e[91mno\e[0m" << endl;}
@@ -249,6 +249,8 @@ void BraggCal(size_t i=0) {
     hdEdx2->Draw("colz");
     c1->cd(3);
     hBragg->Draw("hist");
+    c1->cd(4);
+    hBraggIntRatio->Draw("hist");
 
     cout << "nbr of bragg/candidate: " << n_bragg << "/" << n_bragg_candidate << " (" << 100.*n_bragg/n_bragg_candidate << "%)" << endl;
 
