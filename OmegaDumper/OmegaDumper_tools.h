@@ -114,18 +114,18 @@ private:
     public:
         size_t N;
         vector<size_t>  index;
-        vector<bool>    isTrk,
-                        isShw;
-        vector<size_t*> NClu,
-                        NSpt,
+        vector<bool>    isTrk;
+                        // isShw;
+        // vector<size_t*> NClu,
+        vector<size_t*> NSpt,
                         NHit;
 
         void reset() {
             N=0;
             index.clear();
             isTrk.clear();
-            isShw.clear();
-            NClu.clear();
+            // isShw.clear();
+            // NClu.clear();
             NSpt.clear();
             NHit.clear();
         }
@@ -176,26 +176,26 @@ private:
             ResRange.clear();
         }
     };
-    class Clusters {
-    public:
-        size_t N;
-        vector<size_t>  index;
-        vector<size_t*> NHit,
-                        Plane;
-        vector<float*>  SumADC,
-                        Integral,
-                        Width;
+    // class Clusters {
+    // public:
+    //     size_t N;
+    //     vector<size_t>  index;
+    //     vector<size_t*> NHit,
+    //                     Plane;
+    //     vector<float*>  SumADC,
+    //                     Integral,
+    //                     Width;
         
-        void reset() {
-            N=0;
-            index.clear();
-            NHit.clear();
-            Plane.clear();
-            SumADC.clear();
-            Integral.clear();
-            Width.clear();
-        }
-    };
+    //     void reset() {
+    //         N=0;
+    //         index.clear();
+    //         NHit.clear();
+    //         Plane.clear();
+    //         SumADC.clear();
+    //         Integral.clear();
+    //         Width.clear();
+    //     }
+    // };
     class SpacePoints {
     public: 
         size_t N;
@@ -220,7 +220,7 @@ private:
         vector<size_t>  index;
         vector<size_t*> NTrk,
                         NSpt,
-                        NClu,
+                        // NClu,
                         Plane;
         vector<float*>  SumADC,
                         Integral;
@@ -230,7 +230,7 @@ private:
             index.clear();
             NTrk.clear();
             NSpt.clear();
-            NClu.clear();
+            // NClu.clear();
             Plane.clear();
             SumADC.clear();
             Integral.clear();
@@ -244,13 +244,13 @@ public:
 private:
     //PFParticle
     size_t NPfp;
-    vector<int> *PfpTrkID=nullptr, //[# pfparticle]
-                *PfpShwID=nullptr;
-    vector<size_t>  *PfpNClu=nullptr,
-                    *PfpNSpt=nullptr,
+    vector<int> *PfpTrkID=nullptr; //[# pfparticle]
+                // *PfpShwID=nullptr;
+    // vector<size_t>  *PfpNClu=nullptr,
+    vector<size_t>  *PfpNSpt=nullptr,
                     *PfpNHit=nullptr;
-    vector<vector<double>>  *PfpCluKey=nullptr, //should be ?
-                            *PfpSptKey=nullptr;
+    // vector<vector<double>>  *PfpCluKey=nullptr, //should be ?
+    vector<vector<double>>  *PfpSptKey=nullptr;
 
     //Track
     size_t NTrk;
@@ -276,17 +276,17 @@ private:
                             *TrkCalResRange=nullptr;
 
     //Shower
-    size_t NShw;
-    vector<int> *ShwID=nullptr; //[# shower]
+    // size_t NShw;
+    // vector<int> *ShwID=nullptr; //[# shower]
 
     //Cluster
-    vector<size_t>  *CluKey=nullptr,
-                    *CluNHit=nullptr,
-                    *CluPlane=nullptr; //should be unsigned int
-    vector<float>   *CluSumADC=nullptr,
-                    *CluIntegral=nullptr,
-                    *CluWidth=nullptr;
-    vector<vector<double>>  *CluHitKey=nullptr; //should be ?
+    // vector<size_t>  *CluKey=nullptr,
+    //                 *CluNHit=nullptr,
+    //                 *CluPlane=nullptr; //should be unsigned int
+    // vector<float>   *CluSumADC=nullptr,
+    //                 *CluIntegral=nullptr,
+    //                 *CluWidth=nullptr;
+    // vector<vector<double>>  *CluHitKey=nullptr; //should be ?
 
     //SpacePoint
     vector<size_t>  *SptKey=nullptr,
@@ -301,13 +301,13 @@ private:
     vector<size_t>  *HitKey=nullptr,
                     *HitNTrk=nullptr,
                     *HitNSpt=nullptr,
-                    *HitNClu=nullptr,  
+                    // *HitNClu=nullptr,  
                     *HitPlane=nullptr; //should be unsigned int
     vector<float>   *HitSumADC=nullptr, //should be float
                     *HitIntegral=nullptr; //should be float
     vector<vector<double>>  *HitTrkKey=nullptr, //should be ?
-                            *HitSptKey=nullptr,
-                            *HitCluKey=nullptr;
+                            *HitSptKey=nullptr;
+                            // *HitCluKey=nullptr;
 
 public:
 
@@ -315,7 +315,7 @@ public:
     PFParticles Pfp;
     Tracks Trk;
     Calorimetry Cal;
-    Clusters Clu;
+    // Clusters Clu;
     SpacePoints Spt;
     Hits Hit;
 
@@ -332,11 +332,11 @@ public:
         //PFParticle
         tree->SetBranchAddress("fNPfp",         &NPfp);
         tree->SetBranchAddress("fPfpTrkID",     &PfpTrkID);
-        tree->SetBranchAddress("fPfpShwID",     &PfpShwID);
-        tree->SetBranchAddress("fPfpNClu",      &PfpNClu);
+        // tree->SetBranchAddress("fPfpShwID",     &PfpShwID);
+        // tree->SetBranchAddress("fPfpNClu",      &PfpNClu);
         tree->SetBranchAddress("fPfpNSpt",      &PfpNSpt);
         tree->SetBranchAddress("fPfpNHit",      &PfpNHit);
-        tree->SetBranchAddress("fPfpCluKey",    &PfpCluKey);
+        // tree->SetBranchAddress("fPfpCluKey",    &PfpCluKey);
         tree->SetBranchAddress("fPfpSptKey",    &PfpSptKey);
 
         //Track
@@ -363,17 +363,17 @@ public:
         tree->SetBranchAddress("fTrkCalResRange",&TrkCalResRange);
 
         //Shower
-        tree->SetBranchAddress("fNShw",         &NShw);
-        tree->SetBranchAddress("fShwID",        &ShwID);
+        // tree->SetBranchAddress("fNShw",         &NShw);
+        // tree->SetBranchAddress("fShwID",        &ShwID);
 
         //Cluster
-        tree->SetBranchAddress("fCluKey",       &CluKey);
-        tree->SetBranchAddress("fCluNHit",      &CluNHit);
-        tree->SetBranchAddress("fCluPlane",     &CluPlane);
-        tree->SetBranchAddress("fCluIntegral",  &CluIntegral);
-        tree->SetBranchAddress("fCluSumADC",    &CluSumADC);
-        tree->SetBranchAddress("fCluWidth",     &CluWidth);
-        tree->SetBranchAddress("fCluHitKey",    &CluHitKey);
+        // tree->SetBranchAddress("fCluKey",       &CluKey);
+        // tree->SetBranchAddress("fCluNHit",      &CluNHit);
+        // tree->SetBranchAddress("fCluPlane",     &CluPlane);
+        // tree->SetBranchAddress("fCluIntegral",  &CluIntegral);
+        // tree->SetBranchAddress("fCluSumADC",    &CluSumADC);
+        // tree->SetBranchAddress("fCluWidth",     &CluWidth);
+        // tree->SetBranchAddress("fCluHitKey",    &CluHitKey);
 
         //SpacePoint
         tree->SetBranchAddress("fSptKey",       &SptKey);
@@ -388,7 +388,7 @@ public:
         tree->SetBranchAddress("fHitKey",       &HitKey);
         tree->SetBranchAddress("fHitNTrk",      &HitNTrk);
         tree->SetBranchAddress("fHitNSpt",      &HitNSpt);
-        tree->SetBranchAddress("fHitNClu",      &HitNClu);
+        // tree->SetBranchAddress("fHitNClu",      &HitNClu);
         tree->SetBranchAddress("fHitPlane",     &HitPlane);
         tree->SetBranchAddress("fHitSumADC",    &HitSumADC);
         tree->SetBranchAddress("fHitIntegral",  &HitIntegral);
@@ -408,8 +408,8 @@ public:
 
             Pfp.index.push_back(i_pfp);
             Pfp.isTrk.push_back(PfpTrkID->at(i_pfp) >= 0);
-            Pfp.isShw.push_back(PfpShwID->at(i_pfp) >= 0);
-            Pfp.NClu.push_back(&PfpNClu->at(i_pfp));
+            // Pfp.isShw.push_back(PfpShwID->at(i_pfp) >= 0);
+            // Pfp.NClu.push_back(&PfpNClu->at(i_pfp));
             Pfp.NSpt.push_back(&PfpNSpt->at(i_pfp));
             Pfp.NHit.push_back(&PfpNHit->at(i_pfp));
         }
@@ -423,7 +423,7 @@ public:
             Hit.index.push_back(i_hit);
             Hit.NTrk.push_back(&HitNTrk->at(i_hit));
             Hit.NSpt.push_back(&HitNSpt->at(i_hit));
-            Hit.NClu.push_back(&HitNClu->at(i_hit));
+            // Hit.NClu.push_back(&HitNClu->at(i_hit));
             Hit.Plane.push_back(&HitPlane->at(i_hit));
             Hit.SumADC.push_back(&HitSumADC->at(i_hit));
             Hit.Integral.push_back(&HitIntegral->at(i_hit));
@@ -453,21 +453,21 @@ public:
             Cal.ResRange.push_back(&(*TrkCalResRange)[i_trk][i_cal]);
         }
     }
-    void GetPfpClu(size_t i_pfp) {
-        Clu.reset();
-        Clu.N = PfpNClu->at(i_pfp);
-        for (size_t key : PfpCluKey->at(i_pfp)) {
+    // void GetPfpClu(size_t i_pfp) {
+    //     Clu.reset();
+    //     Clu.N = PfpNClu->at(i_pfp);
+    //     for (size_t key : PfpCluKey->at(i_pfp)) {
 
-            size_t i_clu = std::distance(CluKey->begin(), std::find(CluKey->begin(), CluKey->end(), key));
+    //         size_t i_clu = std::distance(CluKey->begin(), std::find(CluKey->begin(), CluKey->end(), key));
 
-            Clu.index.push_back(i_clu);
-            Clu.NHit.push_back(&CluNHit->at(i_clu));
-            Clu.Plane.push_back(&CluPlane->at(i_clu));
-            Clu.SumADC.push_back(&CluSumADC->at(i_clu));
-            Clu.Integral.push_back(&CluIntegral->at(i_clu));
-            Clu.Width.push_back(&CluWidth->at(i_clu));
-        }
-    }
+    //         Clu.index.push_back(i_clu);
+    //         Clu.NHit.push_back(&CluNHit->at(i_clu));
+    //         Clu.Plane.push_back(&CluPlane->at(i_clu));
+    //         Clu.SumADC.push_back(&CluSumADC->at(i_clu));
+    //         Clu.Integral.push_back(&CluIntegral->at(i_clu));
+    //         Clu.Width.push_back(&CluWidth->at(i_clu));
+    //     }
+    // }
     void GetPfpSpt(size_t i_pfp) {
         Spt.reset();
         Spt.N = PfpNSpt->at(i_pfp);
@@ -492,28 +492,28 @@ public:
             Hit.index.push_back(i_hit);
             Hit.NTrk.push_back(&HitNTrk->at(i_hit));
             Hit.NSpt.push_back(&HitNSpt->at(i_hit));
-            Hit.NClu.push_back(&HitNClu->at(i_hit));
+            // Hit.NClu.push_back(&HitNClu->at(i_hit));
             Hit.Plane.push_back(&HitPlane->at(i_hit));
             Hit.SumADC.push_back(&HitSumADC->at(i_hit));
             Hit.Integral.push_back(&HitIntegral->at(i_hit));
         }
     }
-    void GetCluHit(size_t i_clu) {
-        Hit.reset();
-        Hit.N = CluNHit->at(i_clu);
-        for (size_t key : CluHitKey->at(i_clu)) {
+    // void GetCluHit(size_t i_clu) {
+    //     Hit.reset();
+    //     Hit.N = CluNHit->at(i_clu);
+    //     for (size_t key : CluHitKey->at(i_clu)) {
 
-            size_t i_hit = std::distance(HitKey->begin(), std::find(HitKey->begin(), HitKey->end(), key));
+    //         size_t i_hit = std::distance(HitKey->begin(), std::find(HitKey->begin(), HitKey->end(), key));
 
-            Hit.index.push_back(i_hit);
-            Hit.NTrk.push_back(&HitNTrk->at(i_hit));
-            Hit.NSpt.push_back(&HitNSpt->at(i_hit));
-            Hit.NClu.push_back(&HitNClu->at(i_hit));
-            Hit.Plane.push_back(&HitPlane->at(i_hit));
-            Hit.SumADC.push_back(&HitSumADC->at(i_hit));
-            Hit.Integral.push_back(&HitIntegral->at(i_hit));
-        }
-    }
+    //         Hit.index.push_back(i_hit);
+    //         Hit.NTrk.push_back(&HitNTrk->at(i_hit));
+    //         Hit.NSpt.push_back(&HitNSpt->at(i_hit));
+    //         Hit.NClu.push_back(&HitNClu->at(i_hit));
+    //         Hit.Plane.push_back(&HitPlane->at(i_hit));
+    //         Hit.SumADC.push_back(&HitSumADC->at(i_hit));
+    //         Hit.Integral.push_back(&HitIntegral->at(i_hit));
+    //     }
+    // }
     void GetSptHit(size_t i_spt) {
         Hit.reset();
         Hit.N = SptNHit->at(i_spt);
@@ -523,7 +523,7 @@ public:
 
             Hit.index.push_back(i_hit);
             Hit.NSpt.push_back(&HitNSpt->at(i_hit));
-            Hit.NClu.push_back(&HitNClu->at(i_hit));
+            // Hit.NClu.push_back(&HitNClu->at(i_hit));
             Hit.Plane.push_back(&HitPlane->at(i_hit));
             Hit.SumADC.push_back(&HitSumADC->at(i_hit));
             Hit.Integral.push_back(&HitIntegral->at(i_hit));
@@ -554,21 +554,21 @@ public:
             Cal.ResRange.push_back(&(*TrkCalResRange)[i_trk][i_cal]);
         }
     }
-    void GetHitClu(size_t i_hit) {
-        Clu.reset();
-        Clu.N = HitNClu->at(i_hit);
-        for (size_t key : HitCluKey->at(i_hit)) {
+    // void GetHitClu(size_t i_hit) {
+    //     Clu.reset();
+    //     Clu.N = HitNClu->at(i_hit);
+    //     for (size_t key : HitCluKey->at(i_hit)) {
 
-            size_t i_clu = std::distance(CluKey->begin(), std::find(CluKey->begin(), CluKey->end(), key));
+    //         size_t i_clu = std::distance(CluKey->begin(), std::find(CluKey->begin(), CluKey->end(), key));
 
-            Clu.index.push_back(i_clu);
-            Clu.NHit.push_back(&CluNHit->at(i_clu));
-            Clu.Plane.push_back(&CluPlane->at(i_clu));
-            Clu.SumADC.push_back(&CluSumADC->at(i_clu));
-            Clu.Integral.push_back(&CluIntegral->at(i_clu));
-            Clu.Width.push_back(&CluWidth->at(i_clu));
-        }
-    }
+    //         Clu.index.push_back(i_clu);
+    //         Clu.NHit.push_back(&CluNHit->at(i_clu));
+    //         Clu.Plane.push_back(&CluPlane->at(i_clu));
+    //         Clu.SumADC.push_back(&CluSumADC->at(i_clu));
+    //         Clu.Integral.push_back(&CluIntegral->at(i_clu));
+    //         Clu.Width.push_back(&CluWidth->at(i_clu));
+    //     }
+    // }
     void GetHitSpt(size_t i_hit) {
         Spt.reset();
         Spt.N = HitNSpt->at(i_hit);
