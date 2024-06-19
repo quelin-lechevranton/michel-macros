@@ -60,6 +60,11 @@ public:
                             // *DepT=nullptr,
                             *DepE=nullptr;
 
+    class Deposits {
+    public:
+        
+    }
+
     Truth(const char* filename) {
         file = new TFile(filename);
         tree = file->Get<TTree>("OmegaDumper/Truth");

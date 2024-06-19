@@ -21,7 +21,7 @@ typedef struct {
 const Binning bRR = {100,0,300}; //cm
 const Binning bdEdx = {50,0,5}; //MeV/cm
 const Binning bdQdx = {50,0,800};
-const Binning bBragg = {200,0,100}; //MeV/cm
+const Binning bBragg = {100,0,50}; //MeV/cm
 const Binning bBraggIntRatio = {20,0,1}; 
 
 const double length_mu_min = 20; //cm
@@ -33,7 +33,8 @@ const double dEdx_min_ratio = 1;
 const size_t n_cal_body_min = 10;
 
 const double bragg_length = 10; //cm
-const double bragg_min_ratio_per_int = 3; //MeV/cm
+const double bragg_min_ratio = 3; //cm/MeV?
+
 const double bragg_int_ratio_min = 0.5;
 
 
@@ -60,12 +61,12 @@ void BraggCal(size_t i=0) {
     );
     TH1D* hBragg = new TH1D(
         "hBragg",
-        ";Bragg dEdx (MeV/cm);#",
+        ";Bragg (# AvgdEdx);#",
         bBragg.n, bBragg.min, bBragg.max
     );
     TH1D* hReverseBragg = new TH1D(
         "hReverseBragg",
-        ";Bragg dEdx (MeV/cm);#",
+        ";Bragg (# AvgdEdx);#",
         bBragg.n, bBragg.min, bBragg.max
     );
     TH1D* hBraggIntRatio = new TH1D(
@@ -183,7 +184,7 @@ void BraggCal(size_t i=0) {
                 if (upright) hBragg->Fill(normalized_bragg_head);
                 else hReverseBragg->Fill(normalized_bragg_head);
 
-                // double bragg_min = bragg_min_ratio_per_int*avg_body_dEdx*n_bragg_int;
+                double bragg_min = bragg_min_ratio*avg_body_dEdx;
                 // bool is_bragg1 = n_bragg_int > 0 && bragg_int >= bragg_min;
                 // double bragg_int_ratio = (double) n_bragg_int/n_cal_head;
                 // hBraggIntRatio->Fill(bragg_int_ratio);
@@ -207,7 +208,7 @@ void BraggCal(size_t i=0) {
                 if (!upright) hBragg->Fill(normalized_bragg_tail);
                 else hReverseBragg->Fill(normalized_bragg_tail);
 
-                // bragg_min = bragg_min_ratio_per_int*avg_body_dEdx*n_bragg_int;
+                bragg_min = bragg_min_ratio*avg_body_dEdx;
                 // bool is_bragg2 = n_bragg_int > 0 && bragg_int >= bragg_min;
                 // bragg_int_ratio = (double) n_bragg_int/n_cal_tail;
                 // hBraggIntRatio->Fill(bragg_int_ratio);
@@ -242,7 +243,7 @@ void BraggCal(size_t i=0) {
     } //end file loop
     cout << endl;
 
-    TCanvas* c1 = new TCanvas("c1","BraggCalo");
+    TCanvas* c1 = new TCanvas("c1","BraggCal");
     c1->Divide(2,2);
     // c1->Divide(2,1);
     // c1->cd(1);
@@ -296,8 +297,8 @@ void PlotBragg(size_t i_file=1, size_t i_evt=1, size_t i_pfp=1) {
         gdEdx->AddPoint(resrange,dEdx);
     } //end calorimetry loop
 
-    TCanvas* c2 = new TCanvas("c2","BraggCal");
-    c2->cd(1);
+    TCanvas* c0 = new TCanvas("c0","BraggCal");
+    c0->cd(1);
     gdEdx->Draw();
 
     cout << "total time of execution: " << static_cast<double>(clock()-start_time)/CLOCKS_PER_SEC << " seconds" << endl;
