@@ -25,7 +25,7 @@ const double n_cal_min = 1; //????
 
 const double dEdx_MIP = 2; //MeV/cm
 const double dEdx_min_ratio = 1.5;
-const double dEdx_min = dEdx_MIP*dEdx_min_ratio;
+// const double dEdx_min = dEdx_MIP*dEdx_min_ratio;
 
 const double bragg_length = 15; //cm
 const double bragg_min = 20; //MeV/cm
@@ -145,6 +145,7 @@ void BraggCal(size_t i=0) {
                 } //end calorimetry loop
                 // avg_dQdx /= R.Cal.NPt;
                 avg_dEdx /= R.Cal.NPt;
+                const double dEdx_min = avg_dEdx*dEdx_min_ratio;
 
                 // if (v) cout << "\tavg dQdx: " << avg_dQdx << endl;
                 // if (v) cout << "\tavg dEdx: " << avg_dEdx << endl;
