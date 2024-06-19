@@ -32,6 +32,7 @@ const double dEdx_min_ratio = 1.5;
 
 const double bragg_length = 15; //cm
 const double bragg_min_ratio_per_int = 3; //MeV/cm
+const double bragg_int_ratio = 0.75;
 
 
 void BraggCal(size_t i=0) {
@@ -167,8 +168,9 @@ void BraggCal(size_t i=0) {
                 double rrmax = *R.Cal.ResRange[n_cal_bragg-1];
                 if (v) cout << "\tBragg?: " << bragg_int << " (" << n_bragg_int << "/" << n_cal_bragg << " rr:" << rrmin << "-" << rrmax << ")";
 
-                double bragg_min = bragg_min_ratio_per_int*avg_dEdx*n_bragg_int;
-                bool is_bragg1 = n_bragg_int > 0 && bragg_int >= bragg_min;
+                // double bragg_min = bragg_min_ratio_per_int*avg_dEdx*n_bragg_int;
+                // bool is_bragg1 = n_bragg_int > 0 && bragg_int >= bragg_min;
+                bool is_bragg1 = (double) n_bragg_int/n_bragg > bragg_int_ratio;
                 if (!is_bragg1) {if (v) cout << " \e[91mno\e[0m" << endl;}
                 else {if (v) cout << " \e[94myes\e[0m" << endl;}
 
@@ -189,8 +191,9 @@ void BraggCal(size_t i=0) {
                 rrmax = *R.Cal.ResRange[R.Cal.NPt-1];
                 if (v) cout << "\tBragg?: " << bragg_int << " (" << n_bragg_int << "/" << n_cal_bragg << " rr:" << rrmin << "-" << rrmax << ")";
 
-                bragg_min = bragg_min_ratio_per_int*avg_dEdx*n_bragg_int;
-                bool is_bragg2 = n_bragg_int > 0 && bragg_int >= bragg_min;
+                // bragg_min = bragg_min_ratio_per_int*avg_dEdx*n_bragg_int;
+                // bool is_bragg2 = n_bragg_int > 0 && bragg_int >= bragg_min;
+                bool is_bragg2 = (double) n_bragg_int/n_bragg > bragg_int_ratio;
                 if (!is_bragg2) {if (v) cout << " \e[91mno\e[0m" << endl;}
                 else {if (v) cout << " \e[94myes\e[0m" << endl;}
 
