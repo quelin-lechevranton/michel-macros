@@ -53,6 +53,7 @@ void TrueMichel_v3() {
     } //end file loop
 
     TCanvas* c1 = new TCanvas("c1","TrueMichel_v3");
+    c1->cd();
 
     cout << N_evt << " events treated in " << static_cast<double>(clock()-start_time)/CLOCKS_PER_SEC << " seconds" << endl;
 }

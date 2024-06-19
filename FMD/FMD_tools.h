@@ -1,5 +1,5 @@
 /*
- *  classes to store and access variables from the output ROOT file of YAD_module
+ *  classes to store and access variables from the output ROOT file of FMD_module
  */
 
 
@@ -18,7 +18,7 @@ using namespace std;
 // using Vec3D = ROOT::Math::XYZVector;
 // using Vec4D = ROOT::Math::LorentzVector<ROOT::Math::PxPyPzEVector>;
 
-namespace yad {
+namespace fmd {
 
 class Truth {
 private:
@@ -61,7 +61,7 @@ public:
 
     Truth(const char* filename) {
         file = new TFile(filename);
-        tree = file->Get<TTree>("YAD/Truth");
+        tree = file->Get<TTree>("FMD/Truth");
 
         //Events
         tree->SetBranchAddress("fEvent",    &Event);
@@ -100,7 +100,7 @@ public:
     
     size_t GetEntries() { return tree->GetEntries(); }
     void GetEntry(size_t i) { tree->GetEntry(i); }
-}; //end of yad::Truth
+}; //end of fmd::Truth
 
 class Reco {
 private:
@@ -151,15 +151,24 @@ public:
                             *CluSumADC=nullptr,
                             *CluWidth=nullptr;
 
+    //Hit
+    vector<size_t> *PfpNHit=nullptr; //[# pfparticle]
+    vector<vector<double>>  *HitCluID=nullptr, //[# pfparticle][# hit]
+                            *HitPlane=nullptr, 
+                            *HitSumADC=nullptr,
+                            *HitIntegral=nullptr,
+                            *HitNSpt=nullptr;
+
     //SpacePoint
     vector<size_t> *PfpNSpt=nullptr; //[# pfparticle]
-    vector<vector<double>>  *SptX=nullptr, //[# pfparticle][# spacepoint]
+    vector<vector<double>>  *SptHitID=nullptr, //[# pfparticle][# spacepoint]
+                            *SptX=nullptr, 
                             *SptY=nullptr,
                             *SptZ=nullptr;
 
     Reco(const char* filename) {
         file = new TFile(filename);
-        tree = file->Get<TTree>("YAD/Reco");
+        tree = file->Get<TTree>("FMD/Reco");
 
         //Events
         tree->SetBranchAddress("fEvent",        &Event);
@@ -204,18 +213,26 @@ public:
         tree->SetBranchAddress("fCluSumADC",    &CluSumADC);
         tree->SetBranchAddress("fCluWidth",     &CluWidth);
 
+        //Hit
+        tree->SetBranchAddress("fPfpNHit",      &PfpNHit);
+        tree->SetBranchAddress("fHitCluID",     &HitCluID);
+        tree->SetBranchAddress("fHitPlane",     &HitPlane);
+        tree->SetBranchAddress("fHitSumADC",    &HitSumADC);
+        tree->SetBranchAddress("fHitIntegral",  &HitIntegral);
+        tree->SetBranchAddress("fHitNSpt",      &HitNSpt);
+
         //SpacePoint
         tree->SetBranchAddress("fPfpNSpt",      &PfpNSpt);
+        tree->SetBranchAddress("fSptHitID",     &SptHitID);
         tree->SetBranchAddress("fSptX",         &SptX);
         tree->SetBranchAddress("fSptY",         &SptY);
         tree->SetBranchAddress("fSptZ",         &SptZ);
-
     }
     ~Reco() { file-> Close(); }
     
     size_t GetEntries() { return tree->GetEntries(); }
     void GetEntry(size_t i) { tree->GetEntry(i); }
-}; //end of yad::Reco
+}; //end of fmd::Reco
 
 vector<string> readFileList(size_t n_file, string listname) {
   vector<string> filelist;
@@ -248,7 +265,7 @@ bool isInside (vector<double> Xs,vector<double> Ys,vector<double> Zs, double Xmi
         if (!is_in) break;
     }
     return is_in;
-} //end of yad::isInside
+} //end of fmd::isInside
 
 double distance(double X1, double Y1, double Z1, double X2, double Y2, double Z2) {
     return TMath::Sqrt(
@@ -256,6 +273,6 @@ double distance(double X1, double Y1, double Z1, double X2, double Y2, double Z2
         +TMath::Power(Y1-Y2,2)
         +TMath::Power(Z1-Z2,2)
     );
-} //end of yad::distance
+} //end of fmd::distance
 
-} //end of namespace yad
+} //end of namespace fmd

@@ -60,7 +60,7 @@ void Calorimetry() {
                     avg_dEdx+=(*R.TrkCaldEdx)[i_trk][i_cal]/n_last_deposits;
                 } //end cal loop
                 hLastdEdx->Fill(avg_dEdx);
-                if (avg_dEdx < thres_dEdx) continue;
+                // if (avg_dEdx < thres_dEdx) continue;
 
                 N_trk_sel++;
                 avg_tpt+=R.TrkNPt->at(i_trk);
