@@ -22,6 +22,7 @@ const Binning bRR = {100,0,300}; //cm
 const Binning bdEdx = {50,0,5}; //MeV/cm
 const Binning bdQdx = {50,0,800};
 const Binning bBragg = {200,0,100}; //MeV/cm
+const Binning bBraggIntRatio = {20,0,1}; 
 
 const double length_mu_min = 20; //cm
 const double n_cal_min = 1; //????
@@ -61,6 +62,11 @@ void BraggCal(size_t i=0) {
         ";Bragg dEdx (MeV/cm);#",
         bBragg.n, bBragg.min, bBragg.max
     );
+    TH1D* hBraggIntRatio = new TH1D(
+        "hBraggIntRatio",
+        ";;#",
+        bBraggIntRatio.n,bBraggIntRatio.min,bBraggIntRatio.max
+    )
 
     size_t n_bragg_candidate=0;
     size_t n_bragg=0;
@@ -170,7 +176,9 @@ void BraggCal(size_t i=0) {
 
                 // double bragg_min = bragg_min_ratio_per_int*avg_dEdx*n_bragg_int;
                 // bool is_bragg1 = n_bragg_int > 0 && bragg_int >= bragg_min;
-                bool is_bragg1 = (double) n_bragg_int/n_bragg > bragg_int_ratio_min;
+                double bragg_int_ratio = (double) n_bragg_int/n_bragg;
+                hBraggIntRatio->Fill(bragg_int_ratio);
+                bool is_bragg1 = bragg_int_ratio > bragg_int_ratio_min;
                 if (!is_bragg1) {if (v) cout << " \e[91mno\e[0m" << endl;}
                 else {if (v) cout << " \e[94myes\e[0m" << endl;}
 
@@ -193,7 +201,9 @@ void BraggCal(size_t i=0) {
 
                 // bragg_min = bragg_min_ratio_per_int*avg_dEdx*n_bragg_int;
                 // bool is_bragg2 = n_bragg_int > 0 && bragg_int >= bragg_min;
-                bool is_bragg2 = (double) n_bragg_int/n_bragg > bragg_int_ratio_min;
+                double bragg_int_ratio = (double) n_bragg_int/n_bragg;
+                hBraggIntRatio->Fill(bragg_int_ratio);
+                bool is_bragg2 = bragg_int_ratio > bragg_int_ratio_min;
                 if (!is_bragg2) {if (v) cout << " \e[91mno\e[0m" << endl;}
                 else {if (v) cout << " \e[94myes\e[0m" << endl;}
 
