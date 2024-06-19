@@ -32,7 +32,7 @@ const double dEdx_min_ratio = 1.5;
 
 const double bragg_length = 15; //cm
 const double bragg_min_ratio_per_int = 3; //MeV/cm
-const double bragg_int_ratio_min = 0.5;
+const double bragg_int_ratio_min = 0.3;
 
 
 void BraggCal(size_t i=0) {
