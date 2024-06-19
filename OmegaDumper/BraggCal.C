@@ -32,7 +32,7 @@ const double dEdx_min_ratio = 1.5;
 
 const double bragg_length = 15; //cm
 const double bragg_min_ratio_per_int = 3; //MeV/cm
-const double bragg_int_ratio = 0.75;
+const double bragg_int_ratio_min = 0.67;
 
 
 void BraggCal(size_t i=0) {
@@ -170,7 +170,7 @@ void BraggCal(size_t i=0) {
 
                 // double bragg_min = bragg_min_ratio_per_int*avg_dEdx*n_bragg_int;
                 // bool is_bragg1 = n_bragg_int > 0 && bragg_int >= bragg_min;
-                bool is_bragg1 = (double) n_bragg_int/n_bragg > bragg_int_ratio;
+                bool is_bragg1 = (double) n_bragg_int/n_bragg > bragg_int_ratio_min;
                 if (!is_bragg1) {if (v) cout << " \e[91mno\e[0m" << endl;}
                 else {if (v) cout << " \e[94myes\e[0m" << endl;}
 
@@ -193,7 +193,7 @@ void BraggCal(size_t i=0) {
 
                 // bragg_min = bragg_min_ratio_per_int*avg_dEdx*n_bragg_int;
                 // bool is_bragg2 = n_bragg_int > 0 && bragg_int >= bragg_min;
-                bool is_bragg2 = (double) n_bragg_int/n_bragg > bragg_int_ratio;
+                bool is_bragg2 = (double) n_bragg_int/n_bragg > bragg_int_ratio_min;
                 if (!is_bragg2) {if (v) cout << " \e[91mno\e[0m" << endl;}
                 else {if (v) cout << " \e[94myes\e[0m" << endl;}
 
