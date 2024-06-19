@@ -31,7 +31,7 @@ const double dEdx_min_ratio = 1;
 // const double dEdx_min = dEdx_MIP*dEdx_min_ratio;
 
 const double bragg_length = 15; //cm
-const double bragg_min = 20; //MeV/cm
+const double bragg_min = 1; //MeV/cm
 
 
 void BraggCal(size_t i=0) {
@@ -60,8 +60,6 @@ void BraggCal(size_t i=0) {
         ";Bragg dEdx (MeV/cm);#",
         bBragg.n, bBragg.min, bBragg.max
     );
-
-    size_t c=0;
 
     size_t n_bragg_candidate=0;
     size_t n_bragg=0;
@@ -199,7 +197,6 @@ void BraggCal(size_t i=0) {
                     if (v) cout << "\t\t\e[92mdouble bragg\e[0m" << endl;
                 } else if (is_bragg1 == upside_down) {
                     if (v) cout << "\t\t\e[92mreverse bragg\e[0m" << endl;
-                    c++;
                 }
 
                 for (size_t i_cal=0; i_cal < R.Cal.NPt; i_cal++) {
@@ -219,8 +216,6 @@ void BraggCal(size_t i=0) {
         } //end event loop
     } //end file loop
     cout << endl;
-
-    cout << "nb reverse bragg" << c << endl;
 
     TCanvas* c1 = new TCanvas("c1","BraggCalo");
     c1->Divide(2,2);
