@@ -394,7 +394,7 @@ public:
         tree->SetBranchAddress("fHitIntegral",  &HitIntegral);
         tree->SetBranchAddress("fHitTrkKey",    &HitTrkKey);
         tree->SetBranchAddress("fHitSptKey",    &HitSptKey);
-        tree->SetBranchAddress("fHitSptKey",    &HitCluKey);
+        // tree->SetBranchAddress("fHitSptKey",    &HitCluKey);
 
     }
     ~Reco() { file-> Close(); }
