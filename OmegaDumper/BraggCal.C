@@ -122,6 +122,8 @@ void BraggCal(size_t i=0) {
 
                 size_t n_cal_head, n_cal_tail;
 
+                if (R.Cal.NPt < 1) continue;
+
                 size_t n_cal_bragg=0;
                 while (
                     *R.Cal.ResRange[n_cal_bragg++] < bragg_length
