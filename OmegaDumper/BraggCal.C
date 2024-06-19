@@ -1,5 +1,8 @@
 #include "OmegaLight_tools.h"
 
+const size_t n_file=3;
+const vector<string> filelist = omega::ReadFileList(n_file,"list/light.list");
+
 const bool v = true; //verbose
 const struct {
     double  Xmin=-320, //cm
@@ -20,7 +23,7 @@ const Binning bdEdx = {50,0,5}; //MeV/cm
 const Binning bdQdx = {50,0,800};
 const Binning bBragg = {200,0,100}; //MeV/cm
 
-const double length_min = 20; //cm
+const double length_mu_min = 20; //cm
 const double n_cal_min = 1; //????
 
 const double dEdx_MIP = 2; //MeV/cm
@@ -30,8 +33,6 @@ const double dEdx_min_ratio = 1;
 const double bragg_length = 15; //cm
 const double bragg_min = 20; //MeV/cm
 
-const size_t n_file=3;
-const vector<string> filelist = omega::ReadFileList(n_file,"list/light.list");
 
 void BraggCal(size_t i=0) {
     clock_t start_time=clock();
@@ -96,7 +97,7 @@ void BraggCal(size_t i=0) {
 
                 R.GetPfpTrk(i_pfp);
 
-                if (R.Trk.Length < length_min) {
+                if (R.Trk.Length < length_mu_min) {
                     if (v) cout << "\t\e[91mtoo short\e[0m (" << R.Trk.Length << ")" << endl;
                     continue;
                 }

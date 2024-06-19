@@ -23,12 +23,12 @@ const Binning bRR = {100,0,300}; //cm
 const Binning bdEdx = {50,0,5}; //MeV/cm
 const Binning bE = {100,0,1000};
 
-const double length_mu_min = 100; //cm
+const double length_mu_min = 20; //cm
 const double n_cal_min = 1; //????
 
 const double dEdx_MIP = 2; //MeV/cm
-const double dEdx_min_ratio = 1.5;
-const double dEdx_min = dEdx_MIP*dEdx_min_ratio;
+const double dEdx_min_ratio = 1;
+// const double dEdx_min = dEdx_MIP*dEdx_min_ratio;
 
 const double bragg_length = 15; //cm
 const double bragg_min = 20; //MeV/cm
@@ -91,6 +91,13 @@ void MichelSpectrum(size_t i=0) {
                     det.Ymin,det.Ymax,
                     det.Zmin,det.Zmax
                 )) continue;
+
+                double avg_dEdx=0;
+                for (size_t i_cal=0; i_cal < R.Cal.NPt; i_cal++) {
+                    avg_dEdx += *R.Cal.dEdx[i_cal];
+                } //end calorimetry loop
+                avg_dEdx /= R.Cal.NPt;
+                const double dEdx_min = avg_dEdx*dEdx_min_ratio;
 
                 bool upside_down = *R.Trk.X.back() > *R.Trk.X[0];
 
