@@ -184,7 +184,7 @@ void BraggCal(size_t i=0) {
                     bragg_int += dEdx;
                     n_bragg_int++;
                 }
-                hBragg->Fill(bragg_int*dEdX_MIP/avg_dEdx);
+                hBragg->Fill(bragg_int*dEdx_MIP/avg_dEdx);
                 rrmin = *R.Cal.ResRange[R.Cal.NPt-n_cal_bragg];
                 rrmax = *R.Cal.ResRange[R.Cal.NPt-1];
                 if (v) cout << "\tBragg?: " << bragg_int << " (" << n_bragg_int << "/" << n_cal_bragg << " rr:" << rrmin << "-" << rrmax << ")";
