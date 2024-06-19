@@ -25,11 +25,12 @@ const Binning bBragg = {200,0,100}; //MeV/cm
 const Binning bBraggIntRatio = {20,0,1}; 
 
 const double length_mu_min = 20; //cm
-const double n_cal_min = 1; //????
 
 const double dEdx_MIP = 2; //MeV/cm
 const double dEdx_min_ratio = 1;
 // const double dEdx_min = dEdx_MIP*dEdx_min_ratio;
+
+const size_t n_cal_body_min = 10;
 
 const double bragg_length = 10; //cm
 const double bragg_min_ratio_per_int = 3; //MeV/cm
@@ -90,11 +91,7 @@ void BraggCal(size_t i=0) {
                 if (v) cout << "\t\e[91mno track\e[0m " << endl;
                 continue;
             }
-            if (v) cout << "\tn trk: " << R.Trk.N << "\u21b4" << endl;
-            // if (R.NTrk != 1) {
-            //     if (v) cout << " \e[91mmore than one track\e[0m " << endl;
-            //     continue;
-            // }
+            if (v) cout << "\tn trk: " << R.Trk.N << endl;
 
             for (size_t i_pfp=0; i_pfp < R.Pfp.N; i_pfp++) {
 
@@ -104,12 +101,6 @@ void BraggCal(size_t i=0) {
 
                 if (R.Trk.Length < length_mu_min) {
                     if (v) cout << "\t\e[91mtoo short\e[0m (" << R.Trk.Length << ")" << endl;
-                    continue;
-                }
-
-                if (v) cout << "\tn cal: " << R.Cal.NPt;
-                if (R.Cal.NPt < n_cal_min) {
-                    if (v) cout << " \e[91mnot enough cal pt\e[0m " << endl;
                     continue;
                 }
 
@@ -124,44 +115,66 @@ void BraggCal(size_t i=0) {
                     if (v) cout << " \e[91moutside\e[0m " << endl;
                     continue;
                 }
-                if (v) cout << " \u21b4" << endl;
+
+                bool upright = *R.Trk.X[0] > *R.Trk.X.back();
+                if (upright) {if (v) ccout << "\tuprigth" << endl;}
+                else {if (v) cout << "\tupside down" << endl;}
+
+                size_t n_cal_head, n_cal_tail;
+
+                size_t n_cal_bragg=0;
+                // while (
+                //     *R.Cal.ResRange[n_cal_bragg++] < bragg_length
+                //     && n_cal_bragg < R.Cal.NPt
+                // );
+                // if (upright) n_cal_tail = n_cal_bragg;
+                // else n_cal_head = n_cal_bragg;
+
+                // n_cal_bragg=0;
+                // while (
+                //     *R.Cal.ResRange[R.Cal.NPt-1-n_cal_bragg++] > R.Cal.Range - bragg_length 
+                //     && n_cal_bragg < R.Cal.NPt
+                // );
+                // if (upright) n_cal_head = n_cal_bragg;
+                // else n_cal_tail = n_cal_bragg;
+
+                // size_t n_cal_body = n_cal - n_cal_head - n_cal_tail;
+                // if (v) cout << "\tn cal: " << R.Cal.NPt;
+                // if (n_cal_body < n_cal_body_min) {
+                //     if (v) cout << " \e[91mnot enough cal pt\e[0m " << endl;
+                //     continue;
+                // }
+                // if (v) cout << " \u21b4" << endl;
+                if ( R.Cal.NPt < 1 ) continue;
 
                 n_bragg_candidate++;
 
-                bool upside_down = *R.Trk.X.back() > *R.Trk.X[0];
-                if (upside_down) {if (v) cout << "\tupside_down" << endl;}
-                else {if (v) cout << "\tuprigth" << endl;}
-
-                // double avg_dQdx=0;
-                double avg_dEdx=0;
+                double avg_body_dEdx=0;
                 for (size_t i_cal=0; i_cal < R.Cal.NPt; i_cal++) {
-                    // double dQdx = *R.Cal.dQdx[i_cal]; 
                     double dEdx = *R.Cal.dEdx[i_cal]; 
                     double resrange;
-                    if (!upside_down) {
+                    if (upright) {
                         resrange = *R.Cal.ResRange[i_cal];
                     } else {
                         resrange = R.Cal.Range - *R.Cal.ResRange[i_cal];
                     }
-                    // avg_dQdx += dQdx;
-                    avg_dEdx += dEdx;
-
-                    // hdQdx->Fill(resrange,dQdx);
                     hdEdx->Fill(resrange,dEdx);
+
+                    if (i_cal >= n_cal_head && i_cal < R.Cal.NPt-n_cal_tail) {
+                        avg_body_dEdx += dEdx;
+                    }
                 } //end calorimetry loop
-                // avg_dQdx /= R.Cal.NPt;
-                avg_dEdx /= R.Cal.NPt;
-                const double dEdx_min = avg_dEdx*dEdx_min_ratio;
+                avg_body_dEdx /= n_cal_body;
+                const double dEdx_min = avg_body_dEdx*dEdx_min_ratio;
 
-                // if (v) cout << "\tavg dQdx: " << avg_dQdx << endl;
-                // if (v) cout << "\tavg dEdx: " << avg_dEdx << endl;
-
+                if (v) cout << "\tavg dEdx: " << avg_body_dEdx << endl;
 
                 double bragg_int=0;
                 size_t n_bragg_int=0;
-                size_t n_cal_bragg=0;
-                while (*R.Cal.ResRange[n_cal_bragg++] < bragg_length && n_cal_bragg < R.Cal.NPt);
-
+                while (
+                    *R.Cal.ResRange[R.Cal.NPt-1-n_cal_bragg++] > R.Cal.Range - bragg_length 
+                    && n_cal_bragg < R.Cal.NPt
+                );
                 for (size_t i_cal=0; i_cal < n_cal_bragg; i_cal++) {
                     double dEdx = *R.Cal.dEdx[i_cal]; 
                     
@@ -169,14 +182,14 @@ void BraggCal(size_t i=0) {
                     bragg_int += dEdx;
                     n_bragg_int++;
                 }
-                hBragg->Fill(bragg_int*dEdx_MIP/avg_dEdx);
+                hBragg->Fill(bragg_int*dEdx_MIP/avg_body_dEdx);
                 double rrmin = *R.Cal.ResRange[0];
                 double rrmax = *R.Cal.ResRange[n_cal_bragg-1];
                 if (v) cout << "\tBragg?: " << bragg_int << " (" << n_bragg_int << "/" << n_cal_bragg << " rr:" << rrmin << "-" << rrmax << ")";
 
-                // double bragg_min = bragg_min_ratio_per_int*avg_dEdx*n_bragg_int;
+                // double bragg_min = bragg_min_ratio_per_int*avg_body_dEdx*n_bragg_int;
                 // bool is_bragg1 = n_bragg_int > 0 && bragg_int >= bragg_min;
-                double bragg_int_ratio = (double) n_bragg_int/n_bragg;
+                double bragg_int_ratio = (double) n_bragg_int/n_cal_bragg;
                 hBraggIntRatio->Fill(bragg_int_ratio);
                 bool is_bragg1 = bragg_int_ratio > bragg_int_ratio_min;
                 if (!is_bragg1) {if (v) cout << " \e[91mno\e[0m" << endl;}
@@ -185,7 +198,10 @@ void BraggCal(size_t i=0) {
                 bragg_int=0;
                 n_bragg_int=0;
                 n_cal_bragg=0;
-                while (*R.Cal.ResRange[R.Cal.NPt-1-n_cal_bragg++] > R.Cal.Range - bragg_length && n_cal_bragg < R.Cal.NPt-1);
+                while (
+                    *R.Cal.ResRange[R.Cal.NPt-1-n_cal_bragg++] > R.Cal.Range - bragg_length 
+                    && n_cal_bragg < R.Cal.NPt
+                );
 
                 for (size_t i_cal=R.Cal.NPt-n_cal_bragg; i_cal < R.Cal.NPt; i_cal++) {
                     double dEdx = *R.Cal.dEdx[i_cal]; 
@@ -194,14 +210,14 @@ void BraggCal(size_t i=0) {
                     bragg_int += dEdx;
                     n_bragg_int++;
                 }
-                hBragg->Fill(bragg_int*dEdx_MIP/avg_dEdx);
+                hBragg->Fill(bragg_int*dEdx_MIP/avg_body_dEdx);
                 rrmin = *R.Cal.ResRange[R.Cal.NPt-n_cal_bragg];
                 rrmax = *R.Cal.ResRange[R.Cal.NPt-1];
                 if (v) cout << "\tBragg?: " << bragg_int << " (" << n_bragg_int << "/" << n_cal_bragg << " rr:" << rrmin << "-" << rrmax << ")";
 
-                // bragg_min = bragg_min_ratio_per_int*avg_dEdx*n_bragg_int;
+                // bragg_min = bragg_min_ratio_per_int*avg_body_dEdx*n_bragg_int;
                 // bool is_bragg2 = n_bragg_int > 0 && bragg_int >= bragg_min;
-                bragg_int_ratio = (double) n_bragg_int/n_bragg;
+                bragg_int_ratio = (double) n_bragg_int/n_cal_bragg;
                 hBraggIntRatio->Fill(bragg_int_ratio);
                 bool is_bragg2 = bragg_int_ratio > bragg_int_ratio_min;
                 if (!is_bragg2) {if (v) cout << " \e[91mno\e[0m" << endl;}
@@ -210,7 +226,7 @@ void BraggCal(size_t i=0) {
                 if (!is_bragg1 && !is_bragg2) continue;
                 if (is_bragg1 && is_bragg2) {
                     if (v) cout << "\t\t\e[92mdouble bragg\e[0m" << endl;
-                } else if (is_bragg1 == upside_down) {
+                } else if (is_bragg1 == !upright) {
                     if (v) cout << "\t\t\e[92mreverse bragg\e[0m" << endl;
                 }
 
