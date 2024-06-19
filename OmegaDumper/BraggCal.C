@@ -138,7 +138,7 @@ void BraggCal(size_t i=0) {
                 if (upright) n_cal_head = n_cal_bragg;
                 else n_cal_tail = n_cal_bragg;
 
-                size_t n_cal_body = n_cal - n_cal_head - n_cal_tail;
+                size_t n_cal_body = R.Cal.NPt - n_cal_head - n_cal_tail;
                 if (v) cout << "\tn cal: " << R.Cal.NPt;
                 if (n_cal_body < n_cal_body_min) {
                     if (v) cout << " \e[91mnot enough cal pt\e[0m " << endl;
