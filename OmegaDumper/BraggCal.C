@@ -34,7 +34,7 @@ const size_t n_cal_body_min = 10;
 
 const double bragg_length = 10; //cm
 const double bragg_min_ratio_per_int = 3; //MeV/cm
-const double bragg_int_ratio_min = 0.1;
+const double bragg_int_ratio_min = 0.5;
 
 
 void BraggCal(size_t i=0) {
