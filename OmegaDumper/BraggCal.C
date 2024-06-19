@@ -70,7 +70,6 @@ void BraggCal(size_t i=0) {
         
         cout << "\e[3mOpening file #" << ++i_file << "/" << n_file << ": " << filename << "\e[0m" << endl;
 
-        // yad::Truth T(filename.c_str());
         omega::Reco R(filename.c_str());
 
         for (size_t i_evt=0; i_evt < R.N; i_evt++) {
@@ -194,8 +193,12 @@ void BraggCal(size_t i=0) {
                 if (!is_bragg2) {if (v) cout << " \e[91mno\e[0m" << endl;}
                 else {if (v) cout << " \e[94myes\e[0m" << endl;}
 
-                if (is_bragg1 && is_bragg2) if (v) cout << "\t\t\e[92mDOUBLE BRAGG\e[0m" << endl;
                 if (!is_bragg1 && !is_bragg2) continue;
+                if (is_bragg1 && is_bragg2) {
+                    if (v) cout << "\t\t\e[92mdouble bragg\e[0m" << endl;
+                } else (is_bragg1 == upside_down) {
+                    if (v) cout << "\t\t\e[92mreverse bragg\e[0m" << endl;
+                }
 
                 for (size_t i_cal=0; i_cal < R.Cal.NPt; i_cal++) {
                     double dEdx = *R.Cal.dEdx[i_cal]; 
@@ -216,8 +219,8 @@ void BraggCal(size_t i=0) {
     cout << endl;
 
     TCanvas* c1 = new TCanvas("c1","BraggCalo");
-    // c1->Divide(2,2);
-    c1->Divide(2,1);
+    c1->Divide(2,2);
+    // c1->Divide(2,1);
     // c1->cd(1);
     // hdQdx->SetMinimum(1);
     // gPad->SetLogz();
@@ -230,8 +233,8 @@ void BraggCal(size_t i=0) {
     hdEdx2->SetMinimum(1);
     gPad->SetLogz();
     hdEdx2->Draw("colz");
-    // c1->cd(3);
-    // hBragg->Draw("hist");
+    c1->cd(3);
+    hBragg->Draw("hist");
 
     cout << "nbr of bragg/candidate: " << n_bragg << "/" << n_bragg_candidate << " (" << 100.*n_bragg/n_bragg_candidate << "%)" << endl;
 
