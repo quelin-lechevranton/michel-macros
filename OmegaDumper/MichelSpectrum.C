@@ -1,5 +1,8 @@
 #include "OmegaDumper_tools.h"
 
+const size_t n_file=3;
+const vector<string> filelist = omega::ReadFileList(n_file,"list/jeremy.list");
+
 const bool v = true;
 const struct {
     double  Xmin=-320, //cm
@@ -31,9 +34,6 @@ const double bragg_min = 20; //MeV/cm
 
 const double length_el_max = 20; //cm
 const double end_radius = 10; //cm
-
-const size_t n_file=3;
-const vector<string> filelist = omega::ReadFileList(n_file,"list/ijclab.list");
 
 void MichelSpectrum(size_t i=0) {
     clock_t start_time=clock();
@@ -145,7 +145,8 @@ void MichelSpectrum(size_t i=0) {
                     c[2]++;
                 }
                 gEnd->AddPoint(*End.Y,*End.Z,*End.X);
-
+                
+                double E=0;
                 for (size_t j_pfp=0; j_pfp < R.Pfp.N; j_pfp++) {
 
                     if (R.Pfp.isTrk[j_pfp]) {
@@ -154,7 +155,6 @@ void MichelSpectrum(size_t i=0) {
                     }
                     R.GetPfpSpt(j_pfp);
 
-                    double E=0;
                     for (size_t j_spt=0; j_spt < R.Spt.N; j_spt++) {
                         if (omega::Distance(
                             End.X,End.Y,End.Z,
@@ -169,8 +169,8 @@ void MichelSpectrum(size_t i=0) {
                             E += *R.Hit.SumADC[j_hit];
                         }
                     }
-                    hE->Fill(E);
                 } //end michel spectrum pfparticle loop
+                hE->Fill(E);
             } //end muon selection pfparticle loop
 
         } //end event loop
