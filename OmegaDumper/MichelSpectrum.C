@@ -1,27 +1,15 @@
 //#include "OmegaDumper_tools.h"
 #include "OmegaLight_tools.h"
 
-const size_t n_file=3;
-const vector<string> filelist = omega::ReadFileList(n_file,"list/light.list");
+const size_t n_file=6;
+const vector<string> filelist = omega::ReadFileList(n_file,"list/cosmics.list");
 
 const bool v = true;
-const struct {
-    double  Xmin=-320, //cm
-            Xmax=350,
-            Ymin=-320,
-            Ymax=320,
-            Zmin=20,
-            Zmax=280;
-} det;
 
-typedef struct {
-    size_t  n,
-            min,
-            max;
-} Binning;
-const Binning bRR = {100,0,300}; //cm
-const Binning bdEdx = {50,0,5}; //MeV/cm
-const Binning bE = {100,0,1000};
+const omega::Limits det = omega::fiducial;
+const omega::Binning bRR = {100,0,300}; //cm
+const omega::Binning bdEdx = {50,0,5}; //MeV/cm
+const omega::Binning bE = {100,0,1000};
 
 const double length_mu_min = 20; //cm
 const double n_cal_min = 1; //????
@@ -87,9 +75,7 @@ void MichelSpectrum(size_t i=0) {
                     R.Trk.X,
                     R.Trk.Y,
                     R.Trk.Z,
-                    det.Xmin,det.Xmax,
-                    det.Ymin,det.Ymax,
-                    det.Zmin,det.Zmax
+                    det
                 )) continue;
 
                 double avg_dEdx=0;

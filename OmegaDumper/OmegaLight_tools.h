@@ -26,12 +26,66 @@ private:
     TFile* file;
     TTree* tree;
 
-public:
-    size_t N;
+    class MCParticles {
+    public:
+        size_t N;
+        size_t NDau;
+        bool isOrphelin;
+        int Pdg;
+        size_t NPt;
+        vector<double*> X,
+                        Y,
+                        Z,
+                        // T,
+                        // Px,
+                        // Py,
+                        // Pz,
+                        P,
+                        E;
+        
+        void reset() {
+            N=0;
+            NDau=0;
+            isOrphelin=true;
+            Pdg=0;
+            X.clear();
+            Y.clear();
+            Z.clear();
+            // T.clear();
+            // Px.clear();
+            // Py.clear();
+            // Pz.clear();
+            P.clear();
+            E.clear();
+        }
+    };
 
+    class Deposits {
+    public:
+        size_t N;
+        // vector<int*> Pdg;
+        vector<double*> X,
+                        Y,
+                        Z,
+                        // T,
+                        E;
+    
+        void reset() {
+            N=0;
+            // Pdg.clear();
+            X.clear();
+            Y.clear();
+            Z.clear();
+            // T.clear();
+            E.clear();
+        }    
+    };
+
+public:
     //Events
     size_t Event, Run, SubRun;
 
+private:
     //MCTruth
     size_t NPrt;
 
@@ -60,10 +114,13 @@ public:
                             // *DepT=nullptr,
                             *DepE=nullptr;
 
-    class Deposits {
-    public:
-        
-    }
+public:
+
+    size_t N;
+    MCParticles Prt;
+    MCParticles Mom;
+    MCParticles Dau;
+    Deposits Dep;
 
     Truth(const char* filename) {
         file = new TFile(filename);
@@ -105,7 +162,83 @@ public:
     }
     ~Truth() { file-> Close(); }
     
-    void GetEvent(size_t i) { tree->GetEntry(i); }
+    void GetEvt(size_t i_evt) { 
+        tree->GetEntry(i_evt);
+        Prt.reset();
+        Prt.N = NPrt;
+    }
+
+    void GetPrt(size_t i_prt) {
+        Prt.reset();
+        Prt.N = NPrt;
+        Prt.NDau = PrtNDau->at(i_prt);
+        Prt.isOrphelin = PrtMomID->at(i_prt) == -1;
+        Prt.Pdg = PrtPdg->at(i_prt);
+        Prt.NPt = PrtNPt->at(i_prt);
+        for (size_t i_ppt=0; i_ppt < PrtNPt->at(i_prt); i_ppt++) {
+
+            // Prt.index
+            Prt.X.push_back(&(*PrtX)[i_prt][i_ppt]);
+            Prt.Y.push_back(&(*PrtY)[i_prt][i_ppt]);
+            Prt.Z.push_back(&(*PrtZ)[i_prt][i_ppt]);
+            // Prt.T.push_back(&(*PrtT)[i_prt][i_ppt]);
+            // Prt.Px.push_back(&(*PrtPx)[i_prt][i_ppt]);
+            // Prt.Py.push_back(&(*PrtPy)[i_prt][i_ppt]);
+            // Prt.Pz.push_back(&(*PrtPz)[i_prt][i_ppt]);
+            Prt.P.push_back(&(*PrtP)[i_prt][i_ppt]);
+            Prt.E.push_back(&(*PrtE)[i_prt][i_ppt]);
+        }
+    }
+    void GetPrtMom(size_t i_prt) {
+        Mom.reset();
+        size_t i_mom = PrtMomID->at(i_prt);
+        Mom.NDau = PrtNDau->at(i_mom);
+        Mom.isOrphelin = PrtMomID->at(i_mom) == -1;
+        Mom.NPt = PrtNPt->at(i_mom);
+        for (size_t i_ppt=0; i_ppt < PrtNPt->at(i_mom); i_ppt++) {
+
+            Mom.X.push_back(&(*PrtX)[i_mom][i_ppt]);
+            Mom.Y.push_back(&(*PrtY)[i_mom][i_ppt]);
+            Mom.Z.push_back(&(*PrtZ)[i_mom][i_ppt]);
+            // Mom.T.push_back(&(*PrtT)[i_mom][i_ppt]);
+            // Mom.Px.push_back(&(*PrtPx)[i_mom][i_ppt]);
+            // Mom.Py.push_back(&(*PrtPy)[i_mom][i_ppt]);
+            // Mom.Pz.push_back(&(*PrtPz)[i_mom][i_ppt]);
+            Mom.P.push_back(&(*PrtP)[i_mom][i_ppt]);
+            Mom.E.push_back(&(*PrtE)[i_mom][i_ppt]);
+        }
+    }
+    void GetPrtDau(size_t i_prt, size_t j_dau) {
+        Dau.reset();
+        size_t i_dau = (*PrtDauID)[i_prt][j_dau];
+        Dau.NDau = PrtNDau->at(i_dau);
+        Dau.isOrphelin = PrtMomID->at(i_dau) == -1;
+        Dau.NPt = PrtNPt->at(i_dau);
+        for (size_t i_ppt=0; i_ppt < PrtNPt->at(i_dau); i_ppt++) {
+
+            Dau.X.push_back(&(*PrtX)[i_dau][i_ppt]);
+            Dau.Y.push_back(&(*PrtY)[i_dau][i_ppt]);
+            Dau.Z.push_back(&(*PrtZ)[i_dau][i_ppt]);
+            // Dau.T.push_back(&(*PrtT)[i_dau][i_ppt]);
+            // Dau.Px.push_back(&(*PrtPx)[i_dau][i_ppt]);
+            // Dau.Py.push_back(&(*PrtPy)[i_dau][i_ppt]);
+            // Dau.Pz.push_back(&(*PrtPz)[i_dau][i_ppt]);
+            Dau.P.push_back(&(*PrtP)[i_dau][i_ppt]);
+            Dau.E.push_back(&(*PrtE)[i_dau][i_ppt]);
+        }
+    }
+    void GetPrtDep(size_t i_prt) {
+        Dep.reset();
+        Dep.N = PrtNDep->at(i_prt);
+        for (size_t i_dep=0; i_dep < PrtNDep->at(i_prt); i_dep++) {
+
+            Dep.X.push_back(&(*DepX)[i_prt][i_dep]);
+            Dep.Y.push_back(&(*DepY)[i_prt][i_dep]);
+            Dep.Z.push_back(&(*DepZ)[i_prt][i_dep]);
+            // Dep.T.push_back(&(*DepT)[i_prt][i_dep]);
+            Dep.E.push_back(&(*DepE)[i_prt][i_dep]);
+        }
+    }
 }; //end of omega::Truth
 
 
@@ -118,7 +251,7 @@ private:
     class PFParticles {
     public:
         size_t N;
-        vector<size_t>  index;
+        // vector<size_t>  index;
         vector<bool>    isTrk;
                         // isShw;
         // vector<size_t*> NClu,
@@ -127,7 +260,7 @@ private:
 
         void reset() {
             N=0;
-            index.clear();
+            // index.clear();
             isTrk.clear();
             // isShw.clear();
             // NClu.clear();
@@ -411,7 +544,7 @@ public:
         Trk.N = NTrk;
         for (size_t i_pfp=0; i_pfp < NPfp; i_pfp++) {
 
-            Pfp.index.push_back(i_pfp);
+            // Pfp.index.push_back(i_pfp);
             Pfp.isTrk.push_back(PfpTrkID->at(i_pfp) >= 0);
             // Pfp.isShw.push_back(PfpShwID->at(i_pfp) >= 0);
             // Pfp.NClu.push_back(&PfpNClu->at(i_pfp));
@@ -612,13 +745,31 @@ vector<string> ReadFileList(size_t n_file, string listname) {
   return filelist;
 } //end of yad::ReadFileList
 
-bool IsInside (vector<double*> Xs,vector<double*> Ys,vector<double*> Zs, double Xmin=-350, double Xmax=350, double Ymin=-350, double Ymax=350, double Zmin=0, double Zmax=200) {
+typedef struct {
+    size_t  n,
+            min,
+            max;
+} Binning;
+
+typedef struct {
+    double  Xmin, //cm
+            Xmax,
+            Ymin,
+            Ymax,
+            Zmin,
+            Zmax;
+} Limits;
+const Limits cryostat = {-350,350,-350,350,0,300};
+const Limits cryostat2 = {-345,345,-345,345,5,295};
+const Limits fiducial = {-320,350,-320,320,20,280};
+
+bool IsInside (vector<double*> Xs,vector<double*> Ys,vector<double*> Zs, Limits lim = cryostat) {
     bool is_in=true;
-    vector<size_t> indexes = {0,Xs.size()-1};
+    vector<size_t> indexes = {0,Zs.size()-1};
     for (size_t i : indexes) {
-        is_in = Xmin < *Xs[i] && *Xs[i] < Xmax &&
-                Ymin < *Ys[i] && *Ys[i] < Ymax &&
-                Zmin < *Zs[i] && *Zs[i] < Zmax;
+        is_in = lim.Xmin < *Xs[i] && *Xs[i] < lim.Xmax &&
+                lim.Ymin < *Ys[i] && *Ys[i] < lim.Ymax &&
+                lim.Zmin < *Zs[i] && *Zs[i] < lim.Zmax;
         if (!is_in) break;
     }
     return is_in;
