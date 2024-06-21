@@ -5,26 +5,26 @@ const vector<string> filelist = omega::ReadFileList(n_file,"list/jeremy.list");
 
 const bool v = false; //verbose
 
-const omega::Limits det = omega::cryostat2;
+const omega::Limits det = omega::fiducial;
 
 const omega::Binning bRR = {100,0,300}; //cm
 const omega::Binning bdEdx = {50,0,5}; //MeV/cm
 const omega::Binning bdQdx = {50,0,800};
-const omega::Binning bBragg = {100,0,50}; //#avg dEdx
+const omega::Binning bBragg = {62,-1,30}; //#avg dEdx
 const omega::Binning bBraggIntRatio = {20,0,1}; 
 
 const double length_mu_min = 20; //cm
 
 // const double dEdx_MIP = 2; //MeV/cm
-const double dEdx_min_ratio = 1;
+const double dEdx_min_ratio = 1.5;
 // const double dEdx_min = dEdx_MIP*dEdx_min_ratio;
 
-const size_t n_cal_body_min = 10;
+const size_t n_cal_body_min = 20;
 
-const double bragg_length = 10; //cm
-const double bragg_min_ratio = 10; //cm/MeV?
+const double bragg_length = 2; //cm
+// const double bragg_min_ratio = 10; //cm/MeV?
 
-const double bragg_int_ratio_min = 0.5;
+// const double bragg_int_ratio_min = 0.5;
 
 
 
@@ -61,7 +61,7 @@ void BraggCal2(size_t i=0) {
     vector<size_t> nBragg={3,4,2};
     vector<vector<vector<TH1D*>>> hBragg;
     vector<string> line = {"Bragg","Reverse","Outside"};
-    vector<string> col = {"Bragg","Treshol","Unnormalized","Treshold Unnormalized"};
+    vector<string> col = {" Bragg"," Treshol"," Unnormalized"," Treshold Unnormalized"};
     vector<int> color={kRed,kBlue};
     for (int i=0; i<nBragg[0]; i++) {
         vector<vector<TH1D*>> tpBragg;
@@ -101,7 +101,7 @@ void BraggCal2(size_t i=0) {
 
             R.GetEvtPfp(i_evt);
 
-            if (R.Trk.N < 1) {
+            if (R.Trk.N != 1) {
                 if (v) cout << "\t\e[91mno track\e[0m " << endl;
                 continue;
             }
@@ -172,12 +172,12 @@ void BraggCal2(size_t i=0) {
                     }
                 } //end calorimetry loop
                 avg_body_dEdx /= n_cal_body;
-                const double dEdx_min = avg_body_dEdx*dEdx_min_ratio;
-                // const double dEdx_min = 2*dEdx_min_ratio;
+                // const double dEdx_min = avg_body_dEdx*dEdx_min_ratio;
+                const double dEdx_min = 2*dEdx_min_ratio;
 
                 if (v) cout << "\tavg body dEdx: " << avg_body_dEdx << " (" << n_cal_body << ")" << endl;
 
-                // if(avg_body_dEdx>3 || avg_body_dEdx<1) continue;
+                if(avg_body_dEdx>4 || avg_body_dEdx<1) continue;
 
                 double bragg_tail_int=0;
                 double bragg_tail_treshold_int=0;
@@ -192,48 +192,20 @@ void BraggCal2(size_t i=0) {
                 }
                 if (v) cout << "\tBraggHead: " << bragg_tail_int << " (" << n_bragg_tail_int << "/" << n_cal_tail << ")" << endl;
 
-                if (inside) {
-                    if (upright) {
-                        if (sim_res[i_file][i_evt]) {
-                            hBragg[0][0][1]->Fill(bragg_tail_int/avg_body_dEdx);
-                            hBragg[0][1][1]->Fill(bragg_tail_treshold_int/avg_body_dEdx);
-                            hBragg[0][2][1]->Fill(bragg_tail_int/2);
-                            hBragg[0][3][1]->Fill(bragg_tail_treshold_int/2);
-                        } else {
-                            hBragg[0][0][0]->Fill(bragg_tail_int/avg_body_dEdx);
-                            hBragg[0][1][0]->Fill(bragg_tail_treshold_int/avg_body_dEdx);
-                            hBragg[0][2][0]->Fill(bragg_tail_int/2);
-                            hBragg[0][3][0]->Fill(bragg_tail_treshold_int/2);
-                        }
-                    }
-                    else {
-                        if (sim_res[i_file][i_evt]) {
-                            hBragg[1][0][1]->Fill(bragg_tail_int/avg_body_dEdx);
-                            hBragg[1][1][1]->Fill(bragg_tail_treshold_int/avg_body_dEdx);
-                            hBragg[1][2][1]->Fill(bragg_tail_int/2);
-                            hBragg[1][3][1]->Fill(bragg_tail_treshold_int/2);
-                        } else {
-                            hBragg[1][0][0]->Fill(bragg_tail_int/avg_body_dEdx);
-                            hBragg[1][1][0]->Fill(bragg_tail_treshold_int/avg_body_dEdx);
-                            hBragg[1][2][0]->Fill(bragg_tail_int/2);
-                        }
-                    }
-                } else {
-                    if (upright) {
-                        if (sim_res[i_file][i_evt]) {
-                            hBragg[2][0][1]->Fill(bragg_tail_int/avg_body_dEdx);
-                            hBragg[2][1][1]->Fill(bragg_tail_treshold_int/avg_body_dEdx);
-                            hBragg[2][2][1]->Fill(bragg_tail_int/2);
-                            hBragg[2][3][1]->Fill(bragg_tail_treshold_int/2);
-                        } else {
-                            hBragg[2][0][0]->Fill(bragg_tail_int/avg_body_dEdx);
-                            hBragg[2][1][0]->Fill(bragg_tail_treshold_int/avg_body_dEdx);
-                            hBragg[2][2][0]->Fill(bragg_tail_int/2);
-                        }
-                    }
-                }
+                vector<double> bragg_tail = {
+                    bragg_tail_int/avg_body_dEdx,
+                    bragg_tail_treshold_int/avg_body_dEdx,
+                    bragg_tail_int/2,
+                    bragg_tail_treshold_int/2
+                };
+                // vector<double> bragg_tail = {
+                //     bragg_tail_int/avg_body_dEdx/n_cal_tail,
+                //     bragg_tail_treshold_int/avg_body_dEdx/n_bragg_tail_int,
+                //     bragg_tail_int/2/n_cal_tail,
+                //     bragg_tail_treshold_int/2/n_bragg_tail_int
+                // };
 
-                double bragg_min = bragg_min_ratio*avg_body_dEdx;
+                // double bragg_min = bragg_min_ratio*avg_body_dEdx;
                 // bool is_bragg1 = n_bragg_int > 0 && bragg_int >= bragg_min;
                 // double bragg_int_ratio = (double) n_bragg_int/n_cal_tail;
                 // hBraggIntRatio->Fill(bragg_int_ratio);
@@ -255,42 +227,41 @@ void BraggCal2(size_t i=0) {
                 }
                 // if (v) cout << "\tBraggTail: " << bragg_head_int << " (" << n_bragg_head_int << "/" << n_cal_head << ")" << endl;
 
-                if (inside) {
-                    if (!upright) {
-                        if (sim_res[i_file][i_evt]) {
-                            hBragg[0][0][1]->Fill(bragg_head_int/avg_body_dEdx);
-                            hBragg[0][1][1]->Fill(bragg_head_treshold_int/avg_body_dEdx);
-                            hBragg[0][2][1]->Fill(bragg_head_int/2);
-                            hBragg[0][3][1]->Fill(bragg_head_treshold_int/2);
-                        } else {
-                            hBragg[0][0][0]->Fill(bragg_head_int/avg_body_dEdx);
-                            hBragg[0][1][0]->Fill(bragg_head_treshold_int/avg_body_dEdx);
-                            hBragg[0][2][0]->Fill(bragg_head_int/2);
+                vector<double> bragg_head = {
+                    bragg_head_int/avg_body_dEdx,
+                    bragg_head_treshold_int/avg_body_dEdx,
+                    bragg_head_int/2,
+                    bragg_head_treshold_int/2
+                };
+                // vector<double> bragg_head = {
+                //     bragg_head_int/avg_body_dEdx/n_cal_head,
+                //     bragg_head_treshold_int/avg_body_dEdx/n_bragg_head_int,
+                //     bragg_head_int/2/n_cal_head,
+                //     bragg_head_treshold_int/2/n_bragg_head_int
+                // };
+
+                size_t tru = sim_res[i_file][i_evt];
+                // if (inside) {
+                if (true) {
+                    if (upright) {
+                        for (int j=0; j<nBragg[1]; j++) {
+                            hBragg[0][j][tru]->Fill(bragg_tail[j]);
+                            hBragg[1][j][tru]->Fill(bragg_head[j]);
                         }
-                    }
-                    else {
-                        if (sim_res[i_file][i_evt]) {
-                            hBragg[1][0][1]->Fill(bragg_head_int/avg_body_dEdx);
-                            hBragg[1][1][1]->Fill(bragg_head_treshold_int/avg_body_dEdx);
-                            hBragg[1][2][1]->Fill(bragg_head_int/2);
-                            hBragg[1][3][1]->Fill(bragg_head_treshold_int/2);
-                        } else {
-                            hBragg[1][0][0]->Fill(bragg_head_int/avg_body_dEdx);
-                            hBragg[1][1][0]->Fill(bragg_head_treshold_int/avg_body_dEdx);
-                            hBragg[1][2][0]->Fill(bragg_head_int/2);
+                    } else {
+                        for (int j=0; j<nBragg[1]; j++) {
+                            hBragg[0][j][tru]->Fill(bragg_head[j]);
+                            hBragg[1][j][tru]->Fill(bragg_tail[j]);
                         }
                     }
                 } else {
-                    if (!upright) {
-                        if (sim_res[i_file][i_evt]) {
-                            hBragg[2][0][1]->Fill(bragg_head_int/avg_body_dEdx);
-                            hBragg[2][1][1]->Fill(bragg_head_treshold_int/avg_body_dEdx);
-                            hBragg[2][2][1]->Fill(bragg_head_int/2);
-                            hBragg[2][3][1]->Fill(bragg_head_treshold_int/2);
-                        } else {
-                            hBragg[2][0][0]->Fill(bragg_head_int/avg_body_dEdx);
-                            hBragg[2][1][0]->Fill(bragg_head_treshold_int/avg_body_dEdx);
-                            hBragg[2][2][0]->Fill(bragg_head_int/2);
+                    if (upright) {
+                        for (int j=0; j<nBragg[1]; j++) {
+                            hBragg[2][j][tru]->Fill(bragg_tail[j]);
+                        }
+                    } else {
+                        for (int j=0; j<nBragg[1]; j++) {
+                            hBragg[2][j][tru]->Fill(bragg_head[j]);
                         }
                     }
                 }
@@ -358,8 +329,8 @@ void BraggCal2(size_t i=0) {
     for (int i=0; i<nBragg[0]; i++) {
         for (int j=0; j<nBragg[1]; j++) {
             c2->cd(++k);
-            hBragg[i][j][0]->Draw("hist");
-            hBragg[i][j][1]->Draw("samehist");
+            hBragg[i][j][1]->Draw("hist");
+            hBragg[i][j][0]->Draw("samehist");
         }
     }
 

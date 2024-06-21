@@ -746,8 +746,8 @@ vector<string> ReadFileList(size_t n_file, string listname) {
 } //end of yad::ReadFileList
 
 typedef struct {
-    size_t  n,
-            min,
+    size_t  n;
+    double  min,
             max;
 } Binning;
 

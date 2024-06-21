@@ -1,7 +1,7 @@
 #include "OmegaLight_tools.h"
 
 /*
- * muon Bragg peak analysis preliminary for TrueMichel_v2_1.C
+ * muon Bragg peak analysis preliminary for TrueMichel.C
 */
 
 const size_t n_file=3;
@@ -9,8 +9,7 @@ const vector<string> filelist = omega::ReadFileList(n_file,"list/jeremy.list");
 
 const bool v = false;
 
-const omega::Limits det = omega::cryostat;
-// const omega::Limits det = omega::fiducial;
+const omega::Limits det = omega::fiducial;
 
 const omega::Binning bAvg = {30,0,30};
 const omega::Binning bBragg = {100,0,10}; //#avg dEdx
@@ -72,14 +71,14 @@ void BraggSim(size_t i=0) {
 
                 n_mu++;
 
-                if (!omega::IsInside(
+                bool inside = omega::IsInside(
                     T.Dep.X,
                     T.Dep.Y,
                     T.Dep.Z,
                     det
-                )) continue;
-                n_mu_in++;
-
+                ); 
+                if (inside) n_mu_in++;
+                // if (!inside) continue;
 
                 double avg_body_dEdx=0;
                 for (size_t i_dep=0; i_dep < T.Dep.N-n_dep_bragg; i_dep++) {
@@ -110,9 +109,10 @@ void BraggSim(size_t i=0) {
                 hBragg[3]->Fill(bragg_treshold_int / 2 / n_bragg_int);
 
                 // ofstream("braggsim_results.txt")
-                if (bragg_int/n_dep_bragg > 6) n_mu_stop++;
-
-                res[i_file][i_evt] += 1;
+                if (bragg_int/n_dep_bragg > 6) {
+                    n_mu_stop++;
+                    res[i_file][i_evt] += 1;
+                }
 
                 // double avg_dEdx=0;
                 // for (size_t i_dep=n_dep-n_dep_bragg-n_peak_tail; i_dep < n_dep-n_peak_tail; i_dep++) {
@@ -137,14 +137,14 @@ void BraggSim(size_t i=0) {
 
     cout << "n_mu / n_mu_in / n_mu_stop: " << n_mu << " / " << n_mu_in << " / " << n_mu_stop << endl;
 
-    // ofstream f("braggsim_res.txt");
-    // for (const vector<size_t> r : res) {
-    //     for (const size_t s : r) {
-    //         f << s << " ";
-    //     }
-    //     f << "\n";
-    // }
-    // f.close();
+    ofstream f("braggsim_res.txt");
+    for (const vector<size_t> r : res) {
+        for (const size_t s : r) {
+            f << s << " ";
+        }
+        f << "\n";
+    }
+    f.close();
 
     cout << "total time of execution: " << static_cast<double>(clock()-start_time)/CLOCKS_PER_SEC << " seconds" << endl;
 }
