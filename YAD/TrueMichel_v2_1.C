@@ -15,8 +15,8 @@ size_t n_tail_deposits=2;
 double threshold_dEdx=5;
 
 
-const size_t n_file=30;
-const vector<string> filelist = yad::readFileList(n_file,"list/jeremy.list");
+const size_t n_file=3;
+const vector<string> filelist = yad::readFileList(n_file,"list/ijclab.list");
 
 
 void fillElectronSpectrum(size_t,size_t);
@@ -118,6 +118,7 @@ void TrueMichel_v2_1() {
             for (size_t i_prt=0; i_prt < T.NPrt; i_prt++) {
                 if (T.PrtMomID->at(i_prt)!=-1) continue;
                 if (T.PrtPdg->at(i_prt)!=13 && T.PrtPdg->at(i_prt)!=-13) continue;
+                if (T.PrtNDep->at(i_prt)<1) continue;
                 if (yad::isInside(
                     T.DepX->at(i_prt),
                     T.DepY->at(i_prt),

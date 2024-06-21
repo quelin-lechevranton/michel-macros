@@ -1,7 +1,7 @@
 #include "OmegaLight_tools.h"
 
 const size_t n_file=3;
-const vector<string> filelist = omega::ReadFileList(n_file,"list/jeremy.list");
+const vector<string> filelist = omega::ReadFileList(n_file,"list/light.list");
 
 const bool v = false; //verbose
 

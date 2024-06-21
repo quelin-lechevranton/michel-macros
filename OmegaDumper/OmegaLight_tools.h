@@ -194,6 +194,7 @@ public:
         size_t i_mom = PrtMomID->at(i_prt);
         Mom.NDau = PrtNDau->at(i_mom);
         Mom.isOrphelin = PrtMomID->at(i_mom) == -1;
+        Mom.Pdg = PrtPdg->at(i_mom);
         Mom.NPt = PrtNPt->at(i_mom);
         for (size_t i_ppt=0; i_ppt < PrtNPt->at(i_mom); i_ppt++) {
 
@@ -213,6 +214,7 @@ public:
         size_t i_dau = (*PrtDauID)[i_prt][j_dau];
         Dau.NDau = PrtNDau->at(i_dau);
         Dau.isOrphelin = PrtMomID->at(i_dau) == -1;
+        Dau.Pdg = PrtPdg->at(i_dau);
         Dau.NPt = PrtNPt->at(i_dau);
         for (size_t i_ppt=0; i_ppt < PrtNPt->at(i_dau); i_ppt++) {
 
@@ -237,6 +239,32 @@ public:
             Dep.Z.push_back(&(*DepZ)[i_prt][i_dep]);
             // Dep.T.push_back(&(*DepT)[i_prt][i_dep]);
             Dep.E.push_back(&(*DepE)[i_prt][i_dep]);
+        }
+    }
+    void GetMomDep(size_t i_prt) {
+        Dep.reset();
+        size_t i_mom = PrtMomID->at(i_prt);
+        Dep.N = PrtNDep->at(i_mom);
+        for (size_t i_dep=0; i_dep < PrtNDep->at(i_mom); i_dep++) {
+
+            Dep.X.push_back(&(*DepX)[i_mom][i_dep]);
+            Dep.Y.push_back(&(*DepY)[i_mom][i_dep]);
+            Dep.Z.push_back(&(*DepZ)[i_mom][i_dep]);
+            // Dep.T.push_back(&(*DepT)[i_mom][i_dep]);
+            Dep.E.push_back(&(*DepE)[i_mom][i_dep]);
+        }
+    }
+    void GetDauDep(size_t i_prt, size_t j_dau) {
+        Dep.reset();
+        size_t i_dau = (*PrtDauID)[i_prt][j_dau];
+        Dep.N = PrtNDep->at(i_dau);
+        for (size_t i_dep=0; i_dep < PrtNDep->at(i_dau); i_dep++) {
+
+            Dep.X.push_back(&(*DepX)[i_dau][i_dep]);
+            Dep.Y.push_back(&(*DepY)[i_dau][i_dep]);
+            Dep.Z.push_back(&(*DepZ)[i_dau][i_dep]);
+            // Dep.T.push_back(&(*DepT)[i_dau][i_dep]);
+            Dep.E.push_back(&(*DepE)[i_dau][i_dep]);
         }
     }
 }; //end of omega::Truth
@@ -764,8 +792,10 @@ const Limits cryostat2 = {-345,345,-345,345,5,295};
 const Limits fiducial = {-320,350,-320,320,20,280};
 
 bool IsInside (vector<double*> Xs,vector<double*> Ys,vector<double*> Zs, Limits lim = cryostat) {
+    size_t s=Xs.size();
+    if (!s) return false;
     bool is_in=true;
-    vector<size_t> indexes = {0,Zs.size()-1};
+    vector<size_t> indexes = {0,s-1};
     for (size_t i : indexes) {
         is_in = lim.Xmin < *Xs[i] && *Xs[i] < lim.Xmax &&
                 lim.Ymin < *Ys[i] && *Ys[i] < lim.Ymax &&

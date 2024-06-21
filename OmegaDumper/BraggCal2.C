@@ -1,7 +1,7 @@
 #include "OmegaLight_tools.h"
 
 const size_t n_file=3;
-const vector<string> filelist = omega::ReadFileList(n_file,"list/jeremy.list");
+const vector<string> filelist = omega::ReadFileList(n_file,"list/light.list");
 
 const bool v = false; //verbose
 
@@ -43,6 +43,7 @@ void BraggCal2(size_t i=0) {
         }
         sim_res.push_back(r);
     }
+    cout << "\e[3m\"braggsim_res.txt\" read successfuly\e[0m";
     f.close();
 
     // TH2D* hdEdx = new TH2D(
@@ -61,7 +62,7 @@ void BraggCal2(size_t i=0) {
     vector<size_t> nBragg={3,4,2};
     vector<vector<vector<TH1D*>>> hBragg;
     vector<string> line = {"Bragg","Reverse","Outside"};
-    vector<string> col = {" Bragg"," Treshol"," Unnormalized"," Treshold Unnormalized"};
+    vector<string> col = {" Normalized"," Treshold Normalized"," Non-normalized"," Treshold Non-normalized"};
     vector<int> color={kRed,kBlue};
     for (int i=0; i<nBragg[0]; i++) {
         vector<vector<TH1D*>> tpBragg;
@@ -324,9 +325,9 @@ void BraggCal2(size_t i=0) {
     // hBraggIntRatio->Draw("hist");
 
     TCanvas* c2 = new TCanvas("c2","BraggCal2");
-    c2->Divide(nBragg[1],nBragg[0]);
+    c2->Divide(nBragg[1],nBragg[0]-1);
     int k=0;
-    for (int i=0; i<nBragg[0]; i++) {
+    for (int i=0; i<nBragg[0]-1; i++) {
         for (int j=0; j<nBragg[1]; j++) {
             c2->cd(++k);
             hBragg[i][j][1]->Draw("hist");

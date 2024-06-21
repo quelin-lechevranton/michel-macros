@@ -608,8 +608,10 @@ vector<string> ReadFileList(size_t n_file, string listname) {
 } //end of yad::ReadFileList
 
 bool IsInside (vector<double*> Xs,vector<double*> Ys,vector<double*> Zs, double Xmin=-350, double Xmax=350, double Ymin=-350, double Ymax=350, double Zmin=0, double Zmax=200) {
+    size_t s=Xs.size();
+    if (!s) return false;
     bool is_in=true;
-    vector<size_t> indexes = {0,Xs.size()-1};
+    vector<size_t> indexes = {0,s-1};
     for (size_t i : indexes) {
         is_in = Xmin < *Xs[i] && *Xs[i] < Xmax &&
                 Ymin < *Ys[i] && *Ys[i] < Ymax &&

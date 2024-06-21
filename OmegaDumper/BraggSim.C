@@ -5,7 +5,7 @@
 */
 
 const size_t n_file=3;
-const vector<string> filelist = omega::ReadFileList(n_file,"list/jeremy.list");
+const vector<string> filelist = omega::ReadFileList(n_file,"list/light.list");
 
 const bool v = false;
 
@@ -132,19 +132,21 @@ void BraggSim(size_t i=0) {
     c1->Divide(2,2);
     for (int i=0; i<nBragg; i++) {
         c1->cd(i+1);
+        gPad->SetLogy();
         hBragg[i]->Draw("hist");
     }
 
     cout << "n_mu / n_mu_in / n_mu_stop: " << n_mu << " / " << n_mu_in << " / " << n_mu_stop << endl;
 
-    ofstream f("braggsim_res.txt");
-    for (const vector<size_t> r : res) {
-        for (const size_t s : r) {
-            f << s << " ";
-        }
-        f << "\n";
-    }
-    f.close();
+    // ofstream f("braggsim_res.txt");
+    // for (const vector<size_t> r : res) {
+    //     for (const size_t s : r) {
+    //         f << s << " ";
+    //     }
+    //     f << "\n";
+    // }
+    // cout << "\e[3m\"braggsim_res.txt\" written on disk\e[0m";
+    // f.close();
 
     cout << "total time of execution: " << static_cast<double>(clock()-start_time)/CLOCKS_PER_SEC << " seconds" << endl;
 }
