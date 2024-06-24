@@ -1,8 +1,8 @@
 //#include "OmegaDumper_tools.h"
 #include "OmegaLight_tools.h"
 
-const size_t n_file=6;
-const vector<string> filelist = omega::ReadFileList(n_file,"list/cosmics.list");
+const size_t n_file=37;
+const vector<string> filelist = omega::ReadFileList(n_file,"list/muminus.list");
 
 const bool v = true;
 
@@ -165,9 +165,8 @@ void MichelSpectrum(size_t i=0) {
                     }
                 } //end michel spectrum pfparticle loop
                 if (E>1) hE->Fill(E);
-		else c[3]++;
+		        else c[3]++;
             } //end muon selection pfparticle loop
-
         } //end event loop
     } //end file loop
     cout << endl;

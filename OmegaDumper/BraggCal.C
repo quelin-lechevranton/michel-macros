@@ -1,41 +1,53 @@
 #include "OmegaLight_tools.h"
 
-const size_t n_file=3;
-const vector<string> filelist = omega::ReadFileList(n_file,"list/light.list");
+const size_t n_file=37;
+const vector<string> filelist = omega::ReadFileList(n_file,"list/muminus.list");
 
 const bool v = false; //verbose
 
-const omega::Limits det = omega::cryostat2;
+const omega::Limits det = omega::fiducial;
 
 const omega::Binning bRR = {100,0,300}; //cm
 const omega::Binning bdEdx = {50,0,5}; //MeV/cm
 const omega::Binning bdQdx = {50,0,800};
-const omega::Binning bBragg = {100,0,50}; //#avg dEdx
+const omega::Binning bBragg = {62,-1,30}; //#avg dEdx
 const omega::Binning bBraggIntRatio = {20,0,1}; 
 
 const double length_mu_min = 20; //cm
 
 // const double dEdx_MIP = 2; //MeV/cm
-const double dEdx_min_ratio = 1;
+const double dEdx_min_ratio = 1.5;
 // const double dEdx_min = dEdx_MIP*dEdx_min_ratio;
 
-const size_t n_cal_body_min = 10;
+const size_t n_cal_body_min = 20;
 
-const double bragg_length = 10; //cm
-const double bragg_min_ratio = 10; //cm/MeV?
+const double bragg_length = 2; //cm
+// const double bragg_min_ratio = 10; //cm/MeV?
 
-const double bragg_int_ratio_min = 0.5;
+// const double bragg_int_ratio_min = 0.5;
+
+// const vector<double> bragg_razor = {5,3,5,3};
+const vector<double> bragg_razor = {10,10,10,10};
 
 
 void BraggCal(size_t i=0) {
     clock_t start_time=clock();
 
-    // TH2D* hdQdx = new TH2D(
-    //     "hdQdx",
-    //     ";residual range (cm);dQ/dx (/cm)",
-    //     bRR.n,bRR.min,bRR.max,
-    //     bdQdx.n,bdQdx.min,bdQdx.max
-    // );
+    vector<vector<size_t>> sim_res;
+    ifstream f("braggsim_res.txt");
+    string l;
+    while (getline(f,l)) {
+        vector<size_t> r;
+        istringstream iss(l);
+        size_t s;
+        while (iss >> s) {
+            r.push_back(s);
+        }
+        sim_res.push_back(r);
+    }
+    cout << "\e[3m\"braggsim_res.txt\" read successfuly\e[0m";
+    f.close();
+
     TH2D* hdEdx = new TH2D(
         "hdEdx",
         "before bragg selection;residual range (cm);dE/dx (MeV/cm)",
@@ -48,26 +60,44 @@ void BraggCal(size_t i=0) {
         bRR.n,bRR.min,bRR.max,
         bdEdx.n,bdEdx.min,bdEdx.max
     );
-    TH1D* hBragg = new TH1D(
-        "hBragg",
-        ";Bragg (# AvgdEdx);#",
-        bBragg.n, bBragg.min, bBragg.max
-    );
-    TH1D* hReverseBragg = new TH1D(
-        "hReverseBragg",
-        ";Bragg (# AvgdEdx);#",
-        bBragg.n, bBragg.min, bBragg.max
-    );
-    TH1D* hOutsideBragg = new TH1D(
-        "hOutsideBragg",
-        ";Bragg (# AvgdEdx);#",
-        bBragg.n, bBragg.min, bBragg.max
-    );
-    TH1D* hBraggIntRatio = new TH1D(
-        "hBraggIntRatio",
-        ";;#",
-        bBraggIntRatio.n,bBraggIntRatio.min,bBraggIntRatio.max
-    );
+    
+    vector<size_t> nBragg={3,4,2};
+    vector<vector<vector<TH1D*>>> hBragg;
+    vector<string> line = {"Bragg ","Reverse ","Outside "};
+    vector<string> col = {"Normalized","Treshold Normalized","Non-normalized","Treshold Non-normalized"};
+    vector<int> color={kRed,kBlue};
+    for (int i=0; i<nBragg[0]; i++) {
+        vector<vector<TH1D*>> tpBragg;
+        for (int j=0; j<nBragg[1]; j++) {
+            vector<TH1D*> tptpBragg;
+            for (int k=0; k<nBragg[2]; k++) {
+                stringstream t; t << "h" << i << j <<k;
+                stringstream n; 
+                n << line[i] << col[j] << ";#AvgdEdx;#";
+                TH1D* h = new TH1D(
+                    t.str().c_str(), n.str().c_str(),
+                    bBragg.n,bBragg.min,bBragg.max
+                );
+                h->SetLineColor(color[k]);
+                tptpBragg.push_back(h);
+            }
+            tpBragg.push_back(tptpBragg);
+        }
+        hBragg.push_back(tpBragg);
+    }
+
+    vector<size_t> true_positive;
+    vector<size_t> false_positive;
+    vector<size_t> true_negative;
+    vector<size_t> false_negative;
+
+    for (int j=0; j<nBragg[1]; j++) {
+        true_positive.push_back(0);
+        false_positive.push_back(0);
+        true_negative.push_back(0);
+        false_negative.push_back(0);
+    }
+
 
     size_t n_bragg_candidate=0;
     size_t n_bragg=0;
@@ -75,9 +105,10 @@ void BraggCal(size_t i=0) {
     size_t i_file=0;
     for (string filename : filelist) {
         
-        cout << "\e[3mOpening file #" << ++i_file << "/" << n_file << ": " << filename << "\e[0m" << endl;
+        cout << "\e[3mOpening file #" << i_file+1 << "/" << n_file << ": " << filename << "\e[0m" << endl;
 
         omega::Reco R(filename.c_str());
+
 
         for (size_t i_evt=0; i_evt < R.N; i_evt++) {
         // for (size_t i_evt=0; i_evt < 20; i_evt++) {
@@ -87,7 +118,7 @@ void BraggCal(size_t i=0) {
 
             R.GetEvtPfp(i_evt);
 
-            if (R.Trk.N < 1) {
+            if (R.Trk.N != 1) {
                 if (v) cout << "\t\e[91mno track\e[0m " << endl;
                 continue;
             }
@@ -99,10 +130,10 @@ void BraggCal(size_t i=0) {
 
                 R.GetPfpTrk(i_pfp);
 
-                if (R.Trk.Length < length_mu_min) {
-                    if (v) cout << "\t\e[91mtoo short\e[0m (" << R.Trk.Length << ")" << endl;
-                    continue;
-                }
+                // if (R.Trk.Length < length_mu_min) {
+                //     if (v) cout << "\t\e[91mtoo short\e[0m (" << R.Trk.Length << ")" << endl;
+                //     continue;
+                // }
 
                 if (R.Cal.NPt < 1) continue;
 
@@ -116,7 +147,7 @@ void BraggCal(size_t i=0) {
                 //     if (v) cout << " \e[91moutside\e[0m " << endl;
                 //     continue;
                 // }
-                if (inside) n_bragg_candidate++;
+                // if (inside) n_bragg_candidate++;
 
                 bool upright = *R.Trk.X[0] > *R.Trk.X.back();
                 if (upright) {if (v) cout << "\tuprigth" << endl;}
@@ -151,7 +182,8 @@ void BraggCal(size_t i=0) {
                     } else {
                         resrange = R.Cal.Range - *R.Cal.ResRange[i_cal];
                     }
-                    if (inside) hdEdx->Fill(resrange,dEdx);
+                    // if (inside) hdEdx->Fill(resrange,dEdx);
+                    hdEdx->Fill(resrange,dEdx);
 
                     if (i_cal >= n_cal_tail && i_cal < R.Cal.NPt-n_cal_head) {
                         avg_body_dEdx += dEdx;
@@ -159,29 +191,39 @@ void BraggCal(size_t i=0) {
                 } //end calorimetry loop
                 avg_body_dEdx /= n_cal_body;
                 const double dEdx_min = avg_body_dEdx*dEdx_min_ratio;
+                // const double dEdx_min = 2*dEdx_min_ratio;
 
                 if (v) cout << "\tavg body dEdx: " << avg_body_dEdx << " (" << n_cal_body << ")" << endl;
 
+                if(avg_body_dEdx>4 || avg_body_dEdx<1) continue;
+
                 double bragg_tail_int=0;
+                double bragg_tail_treshold_int=0;
                 size_t n_bragg_tail_int=0;
                 for (size_t i_cal=0; i_cal < n_cal_tail; i_cal++) {
                     double dEdx = *R.Cal.dEdx[i_cal]; 
                     
-                    if (dEdx < dEdx_min) continue;
                     bragg_tail_int += dEdx;
+                    if (dEdx < dEdx_min) continue;
+                    bragg_tail_treshold_int += dEdx;
                     n_bragg_tail_int++;
                 }
                 if (v) cout << "\tBraggHead: " << bragg_tail_int << " (" << n_bragg_tail_int << "/" << n_cal_tail << ")" << endl;
 
-                double normalized_bragg_tail = bragg_tail_int/avg_body_dEdx;
-                if (inside) {
-                    if (upright) hBragg->Fill(normalized_bragg_tail);
-                    else hReverseBragg->Fill(normalized_bragg_tail);
-                } else {
-                    if (upright) hOutsideBragg->Fill(normalized_bragg_tail);
-                }
+                vector<double> bragg_tail = {
+                    bragg_tail_int/avg_body_dEdx,
+                    bragg_tail_treshold_int/avg_body_dEdx,
+                    bragg_tail_int/2,
+                    bragg_tail_treshold_int/2
+                };
+                // vector<double> bragg_tail = {
+                //     bragg_tail_int/avg_body_dEdx/n_cal_tail,
+                //     bragg_tail_treshold_int/avg_body_dEdx/n_bragg_tail_int,
+                //     bragg_tail_int/2/n_cal_tail,
+                //     bragg_tail_treshold_int/2/n_bragg_tail_int
+                // };
 
-                double bragg_min = bragg_min_ratio*avg_body_dEdx;
+                // double bragg_min = bragg_min_ratio*avg_body_dEdx;
                 // bool is_bragg1 = n_bragg_int > 0 && bragg_int >= bragg_min;
                 // double bragg_int_ratio = (double) n_bragg_int/n_cal_tail;
                 // hBraggIntRatio->Fill(bragg_int_ratio);
@@ -191,43 +233,69 @@ void BraggCal(size_t i=0) {
 
 
                 double bragg_head_int=0;
+                double bragg_head_treshold_int=0;
                 size_t n_bragg_head_int=0;
                 for (size_t i_cal=R.Cal.NPt-n_cal_head; i_cal < R.Cal.NPt; i_cal++) {
                     double dEdx = *R.Cal.dEdx[i_cal]; 
                     
-                    if (dEdx < dEdx_min) continue;
                     bragg_head_int += dEdx;
+                    if (dEdx < dEdx_min) continue;
+                    bragg_head_treshold_int += dEdx;
                     n_bragg_head_int++;
                 }
-                if (v) cout << "\tBraggTail: " << bragg_head_int << " (" << n_bragg_head_int << "/" << n_cal_head << ")" << endl;
+                // if (v) cout << "\tBraggTail: " << bragg_head_int << " (" << n_bragg_head_int << "/" << n_cal_head << ")" << endl;
 
-                double normalized_bragg_head = bragg_head_int/avg_body_dEdx;
-                if (inside) {
-                    if (!upright) hBragg->Fill(normalized_bragg_head);
-                    else hReverseBragg->Fill(normalized_bragg_head);
+                vector<double> bragg_head = {
+                    bragg_head_int/avg_body_dEdx,
+                    bragg_head_treshold_int/avg_body_dEdx,
+                    bragg_head_int/2,
+                    bragg_head_treshold_int/2
+                };
+                // vector<double> bragg_head = {
+                //     bragg_head_int/avg_body_dEdx/n_cal_head,
+                //     bragg_head_treshold_int/avg_body_dEdx/n_bragg_head_int,
+                //     bragg_head_int/2/n_cal_head,
+                //     bragg_head_treshold_int/2/n_bragg_head_int
+                // };
+
+                vector<double> bragg, bragg_reverse;
+                if (upright) {
+                    bragg = bragg_tail;
+                    bragg_reverse = bragg_head;
                 } else {
-                    if (!upright) hOutsideBragg->Fill(normalized_bragg_head);
+                    bragg = bragg_head;
+                    bragg_reverse = bragg_tail;
                 }
 
-                bragg_min = bragg_min_ratio*avg_body_dEdx;
-                bool is_bragg = (upright && normalized_bragg_tail > bragg_min) || (!upright && normalized_bragg_head > bragg_min);
-
-                // bool is_bragg2 = n_bragg_int > 0 && bragg_int >= bragg_min;
-                // bragg_int_ratio = (double) n_bragg_int/n_cal_head;
-                // hBraggIntRatio->Fill(bragg_int_ratio);
-                // bool is_bragg2 = bragg_int_ratio > bragg_int_ratio_min;
-                // if (!is_bragg2) {if (v) cout << " \e[91mno\e[0m" << endl;}
-                // else {if (v) cout << " \e[94myes\e[0m" << endl;}
-
-                // if (!is_bragg1 && !is_bragg2) continue;
-                // if (is_bragg1 && is_bragg2) {
-                //     if (v) cout << "\t\t\e[92mdouble bragg\e[0m" << endl;
-                // } else if (is_bragg1 == !upright) {
-                //     if (v) cout << "\t\t\e[92mreverse bragg\e[0m" << endl;
+                size_t tru = sim_res[i_file][i_evt];
+                // if (inside) {
+                    for (int j=0; j<nBragg[1]; j++) {
+                        hBragg[0][j][tru]->Fill(bragg[j]);
+                        hBragg[1][j][tru]->Fill(bragg_reverse[j]);
+                    }
+                // }
+                // } else {
+                    // for (int j=0; j<nBragg[1]; j++) {
+                        // hBragg[2][j][tru]->Fill(bragg[j]);
+                    // }
                 // }
 
+                // if (!inside) continue;
+                n_bragg_candidate++;
+
+                vector<bool> is_bragg;
+                for (int j=0; j<nBragg[1]; j++) {
+                    is_bragg.push_back (bragg[j] > bragg_razor[j]);
+                    if (bragg[j] > bragg_razor[j]) {
+                        if (tru) true_positive[j]++;
+                        else     false_positive[j]++;
+                    } else {
+                        if (tru) false_negative[j]++;
+                        else     true_negative[j]++;
+                    }
+                }
                 
-                if (!is_bragg) continue;
+                if (!is_bragg[1]) continue;
 
                 for (size_t i_cal=0; i_cal < R.Cal.NPt; i_cal++) {
                     double dEdx = *R.Cal.dEdx[i_cal]; 
@@ -244,16 +312,17 @@ void BraggCal(size_t i=0) {
                 n_bragg++;
             } //end pfparticle loop
         } //end event loop
+        i_file++;
     } //end file loop
     cout << endl;
 
     TCanvas* c1 = new TCanvas("c1","BraggCal");
-    c1->Divide(2,2);
-    // c1->Divide(2,1);
-    // c1->cd(1);
-    // hdQdx->SetMinimum(1);
-    // gPad->SetLogz();
-    // hdQdx->Draw("colz");
+    // c1->Divide(2,2);
+    c1->Divide(2,1);
+    // // c1->cd(1);
+    // // hdQdx->SetMinimum(1);
+    // // gPad->SetLogz();
+    // // hdQdx->Draw("colz");
     c1->cd(1);
     hdEdx->SetMinimum(1);
     gPad->SetLogz();
@@ -262,19 +331,53 @@ void BraggCal(size_t i=0) {
     hdEdx2->SetMinimum(1);
     gPad->SetLogz();
     hdEdx2->Draw("colz");
-    c1->cd(4);
-    hBraggIntRatio->Draw("hist");
+    // c1->cd(4);
+    // hBraggIntRatio->Draw("hist");
+
+    vector<TLine*> razor(nBragg[1]);
+    for (int j=0; j<nBragg[1]; j++) {
+        razor[j]= new TLine(bragg_razor[j],0,bragg_razor[j],hBragg[0][j][1]->GetMaximum());
+        razor[j]->SetLineColor(kViolet);
+        razor[j]->SetLineWidth(2);
+    }
 
     TCanvas* c2 = new TCanvas("c2","BraggCal");
     c2->Divide(2,2);
-    c2->cd(1);
-    hBragg->Draw("hist");
-    c2->cd(2);
-    hOutsideBragg->Draw("hist");
-    c2->cd(3);
-    hReverseBragg->Draw("hist");
+    int k=0;
+    for (int j=0; j<nBragg[1]; j++) {
+        c2->cd(++k);
+        gPad->SetLogy();
+        hBragg[0][j][1]->Draw("hist");
+        hBragg[0][j][0]->Draw("samehist");
+        razor[j]->Draw();
+    }
+    TCanvas* c3 = new TCanvas("c3","BraggCal");
+    c3->Divide(2,2);
+    k=0;
+    for (int j=0; j<nBragg[1]; j++) {
+        c3->cd(++k);
+        gPad->SetLogy();
+        hBragg[1][j][1]->Draw("hist");
+        hBragg[1][j][0]->Draw("samehist");
+        razor[j]->Draw();
+    }
 
-    cout << "nbr of bragg/candidate: " << n_bragg << "/" << n_bragg_candidate << " (" << 100.*n_bragg/n_bragg_candidate << "%)" << endl;
+
+    cout << "criterium results: " << endl;
+    for (int j=0; j<nBragg[1]; j++) {
+        cout << "\t" << col[j] << ": " << endl;
+        cout << "\t\ttrue_positive: " << true_positive[j] << " (" << 100.*true_positive[j]/n_bragg_candidate << "%)" << endl;
+        cout << "\t\tfalse_positive: " << false_positive[j] << " (" << 100.*false_positive[j]/n_bragg_candidate << "%)" << endl;
+        cout << "\t\ttrue_negative: " << true_negative[j] << " (" << 100.*true_negative[j]/n_bragg_candidate << "%)" << endl;
+        cout << "\t\tfalse_negative: " << false_negative[j] << " (" << 100.*false_negative[j]/n_bragg_candidate << "%)" << endl;
+        cout << "\t\t----------------------------------------" << endl;
+        cout << "\t\tefficiency (tp/tp+fn): " << 100.*true_positive[j]/(true_positive[j]+false_negative[j]) << "%" << endl;
+        cout << "\t\tpurity (tp/tp+fp): " << 100.*true_positive[j]/(true_positive[j]+false_positive[j]) << "%" << endl;
+    }
+
+
+
+    // cout << "nbr of bragg/candidate: " << n_bragg << "/" << n_bragg_candidate << " (" << 100.*n_bragg/n_bragg_candidate << "%)" << endl;
 
     cout << "total time of execution: " << static_cast<double>(clock()-start_time)/CLOCKS_PER_SEC << " seconds" << endl;
 }

@@ -1,7 +1,7 @@
 #include "OmegaLight_tools.h"
 
-const size_t n_file=3;
-const vector<string> filelist = omega::ReadFileList(n_file,"list/light.list");
+const size_t n_file=37;
+const vector<string> filelist = omega::ReadFileList(n_file,"list/muplus.list");
 
 const bool v = false;
 
@@ -15,7 +15,7 @@ const double r_coincidence =1.; //cm
 const size_t n_least_deposits=20;
 const size_t n_dep_bragg=20;
 const double dEdx_min_ratio = 1;
-const double treshold_bragg=12;
+const double bragg_razor=12;
 
 const omega::Limits det = omega::fiducial;
 
@@ -100,12 +100,14 @@ void TrueMichel() {
 
                 if (T.Prt.Pdg != 11 && T.Prt.Pdg != -11) COND(i_c)
                 if (T.Dep.N < n_least_deposits) COND(i_c)
-                bool inside = omega::IsInside(T.Dep.X, T.Dep.Y, T.Dep.Z, det);
-                if (!inside) COND(i_c)
+                // bool inside = omega::IsInside(T.Dep.X, T.Dep.Y, T.Dep.Z, det);
+                // if (!inside) COND(i_c)
 
                 if (T.Prt.isOrphelin) COND(i_c) 
                 T.GetPrtMom(i_prt);
                 T.GetMomDep(i_prt);
+                bool inside = omega::IsInside(T.Dep.X, T.Dep.Y, T.Dep.Z, det);
+                if (!inside) COND(i_c)
                 if (T.Mom.Pdg != 13 && T.Mom.Pdg != -13) COND(i_c)
 
                 size_t n_max_rough=0, i_max_rough=0;
@@ -151,7 +153,6 @@ void TrueMichel() {
                     avg_body_dEdx += *T.Dep.E[i_dep];
                 }
                 avg_body_dEdx /= dep_step * n_dep_body;
-
                 double bragg_int=0;
                 for (size_t i_dep=n_dep_body; i_dep < i_max; i_dep++) {
                     double dEdx = *T.Dep.E[i_dep] / dep_step;
@@ -161,7 +162,7 @@ void TrueMichel() {
                 hBragg[0]->Fill(bragg_int/n_dep_bragg);
                 FILLHBRAGG2D(0)
 
-                if (bragg_int/n_dep_bragg < treshold_bragg) COND(i_c)
+                if (bragg_int/n_dep_bragg < bragg_razor) COND(i_c)
 
                 hBragg[1]->Fill(bragg_int/n_dep_bragg);
                 FILLHBRAGG2D(1)
@@ -178,16 +179,22 @@ void TrueMichel() {
     } //end file loop
     cout << endl;
 
+    TLine* l = new TLine(bragg_razor,0,bragg_razor,hBragg[0]->GetMaximum());
+    l->SetLineColor(kViolet); 
+    l->SetLineWidth(2);
 
     TCanvas* c1 = new TCanvas("c1","TrueMichel - Bragg");
     c1->Divide(2,2);
     c1->cd(1);
+    gPad->SetLogz();
     hBragg2D[0]->Draw("colz");
     c1->cd(2);
+    gPad->SetLogz();
     hBragg2D[1]->Draw("colz");
     c1->cd(3);
     gPad->SetLogy();
     hBragg[0]->Draw("hist");
+    l->Draw();
     c1->cd(4);
     hBragg[1]->Draw("hist");
 
@@ -198,8 +205,10 @@ void TrueMichel() {
 
     cout << N_evt << " events treated in " << static_cast<double>(clock()-start_time)/CLOCKS_PER_SEC << " seconds" << endl;
 
+    size_t N_mu_in = N_evt-N_mu_out;
+
     cout << "particle total: " << N_prt << endl; 
-    cout << "nbr of muon inside: " << N_evt-N_mu_out << " (" << 100.*N_evt-N_mu_out << "%)" << endl;
+    cout << "nbr of muon inside: " << N_mu_in << " (" << 100.*(N_mu_in)/N_evt << "%)" << endl;
     cout << "number of fails per condition:" << endl;
     size_t rem_prt=N_prt;
     for (int i=0; i<n_c.size(); i++) {
@@ -207,8 +216,8 @@ void TrueMichel() {
         if (i) cout << "\t\t(" << 100.*n_c[i]/rem_prt << "%)" << "\r";
         rem_prt -= n_c[i];
         cout << "\t\t\t\t rem: " << rem_prt << "\r";
-        cout << "\t\t\t\t\t\t(" << 100.*rem_prt/N_prt << "%)";
-        cout << "\t\t\t\t\t\t\t(" << 100.*rem_prt/N_evt << "%)";
+        cout << "\t\t\t\t\t\t(" << 100.*rem_prt/N_prt << "%)" << "\r";
+        cout << "\t\t\t\t\t\t\t(" << 100.*rem_prt/N_evt << "% of evt) (" << 100.*rem_prt/N_mu_in << "% of mu in)";
         cout << endl;
     }
 }

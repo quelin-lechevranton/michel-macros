@@ -4,8 +4,8 @@
  * muon Bragg peak analysis preliminary for TrueMichel.C
 */
 
-const size_t n_file=3;
-const vector<string> filelist = omega::ReadFileList(n_file,"list/light.list");
+const size_t n_file=37;
+const vector<string> filelist = omega::ReadFileList(n_file,"list/muminus.list");
 
 const bool v = false;
 
@@ -14,9 +14,11 @@ const omega::Limits det = omega::fiducial;
 const omega::Binning bAvg = {30,0,30};
 const omega::Binning bBragg = {100,0,10}; //#avg dEdx
 
-size_t n_dep_bragg=50; // 0.03 cm/pt
-const double dEdx_min_ratio = 1;
+size_t n_dep_bragg=20; // 0.03 cm/pt
+const double dEdx_min_ratio = 1.5;
 const size_t n_peak_tail=2;
+
+const double bragg_razor=4;
 
 
 void BraggSim(size_t i=0) {
@@ -26,7 +28,7 @@ void BraggSim(size_t i=0) {
 
     size_t nBragg=4;
     vector<TH1D*> hBragg(nBragg);
-    vector<string> col = {"Bragg","Treshol","Unnormalized","Treshold Unnormalized"};
+    vector<string> col = {"Normalized","Treshold Normalized","Non-normalized","Treshold Non-normalized"};
     for (int i=0; i<nBragg; i++) {
         stringstream t; t << "h" << i;
         stringstream n; n << col[i] << ";#AvgdEdx;#";
@@ -109,7 +111,7 @@ void BraggSim(size_t i=0) {
                 hBragg[3]->Fill(bragg_treshold_int / 2 / n_bragg_int);
 
                 // ofstream("braggsim_results.txt")
-                if (bragg_int/n_dep_bragg > 6) {
+                if (bragg_int/2/n_dep_bragg > bragg_razor) {
                     n_mu_stop++;
                     res[i_file][i_evt] += 1;
                 }
@@ -128,6 +130,10 @@ void BraggSim(size_t i=0) {
     } //end file loop
     cout << endl;
 
+    TLine* l = new TLine(bragg_razor,0,bragg_razor,hBragg[2]->GetMaximum());
+    l->SetLineColor(kViolet); 
+    l->SetLineWidth(2);
+
     TCanvas* c1 = new TCanvas("c1","BraggSim");
     c1->Divide(2,2);
     for (int i=0; i<nBragg; i++) {
@@ -135,6 +141,8 @@ void BraggSim(size_t i=0) {
         gPad->SetLogy();
         hBragg[i]->Draw("hist");
     }
+    c1->cd(3);
+    l->Draw();
 
     cout << "n_mu / n_mu_in / n_mu_stop: " << n_mu << " / " << n_mu_in << " / " << n_mu_stop << endl;
 
