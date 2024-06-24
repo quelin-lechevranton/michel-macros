@@ -1,25 +1,26 @@
 //#include "OmegaDumper_tools.h"
 #include "OmegaLight_tools.h"
 
-const size_t n_file=37;
-const vector<string> filelist = omega::ReadFileList(n_file,"list/muminus.list");
+const size_t n_file=1;
+const vector<string> filelist = omega::ReadFileList(n_file,"list/cosmics.list");
 
 const bool v = true;
 
 const omega::Limits det = omega::fiducial;
 const omega::Binning bRR = {100,0,300}; //cm
-const omega::Binning bdEdx = {50,0,5}; //MeV/cm
-const omega::Binning bE = {100,0,1000};
+const omega::Binning bdQdx = {50,0,5}; //MeV/cm
+const omega::Binning bE = {100,0,100000};
+const omega::Binning bBragg = {40,0,20};
 
 const double length_mu_min = 20; //cm
 const double n_cal_min = 1; //????
 
-const double dEdx_MIP = 2; //MeV/cm
-const double dEdx_min_ratio = 1;
-// const double dEdx_min = dEdx_MIP*dEdx_min_ratio;
+const double dQdx_MIP = 2; //MeV/cm
+const double dQdx_min_ratio = 1;
+// const double dQdx_min = dQdx_MIP*dQdx_min_ratio;
 
 const double bragg_length = 15; //cm
-const double bragg_min = 20; //MeV/cm
+const double bragg_razor = 6; //MeV/cm
 
 const double length_el_max = 20; //cm
 const double end_radius = 30; //cm
@@ -27,22 +28,38 @@ const double end_radius = 30; //cm
 void MichelSpectrum(size_t i=0) {
     clock_t start_time=clock();
 
-    TH2D* hdEdx = new TH2D(
-        "hdEdx",
+    TH1D* hE = new TH1D("hE",";SumADC;#",bE.n,bE.min,bE.max);
+
+    TH1D* hBragg = new TH1D("hBragg",";SumADC;#",bBragg.n,bBragg.min,bBragg.max);
+
+    TH2D* hdQdx = new TH2D(
+        "hdQdx",
         "after bragg selection;residual range (cm);dE/dx (MeV/cm)",
         bRR.n,bRR.min,bRR.max,
-        bdEdx.n,bdEdx.min,bdEdx.max
+        bdQdx.n,bdQdx.min,bdQdx.max
     );
+
+    TGraph2D* gSpacePoint = new TGraph2D();
+    gSpacePoint->SetMarkerStyle(20);
+    gSpacePoint->SetMarkerSize(0.2);
+    gSpacePoint->SetMarkerColor(kBlack);
+
+    TGraph2D* gTrack = new TGraph2D();
+    gTrack->SetMarkerStyle(20);
+    gTrack->SetMarkerSize(0.2);
+    gTrack->SetMarkerColor(kOrange+9);
+
     TGraph2D* gEnd = new TGraph2D();
     gEnd->SetMarkerStyle(20);
-    gEnd->SetMarkerColor(kOrange);
+    gEnd->SetMarkerSize(0.2);
+    gEnd->SetMarkerColor(kOrange+7);
 
     TGraph2D* gEl = new TGraph2D();
     gEl->SetMarkerStyle(20);
-    gEl->SetMarkerSize(0.5);
+    gEl->SetMarkerSize(0.2);
     gEl->SetMarkerColor(kAzure);
 
-    TH1D* hE = new TH1D("hE",";SumADC;#",bE.n,bE.min,bE.max);
+
 
     size_t nc=4;
     vector<size_t> c;
@@ -56,6 +73,7 @@ void MichelSpectrum(size_t i=0) {
         omega::Reco R(filename.c_str());
 
         for (size_t i_evt=0; i_evt < R.N; i_evt++) {
+        // size_t i_evt=0; {
 
             if (v) cout << "Event#" << i_evt+1 << "/" << R.N << "\r" << flush;
 
@@ -66,39 +84,58 @@ void MichelSpectrum(size_t i=0) {
             struct { double *X,*Y,*Z; } End;
             for (size_t i_pfp=0; i_pfp < R.Pfp.N; i_pfp++) {
 
+                R.GetPfpSpt(i_pfp);
+                for (size_t i_spt=0; i_spt < R.Spt.N; i_spt++) {
+                    gSpacePoint->AddPoint(
+                        *R.Spt.Y[i_spt],
+                        *R.Spt.Z[i_spt],
+                        *R.Spt.X[i_spt]
+                    );
+                }
+
                 if (!R.Pfp.isTrk[i_pfp]) continue;
                 R.GetPfpTrk(i_pfp);
-                if (R.Trk.Length < length_mu_min) continue;
+
+                for (size_t i_spt=0; i_spt < R.Spt.N; i_spt++) {
+                    gTrack->AddPoint(
+                        *R.Spt.Y[i_spt],
+                        *R.Spt.Z[i_spt],
+                        *R.Spt.X[i_spt]
+                    );
+                }
+
+
+                // if (R.Trk.Length < length_mu_min) continue;
                 if (R.Cal.NPt < n_cal_min) continue;
                 
-                if (!omega::IsInside(
+                bool inside = omega::IsInside(
                     R.Trk.X,
                     R.Trk.Y,
                     R.Trk.Z,
                     det
-                )) continue;
+                );
 
-                double avg_dEdx=0;
+                double avg_dQdx=0;
                 for (size_t i_cal=0; i_cal < R.Cal.NPt; i_cal++) {
-                    avg_dEdx += *R.Cal.dEdx[i_cal];
+                    avg_dQdx += *R.Cal.dQdx[i_cal];
                 } //end calorimetry loop
-                avg_dEdx /= R.Cal.NPt;
-                const double dEdx_min = avg_dEdx*dEdx_min_ratio;
+                avg_dQdx /= R.Cal.NPt;
+                const double dQdx_min = avg_dQdx*dQdx_min_ratio;
 
-                bool upside_down = *R.Trk.X.back() > *R.Trk.X[0];
+                bool uprigth = *R.Trk.X[0] > *R.Trk.X.back();
 
                 double bragg_int=0;
                 size_t n_cal_bragg=0;
-                if (!upside_down) {
+                if (uprigth) {
                     while (
                         *R.Cal.ResRange[n_cal_bragg++] < bragg_length 
                         && n_cal_bragg < R.Cal.NPt
                     );
 
                     for (size_t i_cal=0; i_cal < n_cal_bragg; i_cal++) {
-                        double dEdx = *R.Cal.dEdx[i_cal]; 
-                        if (dEdx < dEdx_min) continue;
-                        bragg_int += dEdx;
+                        double dQdx = *R.Cal.dQdx[i_cal]; 
+                        if (dQdx < dQdx_min) continue;
+                        bragg_int += dQdx;
                     }
                 } else {
                     while (
@@ -107,38 +144,46 @@ void MichelSpectrum(size_t i=0) {
                     );
 
                     for (size_t i_cal=R.Cal.NPt-n_cal_bragg; i_cal < R.Cal.NPt; i_cal++) {
-                        double dEdx = *R.Cal.dEdx[i_cal]; 
-                        if (dEdx < dEdx_min) continue;
-                        bragg_int += dEdx;
+                        double dQdx = *R.Cal.dQdx[i_cal]; 
+                        if (dQdx < dQdx_min) continue;
+                        bragg_int += dQdx;
                     }
                 }
-                if (bragg_int < bragg_min) continue;
+
+                hBragg->Fill(bragg_int/avg_dQdx);
+
+                if (bragg_int/avg_dQdx < bragg_razor) continue;
                 c[0]++;
 
                 // for (size_t i_cal=0; i_cal < R.Cal.NPt; i_cal++) {
-                //     double dEdx = *R.Cal.dEdx[i_cal]; 
+                //     double dQdx = *R.Cal.dQdx[i_cal]; 
                 //     double resrange;
                 //     if (!upside_down) resrange = *R.Cal.ResRange[i_cal];
                 //     else resrange = R.Cal.Range - *R.Cal.ResRange[i_cal];
                 //     else continue;
 
-                //     hdEdx->Fill(resrange,dEdx);
+                //     hdQdx->Fill(resrange,dQdx);
                 // } //end calorimetry loop
 
-                if (!upside_down) {
-                    // gStart->AddPoint(*R.Trk.Y[0],*R.Trk.Z[0],*R.Trk.X[0]);
+                if (uprigth) {
                     End.X=R.Trk.X.back();
                     End.Y=R.Trk.Y.back();
                     End.Z=R.Trk.Z.back();
                     c[1]++;
                 } else {
-                    // gStart->AddPoint(*R.Trk.Y.back(),*R.Trk.Z.back(),*R.Trk.X.back());
                     End.X=R.Trk.X[0];
                     End.Y=R.Trk.Y[0];
                     End.Z=R.Trk.Z[0];
                     c[2]++;
                 }
-                gEnd->AddPoint(*End.Y,*End.Z,*End.X);
+                // gEnd->AddPoint(*End.Y,*End.Z,*End.X);
+                for (size_t i_spt=0; i_spt < R.Spt.N; i_spt++) {
+                    gEnd->AddPoint(
+                        *R.Spt.Y[i_spt],
+                        *R.Spt.Z[i_spt],
+                        *R.Spt.X[i_spt]
+                    );
+                }
                 
                 double E=0;
                 for (size_t j_pfp=0; j_pfp < R.Pfp.N; j_pfp++) {
@@ -173,19 +218,32 @@ void MichelSpectrum(size_t i=0) {
 
     for (size_t a : c) cout << a << endl;
 
-    TCanvas* c1 = new TCanvas("c1","MichelSpectrum");
-    c1->Divide(2,1);
-    // c1->cd(1);
-    // hdEdx->SetMinimum(1);
-    // gPad->SetLogz();
-    // hdEdx->Draw("colz");
-    c1->cd(1);
-    gEnd->Draw("p");
-    gEl->Draw("samep");
-    c1->cd(2);
+    TCanvas* c0 = new TCanvas("c0","MichelSpectrum");
+    c0->cd();
     hE->Draw("hist");
 
-    c1->SaveAs("MichelSpectrum.root");
+    TLine* l = new TLine(bragg_razor,0,bragg_razor,hBragg->GetMaximum());
+
+    TCanvas* c1 = new TCanvas("c1","MichelSpectrum");
+    c1->cd();
+    hBragg->Draw("hist");
+    l->Draw();
+    // hdQdx->SetMinimum(1);
+    // gPad->SetLogz();
+    // hdQdx->Draw("colz");
+
+    TCanvas* c2 = new TCanvas("c2","MichelSpectrum");
+    c2->cd();
+    gSpacePoint->Draw("p");
+
+    TCanvas* c3 = new TCanvas("c3","MichelSpectrum");
+    c3->cd();
+    gTrack->Draw("p");
+
+    TCanvas* c4 = new TCanvas("c4","MichelSpectrum");
+    c4->cd();
+    gEnd->Draw("p");
+    // gEl->Draw("samep");
 
     cout << "total time of execution: " << static_cast<double>(clock()-start_time)/CLOCKS_PER_SEC << " seconds" << endl;
 }
