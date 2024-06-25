@@ -85,7 +85,6 @@ public:
     //Events
     size_t Event, Run, SubRun;
 
-private:
     //MCTruth
     size_t NPrt;
 
@@ -114,7 +113,6 @@ private:
                             // *DepT=nullptr,
                             *DepE=nullptr;
 
-public:
 
     size_t N;
     MCParticles Prt;
