@@ -27,9 +27,9 @@ const omega::Binning bMichel = {50,0,50};
 vector<size_t> n_c = {0,0,0,0,0,0,0,0,0};
 #define COND(i) {n_c[i]++; if (v) cout << "\t\t\e[91mc" << i << "\e[0m" << endl; continue;} i_c++;
 
-#define FILLHBRAGG2D(i) for (size_t i_dep=0; i_dep <= i_max ; i_dep++) {hBragg2D[i]->Fill((i_max-i_dep)*dep_step, *T.Dep.E[i_dep]/dep_step);}
+#define FILLHBRAGG2D(i) for (size_t i_dep=0; i_dep <= i_max ; i_dep++) {hBragg2D[i]->Fill((i_max-i_dep)*dep_step, T.DepE->at(i_mom)[i_dep]/dep_step);}
 
-void TrueMichel() {
+void TrueMichelFast() {
     clock_t start_time=clock();
 
     TColor color;
@@ -85,9 +85,12 @@ void TrueMichel() {
             N_prt+=T.Prt.N;
 
             for (size_t i_prt=0; i_prt < T.Prt.N; i_prt++) {
-                T.GetPrt(i_prt);
-                if (T.Prt.Pdg!=13 && T.Prt.Pdg!=-13) continue;
-                if (!omega::IsInside(T.Prt.X,T.Prt.Y,T.Prt.Z,det)) N_mu_out++;
+                if (T.PrtPdg->at(i_prt)!=13 && T.PrtPdg->at(i_prt)!=-13) continue;
+                // if (!omega::IsInside(T.PrtX,T.Prt.Y,T.Prt.Z,det)) N_mu_out++;
+                vector<double *> Xs = {&T.PrtX->at(i_prt)[0],&T.PrtX->at(i_prt).back()},
+                                 Ys = {&T.PrtY->at(i_prt)[0],&T.PrtZ->at(i_prt).back()},
+                                 Zs = {&T.PrtZ->at(i_prt)[0],&T.PrtZ->at(i_prt).back()};
+                if (!omega::IsInside(Xs,Ys,Zs,det)) N_mu_out++;
             }
 
             for (size_t i_prt=0; i_prt < T.Prt.N; i_prt++) {
@@ -95,29 +98,31 @@ void TrueMichel() {
                 if (v) cout << "\tprt# " << i_prt << "\r" << flush;
                 size_t i_c=0;
 
-                T.GetPrt(i_prt);
-                T.GetPrtDep(i_prt);
-
-                if (T.Prt.Pdg != 11 && T.Prt.Pdg != -11) COND(i_c)
-                if (T.Dep.N > n_least_deposits) COND(i_c)
-                // if (T.Dep.N > n_least_deposits) COND(i_c);
+                if (T.PrtPdg->at(i_prt) != 11 && T.PrtPdg->at(i_prt) != -11) COND(i_c)
+                if (T.PrtNDep->at(i_prt) > n_least_deposits) COND(i_c)
+                size_t n_dep = T.PrtNDep->at(i_prt);
+                // if (n_dep > n_least_deposits) COND(i_c);
                 // bool inside = omega::IsInside(T.Dep.X, T.Dep.Y, T.Dep.Z, det);
                 // if (!inside) COND(i_c)
 
-                if (T.Prt.isOrphelin) COND(i_c) 
-                T.GetPrtMom(i_prt);
-                T.GetMomDep(i_prt);
-                if (T.Mom.Pdg != 13 && T.Mom.Pdg != -13) COND(i_c)
-                bool inside = omega::IsInside(T.Dep.X, T.Dep.Y, T.Dep.Z, det);
+                int i_mom = T.PrtMomID->at(i_prt);
+                if (i_mom == -1) COND(i_c) 
+                if (T.PrtPdg->at(i_mom) != 13 && T.PrtPdg->at(i_mom) != -13) COND(i_c)
+                vector<double *> Xs = {&T.DepX->at(i_mom)[0],&T.DepX->at(i_mom).back()},
+                                 Ys = {&T.DepY->at(i_mom)[0],&T.DepY->at(i_mom).back()},
+                                 Zs = {&T.DepZ->at(i_mom)[0],&T.DepZ->at(i_mom).back()};
+                bool inside = omega::IsInside(Xs,Ys,Zs,det);
                 if (!inside) COND(i_c)
 
+                size_t n_dep_mom = T.PrtNDep->at(i_mom);
+
                 size_t n_max_rough=0, i_max_rough=0;
-                for (size_t i_dep=0; i_dep<T.Dep.N; i_dep+=step_rough) {
+                for (size_t i_dep=0; i_dep<n_dep_mom; i_dep+=step_rough) {
                     size_t n_coincidence=0;
-                    for (size_t i_ppt=0; i_ppt<T.Prt.NPt; i_ppt+=step_rough) {
+                    for (size_t j_dep=0; j_dep<n_dep; j_dep+=step_rough) {
                         double dist = omega::Distance(
-                            T.Prt.X[i_ppt],T.Prt.Y[i_ppt],T.Prt.Z[i_ppt],
-                            T.Dep.X[i_dep],T.Dep.Y[i_dep],T.Dep.Z[i_dep]
+                            &T.DepX->at(i_mom)[i_dep],&T.DepY->at(i_mom)[i_dep],&T.DepZ->at(i_mom)[i_dep],
+                            &T.DepX->at(i_prt)[j_dep],&T.DepY->at(i_prt)[j_dep],&T.DepZ->at(i_prt)[j_dep]
                         );
                         if (dist < r_coincidence_rough) n_coincidence++;
                     }
@@ -130,14 +135,14 @@ void TrueMichel() {
                 int i_dep_ini = i_max_rough-window_rough*step_rough;
                 i_dep_ini = i_dep_ini > 0 ? i_dep_ini : 0;
                 int i_dep_end = i_max_rough+window_rough*step_rough;
-                i_dep_end = i_dep_end > T.Dep.N ? T.Dep.N : i_dep_end;
+                i_dep_end = i_dep_end > n_dep_mom ? n_dep_mom : i_dep_end;
                 size_t n_max=0, i_max=0;
                 for (size_t i_dep=i_dep_ini; i_dep<i_dep_end; i_dep++) {
                     size_t n_coincidence=0;
-                    for (size_t i_ppt=0; i_ppt<T.Prt.NPt; i_ppt++) {
+                    for (size_t j_dep=0; j_dep<n_dep; j_dep++) {
                         double dist = omega::Distance(
-                            T.Prt.X[i_ppt],T.Prt.Y[i_ppt],T.Prt.Z[i_ppt],
-                            T.Dep.X[i_dep],T.Dep.Y[i_dep],T.Dep.Z[i_dep]
+                            &T.DepX->at(i_mom)[i_dep],&T.DepY->at(i_mom)[i_dep],&T.DepZ->at(i_mom)[i_dep],
+                            &T.DepX->at(i_prt)[j_dep],&T.DepY->at(i_prt)[j_dep],&T.DepZ->at(i_prt)[j_dep]
                         );
                         if (dist < r_coincidence) n_coincidence++;
                     }
@@ -151,12 +156,12 @@ void TrueMichel() {
                 if (n_dep_body <= 0) COND(i_c)
                 double avg_body_dEdx=0;
                 for (size_t i_dep=0; i_dep<n_dep_body; i_dep++) {
-                    avg_body_dEdx += *T.Dep.E[i_dep];
+                    avg_body_dEdx += T.DepE->at(i_mom)[i_dep];
                 }
                 avg_body_dEdx /= dep_step * n_dep_body;
                 double bragg_int=0;
                 for (size_t i_dep=n_dep_body; i_dep < i_max; i_dep++) {
-                    double dEdx = *T.Dep.E[i_dep] / dep_step;
+                    double dEdx = T.DepE->at(i_mom)[i_dep] / dep_step;
                     bragg_int += dEdx;
                 }
 
@@ -168,10 +173,9 @@ void TrueMichel() {
                 hBragg[1]->Fill(bragg_int/n_dep_bragg);
                 FILLHBRAGG2D(1)
 
-                T.GetPrtDep(i_prt);
                 double E=0;
-                for (size_t i_dep=0; i_dep < T.Dep.N ; i_dep++) {
-                    E+=*T.Dep.E[i_dep];
+                for (size_t i_dep=0; i_dep < n_dep ; i_dep++) {
+                    E+=T.DepE->at(i_prt)[i_dep];
                 }
                 hMichel->Fill(E);
 
