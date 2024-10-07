@@ -1,7 +1,7 @@
-#include "YAD_tools.h"
+#include "OmegaLight_tools.h"
 
 const size_t n_file=1;
-const vector<string> filelist = yad::readFileList(n_file,"list/ijclab.list");
+const vector<string> filelist = omega::ReadFileList(n_file,"list/light.list");
 
 void RecoStats() {
 
@@ -16,17 +16,17 @@ void RecoStats() {
         
         cout << "\e[3mOpening file #" << ++i_file << "/" << n_file << ": " << filename << "\e[0m" << endl;
 
-        yad::Reco R(filename.c_str());
-        yad::Truth T(filename.c_str());
+        omega::Reco R(filename.c_str());
+        omega::Truth T(filename.c_str());
 
-        size_t n_evt = R.GetEntries();
+        size_t n_evt = R.N;
         N_evt += n_evt;
         for (size_t i_evt=0; i_evt < n_evt; i_evt++) {
+            
+            R.GetEvtPfp(i_evt);
+            T.GetEvt(i_evt);
 
-            R.GetEntry(i_evt);
-            T.GetEntry(i_evt);
-
-            size_t n_trklong=0, n_trk=R.NTrk;
+            size_t n_trklong=0, n_trk=R.Trk.N;
             N_trk += n_trk;
 
             switch (n_trk) {
@@ -35,33 +35,24 @@ void RecoStats() {
                 default: 
                     N_trkful++; 
                     // for (size_t i_trk=0; i_trk < R.NTrk; i_trk++) {
-                    for (size_t i_pfp=0; i_pfp < R.NPfp; i_pfp++) {
+                    
+                    for (size_t i_pfp=0; i_pfp < R.Pfp.N; i_pfp++) {
 
-                        int i_trk = R.PfpTrkID->at(i_pfp);
-                        if (i_trk < 0) {continue;}
+                        if (!R.Pfp.isTrk[i_pfp]) continue;
 
-                        if (R.TrkLength->at(i_trk) > 25) {
+                        R.GetPfpTrk(i_pfp);
+
+                        if (R.Trk.Length > 25) {
                             N_trklong++;
                             n_trklong++;
                         }
                         else {
                             N_trkshort++;
                         }
-
-                        if (R.PfpPdg->at(i_pfp)!=13) {
-                            N_trkmuless++;
-                        }
                     }
             }
             if (n_trklong > 1) { cout << "Multiple long tracks ! at Event #" << i_evt << endl;}
             
-            size_t n_mu = count(R.PfpPdg->begin(), R.PfpPdg->end(), 13);
-            switch (n_mu) {
-                case 0:  N_muless++; break;
-                case 1:  N_muone++;  break;
-                default: N_muful++;
-            }
-
             // cout << "Event#" << i_evt+1 << ": #pfp=" << R.NPfp << "\t#muon=" << count(R.PfpPdg->begin(), R.PfpPdg->end(), 13) << "\t#genmu=" << count(T.PrtPdg->begin(), T.PrtPdg->end(), 13) << endl;
 
         } //end event loop
@@ -73,10 +64,6 @@ void RecoStats() {
             << "#TrkOne:    " << N_trkone << " (" << 100.*N_trkone/N_evt << "%)" << endl
             << "#TrkFul:    " << N_trkful << " (" << 100.*N_trkful/N_evt << "%)" << endl
             << "#TrkLong:   " << N_trklong << " (" << 100.*N_trklong/N_trkful << "%)" << endl
-            << "#TrkShort:  " << N_trkshort << " (" << 100.*N_trkshort/N_trkful << "%)" << endl
-            << "#TrkMuLess: " << N_trkmuless << " (" << 100.*N_trkmuless/N_trk << "%)" << endl
-            << "#MuLess:    " << N_muless << " (" << 100.*N_muless/N_evt << "%)" << endl
-            << "#MuOne:     " << N_muone << " (" << 100.*N_muone/N_evt << "%)" << endl
-            << "#MuFul:     " << N_muful << " (" << 100.*N_muful/N_evt << "%)" << endl;
+            << "#TrkShort:  " << N_trkshort << " (" << 100.*N_trkshort/N_trkful << "%)" << endl;
 
 }

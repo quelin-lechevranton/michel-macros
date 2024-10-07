@@ -405,7 +405,7 @@ public:
     //Events
     size_t Event, Run, SubRun;
 
-private:
+// private:
     //PFParticle
     size_t NPfp;
     vector<int> *PfpTrkID=nullptr; //[# pfparticle]
@@ -473,7 +473,7 @@ private:
                             *HitSptKey=nullptr;
                             // *HitCluKey=nullptr;
 
-public:
+// public:
 
     size_t N;
     PFParticles Pfp;

@@ -26,7 +26,7 @@ const double bragg_length = 2; //cm
 
 // const double bragg_int_ratio_min = 0.5;
 
-// const vector<double> bragg_razor = {5,3,5,3};
+// const vector<double> bragg_razor = {7,5.5,7,5.5};
 const vector<double> bragg_razor = {10,10,10,10};
 
 
@@ -347,8 +347,8 @@ void BraggCal(size_t i=0) {
     for (int j=0; j<nBragg[1]; j++) {
         c2->cd(++k);
         gPad->SetLogy();
-        hBragg[0][j][1]->Draw("hist");
-        hBragg[0][j][0]->Draw("samehist");
+        hBragg[0][j][0]->Draw("hist");
+        hBragg[0][j][1]->Draw("samehist");
         razor[j]->Draw();
     }
     TCanvas* c3 = new TCanvas("c3","BraggCal");
@@ -357,8 +357,8 @@ void BraggCal(size_t i=0) {
     for (int j=0; j<nBragg[1]; j++) {
         c3->cd(++k);
         gPad->SetLogy();
-        hBragg[1][j][1]->Draw("hist");
-        hBragg[1][j][0]->Draw("samehist");
+        hBragg[1][j][0]->Draw("hist");
+        hBragg[1][j][1]->Draw("samehist");
         razor[j]->Draw();
     }
 

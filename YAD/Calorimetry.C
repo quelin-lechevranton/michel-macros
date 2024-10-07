@@ -16,6 +16,7 @@ void Calorimetry() {
 
     TH1D* hTrkLen = new TH1D("hTrkLen",";Track Length (cm);#",200,0,800);
     TH1D* hLastdEdx = new TH1D("hLastdEdx",";dE/dx (Mev/cm);#",50,0,6);
+    TH1D* hMiddEdx = new TH1D("hMiddEdx",";dE/dx (Mev/cm);#",50,0,6);
 
     size_t N_trk=0;
     size_t N_trk_sel=0;
@@ -85,6 +86,9 @@ void Calorimetry() {
     gPad->SetLogy();
     hTrkLen->Draw("hist");
     c1->cd(3);
+    gPad->SetLogy();
+    hLastdEdx->Draw("hist");
+    c1->cd(4);
     gPad->SetLogy();
     hLastdEdx->Draw("hist");
     

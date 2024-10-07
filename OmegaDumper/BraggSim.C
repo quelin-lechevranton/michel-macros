@@ -146,15 +146,15 @@ void BraggSim(size_t i=0) {
 
     cout << "n_mu / n_mu_in / n_mu_stop: " << n_mu << " / " << n_mu_in << " / " << n_mu_stop << endl;
 
-    // ofstream f("braggsim_res.txt");
-    // for (const vector<size_t> r : res) {
-    //     for (const size_t s : r) {
-    //         f << s << " ";
-    //     }
-    //     f << "\n";
-    // }
-    // cout << "\e[3m\"braggsim_res.txt\" written on disk\e[0m";
-    // f.close();
+    ofstream f("braggsim_res.txt");
+    for (const vector<size_t> r : res) {
+        for (const size_t s : r) {
+            f << s << " ";
+        }
+        f << "\n";
+    }
+    cout << "\e[3m\"braggsim_res.txt\" written on disk\e[0m";
+    f.close();
 
     cout << "total time of execution: " << static_cast<double>(clock()-start_time)/CLOCKS_PER_SEC << " seconds" << endl;
 }

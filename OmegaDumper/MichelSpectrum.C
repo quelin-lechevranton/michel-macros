@@ -1,7 +1,7 @@
 //#include "OmegaDumper_tools.h"
 #include "OmegaLight_tools.h"
 
-const size_t n_file=1;
+const size_t n_file=6;
 const vector<string> filelist = omega::ReadFileList(n_file,"list/cosmics.list");
 
 const bool v = true;
@@ -62,8 +62,9 @@ void MichelSpectrum(size_t i=0) {
 
 
     size_t nc=4;
+    vector<string> cn = {"tracks","bragg tracks","bragg upright","bragg reverse"};
     vector<size_t> c;
-    while (nc--) c.push_back(0);
+    for (int i=0; i<nc; i++) c.push_back(0);
 
     size_t i_file=0;
     for (string filename : filelist) {
@@ -94,6 +95,7 @@ void MichelSpectrum(size_t i=0) {
                 }
 
                 if (!R.Pfp.isTrk[i_pfp]) continue;
+                c[0]++;
                 R.GetPfpTrk(i_pfp);
 
                 for (size_t i_spt=0; i_spt < R.Spt.N; i_spt++) {
@@ -153,7 +155,7 @@ void MichelSpectrum(size_t i=0) {
                 hBragg->Fill(bragg_int/avg_dQdx);
 
                 if (bragg_int/avg_dQdx < bragg_razor) continue;
-                c[0]++;
+                c[1]++;
 
                 // for (size_t i_cal=0; i_cal < R.Cal.NPt; i_cal++) {
                 //     double dQdx = *R.Cal.dQdx[i_cal]; 
@@ -169,12 +171,12 @@ void MichelSpectrum(size_t i=0) {
                     End.X=R.Trk.X.back();
                     End.Y=R.Trk.Y.back();
                     End.Z=R.Trk.Z.back();
-                    c[1]++;
+                    c[2]++;
                 } else {
                     End.X=R.Trk.X[0];
                     End.Y=R.Trk.Y[0];
                     End.Z=R.Trk.Z[0];
-                    c[2]++;
+                    c[3]++;
                 }
                 // gEnd->AddPoint(*End.Y,*End.Z,*End.X);
                 for (size_t i_spt=0; i_spt < R.Spt.N; i_spt++) {
@@ -209,14 +211,13 @@ void MichelSpectrum(size_t i=0) {
                         }
                     }
                 } //end michel spectrum pfparticle loop
-                if (E>1) hE->Fill(E);
-		        else c[3]++;
+                hE->Fill(E);
             } //end muon selection pfparticle loop
         } //end event loop
     } //end file loop
     cout << endl;
 
-    for (size_t a : c) cout << a << endl;
+    for (size_t i=0; i<nc; i++) cout << cn[i] << ": " << c[i] << endl;
 
     TCanvas* c0 = new TCanvas("c0","MichelSpectrum");
     c0->cd();

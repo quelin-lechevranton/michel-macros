@@ -1,7 +1,7 @@
 #include "OmegaLight_tools.h"
 
 const size_t n_file=74;
-const vector<string> filelist = omega::ReadFileList(n_file,"list/jmu.list");
+const vector<string> filelist = omega::ReadFileList(n_file,"list/mu.list");
 
 const bool v = false;
 
@@ -13,9 +13,11 @@ const size_t window_rough = 4;
 const double r_coincidence =1.; //cm
 
 const size_t n_least_deposits=20;
+const size_t n_most_deposits=9999999999999;
 const size_t n_dep_bragg=20;
 const double dEdx_min_ratio = 1;
 const double bragg_razor=5;
+const double bragg_razor_max=99999;
 
 const omega::Limits det = omega::fiducial;
 
@@ -24,7 +26,7 @@ const omega::Binning bdEdx = {50,0,5};
 const omega::Binning bBragg = {100,0,20}; 
 const omega::Binning bMichel = {50,0,50};
 
-vector<size_t> n_c = {0,0,0,0,0,0,0,0,0};
+vector<size_t> n_c = {0,0,0,0,0,0,0,0,0,0};
 #define COND(i) {n_c[i]++; if (v) cout << "\t\t\e[91mc" << i << "\e[0m" << endl; continue;} i_c++;
 
 #define FILLHBRAGG2D(i) for (size_t i_dep=0; i_dep <= i_max ; i_dep++) {hBragg2D[i]->Fill((i_max-i_dep)*dep_step, *T.Dep.E[i_dep]/dep_step);}
@@ -99,17 +101,17 @@ void TrueMichel() {
                 T.GetPrtDep(i_prt);
 
                 if (T.Prt.Pdg != 11 && T.Prt.Pdg != -11) COND(i_c)
-                if (T.Dep.N > n_least_deposits) COND(i_c)
-                // if (T.Dep.N > n_least_deposits) COND(i_c);
-                // bool inside = omega::IsInside(T.Dep.X, T.Dep.Y, T.Dep.Z, det);
-                // if (!inside) COND(i_c)
+                if (T.Dep.N < n_least_deposits) COND(i_c)
+                if (T.Dep.N > n_most_deposits) COND(i_c);
+                bool inside = omega::IsInside(T.Dep.X, T.Dep.Y, T.Dep.Z, det);
+                if (!inside) COND(i_c)
 
                 if (T.Prt.isOrphelin) COND(i_c) 
                 T.GetPrtMom(i_prt);
                 T.GetMomDep(i_prt);
                 if (T.Mom.Pdg != 13 && T.Mom.Pdg != -13) COND(i_c)
-                bool inside = omega::IsInside(T.Dep.X, T.Dep.Y, T.Dep.Z, det);
-                if (!inside) COND(i_c)
+                // inside = omega::IsInside(T.Dep.X, T.Dep.Y, T.Dep.Z, det);
+                // if (!inside) COND(i_c)
 
                 size_t n_max_rough=0, i_max_rough=0;
                 for (size_t i_dep=0; i_dep<T.Dep.N; i_dep+=step_rough) {
@@ -164,6 +166,7 @@ void TrueMichel() {
                 FILLHBRAGG2D(0)
 
                 if (bragg_int/n_dep_bragg < bragg_razor) COND(i_c)
+                if (bragg_int/n_dep_bragg > bragg_razor_max) COND(i_c)
 
                 hBragg[1]->Fill(bragg_int/n_dep_bragg);
                 FILLHBRAGG2D(1)
