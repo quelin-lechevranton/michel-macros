@@ -57,6 +57,7 @@ void Template() {
 
     // TCanvas* c1 = new TCanvas("c1","Template");
     // c1->cd();
+    // c1->SaveAs("out/Template_out.pdf");
 
     cout << "total time of execution: " << static_cast<double>(clock()-start_time)/CLOCKS_PER_SEC << " seconds" << endl;
 }

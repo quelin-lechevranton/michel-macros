@@ -1,7 +1,7 @@
 #include "OmegaLight_tools.h"
 
 const size_t n_file=1;
-const vector<string> filelist = omega::ReadFileList(n_file,"list/light.list");
+const vector<string> filelist = omega::ReadFileList(n_file,"list/pdvd_cosmics.list");
 
 void RecoStats() {
 
@@ -17,14 +17,14 @@ void RecoStats() {
         cout << "\e[3mOpening file #" << ++i_file << "/" << n_file << ": " << filename << "\e[0m" << endl;
 
         omega::Reco R(filename.c_str());
-        omega::Truth T(filename.c_str());
+        //omega::Truth T(filename.c_str());
 
         size_t n_evt = R.N;
         N_evt += n_evt;
         for (size_t i_evt=0; i_evt < n_evt; i_evt++) {
             
             R.GetEvtPfp(i_evt);
-            T.GetEvt(i_evt);
+            //T.GetEvt(i_evt);
 
             size_t n_trklong=0, n_trk=R.Trk.N;
             N_trk += n_trk;
