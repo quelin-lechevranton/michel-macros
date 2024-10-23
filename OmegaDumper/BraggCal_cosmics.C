@@ -19,6 +19,7 @@ const double length_mu_min = 20; //cm
 const double dEdx_min_ratio = 1.5;
 // const double dEdx_min = dEdx_MIP*dEdx_min_ratio;
 
+const size_t n_cal_min = 1 ;
 const size_t n_cal_body_min = 20;
 
 const double bragg_length = 2; //cm
@@ -84,7 +85,6 @@ void BraggCal_cosmics(size_t i=0) {
         false_negative.push_back(0);
     }
 
-
     size_t n_bragg_candidate=0;
     size_t n_bragg=0;
 
@@ -104,24 +104,27 @@ void BraggCal_cosmics(size_t i=0) {
 
             R.GetEvtPfp(i_evt);
 
-            if (R.Trk.N != 1) {
+            if (R.Trk.N < 1) {
                 if (v) cout << "\t\e[91mno track\e[0m " << endl;
                 continue;
             }
             if (v) cout << "\tn trk: " << R.Trk.N << endl;
 
+            size_t i_trk=1;
             for (size_t i_pfp=0; i_pfp < R.Pfp.N; i_pfp++) {
 
                 if (!R.Pfp.isTrk[i_pfp]) continue;
 
                 R.GetPfpTrk(i_pfp);
 
+                if (v) cout << "\ttrk#" << i_trk++ << "\r" << flush;
+
                 // if (R.Trk.Length < length_mu_min) {
                 //     if (v) cout << "\t\e[91mtoo short\e[0m (" << R.Trk.Length << ")" << endl;
                 //     continue;
                 // }
 
-                if (R.Cal.NPt < 1) continue;
+                if (R.Cal.NPt < n_cal_min) continue;
 
                 bool inside = omega::IsInside(
                     R.Trk.X,
@@ -136,8 +139,10 @@ void BraggCal_cosmics(size_t i=0) {
                 // if (inside) n_bragg_candidate++;
 
                 bool upright = *R.Trk.X[0] > *R.Trk.X.back();
-                if (upright) {if (v) cout << "\tuprigth" << endl;}
-                else {if (v) cout << "\tupside down" << endl;}
+                if (upright) {if (v) cout << "\t\tuprigth" << endl;}
+                else {if (v) cout << "\t\tupside down" << endl;}
+
+                if (v) cout << "\t\tn cal: " << R.Cal.NPt;
 
                 size_t n_cal_tail=0;
                 while (
@@ -149,11 +154,9 @@ void BraggCal_cosmics(size_t i=0) {
                     *R.Cal.ResRange[R.Cal.NPt-1-n_cal_head++] > R.Cal.Range - bragg_length 
                     && n_cal_head < R.Cal.NPt-1
                 );
-
-                size_t n_cal_body = R.Cal.NPt - n_cal_tail - n_cal_head;
-                if (v) cout << "\tn cal: " << R.Cal.NPt;
+                size_t n_cal_body = R.Cal.NPt > n_cal_tail + n_cal_head ? R.Cal.NPt - n_cal_tail - n_cal_head : 0;
                 if (n_cal_body < n_cal_body_min) {
-                    if (v) cout << " \e[91mnot enough cal pt\e[0m " << endl;
+                    if (v) cout << " \e[91m< " << n_cal_body_min << "\e[0m" << endl;
                     continue;
                 }
                 if (v) cout << " \u21b4" << endl;
@@ -179,9 +182,13 @@ void BraggCal_cosmics(size_t i=0) {
                 const double dEdx_min = avg_body_dEdx*dEdx_min_ratio;
                 // const double dEdx_min = 2*dEdx_min_ratio;
 
-                if (v) cout << "\tavg body dEdx: " << avg_body_dEdx << " (" << n_cal_body << ")" << endl;
+                if (v) cout << "\t\tavg body dEdx: " << avg_body_dEdx << " (over " << n_cal_body << " cal)";
 
-                if(avg_body_dEdx>4 || avg_body_dEdx<1) continue;
+                if(avg_body_dEdx>4 || avg_body_dEdx<1) {
+                    if (v) cout << " \e[91m\u2209 [1,4]\e[0m" << endl;
+                    continue;
+                }
+                if (v) cout << " \u21b4" << endl;
 
                 double bragg_tail_int=0;
                 double bragg_tail_treshold_int=0;
@@ -194,7 +201,7 @@ void BraggCal_cosmics(size_t i=0) {
                     bragg_tail_treshold_int += dEdx;
                     n_bragg_tail_int++;
                 }
-                if (v) cout << "\tBraggHead: " << bragg_tail_int << " (" << n_bragg_tail_int << "/" << n_cal_tail << ")" << endl;
+                if (v) cout << "\t\tbragg tail: " << bragg_tail_int << " (" << n_cal_tail << ") ; over-threshold tail: " << bragg_tail_treshold_int << " (" << n_bragg_tail_int << ")" << endl;
 
                 vector<double> bragg_tail = {
                     bragg_tail_int/avg_body_dEdx,
@@ -229,7 +236,7 @@ void BraggCal_cosmics(size_t i=0) {
                     bragg_head_treshold_int += dEdx;
                     n_bragg_head_int++;
                 }
-                // if (v) cout << "\tBraggTail: " << bragg_head_int << " (" << n_bragg_head_int << "/" << n_cal_head << ")" << endl;
+                if (v) cout << "\t\tbragg head: " << bragg_head_int << " (" << n_cal_head << ") ; over-threshold head: " << bragg_head_treshold_int << " (" << n_bragg_head_int << ")" << endl;
 
                 vector<double> bragg_head = {
                     bragg_head_int/avg_body_dEdx,
@@ -246,11 +253,11 @@ void BraggCal_cosmics(size_t i=0) {
 
                 vector<double> bragg, bragg_reverse;
                 if (upright) {
-                    bragg = bragg_tail;
-                    bragg_reverse = bragg_head;
-                } else {
                     bragg = bragg_head;
                     bragg_reverse = bragg_tail;
+                } else {
+                    bragg = bragg_tail;
+                    bragg_reverse = bragg_head;
                 }
 
                 size_t tru = 0;
@@ -280,6 +287,19 @@ void BraggCal_cosmics(size_t i=0) {
                         else     true_negative[j]++;
                     }
                 }
+
+                if (v) {
+                    cout << "\t\tis bragg? :";
+                    for (int j=0; j<nBragg[1]; j++) {
+                        if (is_bragg[j]) {
+                            cout << " \e[92m1\e[0m";
+                        } else {
+                            cout << " \e[91m0\e[0m";
+                        }
+                    }
+                    cout << endl;
+                }
+
                 
                 if (!is_bragg[1]) continue;
 
@@ -322,7 +342,8 @@ void BraggCal_cosmics(size_t i=0) {
 
     vector<TLine*> razor(nBragg[1]);
     for (int j=0; j<nBragg[1]; j++) {
-        razor[j]= new TLine(bragg_razor[j],0,bragg_razor[j],hBragg[0][j][1]->GetMaximum());
+        double hBraggMax = hBragg[0][j][0]->GetMaximum() > hBragg[0][j][1]->GetMaximum() ? hBragg[0][j][0]->GetMaximum() : hBragg[0][j][1]->GetMaximum() ;
+        razor[j]= new TLine(bragg_razor[j],0,bragg_razor[j],hBraggMax);
         razor[j]->SetLineColor(kViolet);
         razor[j]->SetLineWidth(2);
     }
@@ -349,21 +370,21 @@ void BraggCal_cosmics(size_t i=0) {
     }
 
 
-    cout << "criterium results: " << endl;
+    cout << "results: " << endl;
     for (int j=0; j<nBragg[1]; j++) {
         cout << "\t" << col[j] << ": " << endl;
-        cout << "\t\ttrue_positive: " << true_positive[j] << " (" << 100.*true_positive[j]/n_bragg_candidate << "%)" << endl;
-        cout << "\t\tfalse_positive: " << false_positive[j] << " (" << 100.*false_positive[j]/n_bragg_candidate << "%)" << endl;
-        cout << "\t\ttrue_negative: " << true_negative[j] << " (" << 100.*true_negative[j]/n_bragg_candidate << "%)" << endl;
-        cout << "\t\tfalse_negative: " << false_negative[j] << " (" << 100.*false_negative[j]/n_bragg_candidate << "%)" << endl;
-        cout << "\t\t----------------------------------------" << endl;
-        cout << "\t\tefficiency (tp/tp+fn): " << 100.*true_positive[j]/(true_positive[j]+false_negative[j]) << "%" << endl;
-        cout << "\t\tpurity (tp/tp+fp): " << 100.*true_positive[j]/(true_positive[j]+false_positive[j]) << "%" << endl;
+        // cout << "\t\ttrue_positive: " << true_positive[j] << " (" << 100.*true_positive[j]/n_bragg_candidate << "%)" << endl;
+        cout << "\t\tpositive: " << false_positive[j] << " (" << 100.*false_positive[j]/n_bragg_candidate << "%)" << endl;
+        cout << "\t\tnegative: " << true_negative[j] << " (" << 100.*true_negative[j]/n_bragg_candidate << "%)" << endl;
+        //cout << "\t\tfalse_negative: " << false_negative[j] << " (" << 100.*false_negative[j]/n_bragg_candidate << "%)" << endl;
+        // cout << "\t\t----------------------------------------" << endl;
+        // cout << "\t\tefficiency (tp/tp+fn): " << 100.*true_positive[j]/(true_positive[j]+false_negative[j]) << "%" << endl;
+        // cout << "\t\tpurity (tp/tp+fp): " << 100.*true_positive[j]/(true_positive[j]+false_positive[j]) << "%" << endl;
     }
 
-    c1->SaveAs("out/BraggCal_cosmics_out1.pdf");
-    c2->SaveAs("out/BraggCal_cosmics_out2.pdf");
-    c3->SaveAs("out/BraggCal_cosmics_out3.pdf");
+    c1->SaveAs("out/BraggCal_cosmics_BraggPeaks.pdf");
+    c2->SaveAs("out/BraggCal_cosmics_BraggInt.pdf");
+    c3->SaveAs("out/BraggCal_cosmics_ReverseBraggInt.pdf");
 
 
     // cout << "nbr of bragg/candidate: " << n_bragg << "/" << n_bragg_candidate << " (" << 100.*n_bragg/n_bragg_candidate << "%)" << endl;
