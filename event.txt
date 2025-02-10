@@ -1,4 +1,0 @@
-Special events bookmarks:
-100_muon_800MeV: {
-    #6, 25, 31
-}
